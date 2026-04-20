@@ -1,0 +1,19 @@
+.header{
+    grid-area: header;
+    background-color: #FFFFFF;
+    color: black;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+}
+
+.fecha{
+    font-size: 26px;
+    font-weight: 600;
+    color:black;
+}
+
+.dia-semana{
+    font-weight: 800;
+    
+}

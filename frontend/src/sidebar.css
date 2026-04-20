@@ -1,0 +1,31 @@
+.sidebar{
+    grid-area: sidebar;
+    background-color: #252467;
+    color: #FFFFFF;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+
+}
+
+.option{
+    padding-top: 2rem;
+    font-size: 0.5rem;
+}
+
+p{
+    margin-top: 1px;
+}
+
+.profile-white{
+  width: 65px;
+}
+
+.icon{
+    width: 30px;
+}
+
+
+
