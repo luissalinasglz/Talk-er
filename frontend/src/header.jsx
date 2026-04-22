@@ -1,28 +1,28 @@
 import "./header.css"
 
 function Header(){
-    const fecha = new Date();
+    const date = new Date();
 
-    const diasSemana = [
+    const daysWeek = [
         'Domingo', 'Lunes', 'Martes', 'Miércoles', 
         'Jueves', 'Viernes', 'Sábado', 'Domingo'
     ]
 
-    const meses = [
+    const months = [
         'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
         'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
     ];
 
-    const diaSemana = diasSemana[fecha.getDay()];
-    const diaMes = fecha.getDate();
-    const mes = meses[fecha.getMonth()];
-    const anio = fecha.getFullYear();
+    const dayWeek = daysWeek[date.getDay()];
+    const dayMonth = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
 
     return (
         <header className="header">
             <h1 className="fecha">
-                <span className="dia-semana">{diaSemana}</span>
-                {' '}{diaMes} de {mes} {anio}
+                <span className="dia-semana">{dayWeek}</span>
+                {' '}{dayMonth} de {month} {year}
             </h1>
         </header>
     );

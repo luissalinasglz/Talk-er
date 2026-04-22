@@ -1,4 +1,5 @@
 import "./sidebar.css"
+import { NavLink } from "react-router-dom"
 import profileWhite from "./assets/profile-white.png"
 import dashboardIcon from "./assets/dashboard.png"
 import sesionesIcon from "./assets/calendario.png"
@@ -17,42 +18,42 @@ function Sidebar(){
                 <img className="profile-white" src={profileWhite}/>
             </div>
             <nav>
-                <div className="option">
+                <NavLink to="/" className="option">
                     <img className="icon" src={dashboardIcon}/>
                     <p>Dashboard</p>
-                </div>
-                <div className="option">
+                </NavLink>
+                <NavLink to="/sesiones" className="option">
                     <img className="icon" src={sesionesIcon}/>
                     <p>Sesiones</p>
-                </div>
-                 <div className="option">
+                </NavLink>
+                <NavLink to="/ligas" className="option">
                     <img className="icon" src={ligasIcon}/>
                     <p>Ligas</p>
-                </div>
-                <div className="option">
+                </NavLink>
+                <NavLink to="/tareas" className="option">
                     <img className="icon" src={tareasIcon}/>
-                     <p>Tareas</p>
-                </div>
-                <div className="option">
+                    <p>Tareas</p>
+                </NavLink>
+                <NavLink to="/examenes" className="option">
                     <img className="icon" src={examenIcon}/>
-                     <p>Examenes</p>
-                </div>
-                <div className="option">
+                    <p>Examenes</p>
+                </NavLink>
+                <NavLink to="/material" className="option">
                     <img className="icon" src={materialIcon}/>
                     <p>Material</p>
-                </div>
-                <div className="option">
+                </NavLink>
+                <NavLink to="/anuncios" className="option">
                     <img className="icon" src={anunciosIcon}/>
                     <p>Anuncios</p>
-                </div>
-                <div className="option">
+                </NavLink>
+                <NavLink to="/bitacora" className="option">
                     <img className="icon" src={bitacoraIcon}/>
                     <p>Bitacora</p>
-                </div>
-                <div className="option">
+                </NavLink>
+                <NavLink to="/horas" className="option">
                     <img className="icon" src={horasIcon}/>
                     <p>Horas</p>
-                </div>
+                </NavLink>
             </nav>
         </aside>
     );
