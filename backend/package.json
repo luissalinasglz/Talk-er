@@ -1,0 +1,13 @@
+{
+    "name": "talker-backend",
+    "version": "1.0.0",
+    "main": "login.js",
+    "scripts": {
+        "start": "node login.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "jsonwebtoken": "^9.0.2",
+        "cors": "^2.8.5"
+    }
+}

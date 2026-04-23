@@ -1,12 +1,10 @@
-import "./dashboard.css"
-
 function Dashboard() {
     return(
         <div className="dashboard">
             <div className="left-rectangles">
                 <div className="rectangle-one">
                     <h3>Mis clases</h3>
-                    <p>Inglés A</p>
+                    <p>Dashboard de estudiante</p>
                 </div>
                 <div className="rectangle-two">
                     <h3>Semana ()</h3>
