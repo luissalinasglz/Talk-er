@@ -10,14 +10,16 @@ import Material from "./tutor-material";
 import Anuncios from "./tutor-anuncios";
 import Bitacoras from "./tutor-bitacoras";
 import Horas from "./tutor-horas";
+import Header from "../../header";
+import "./tutor-container.css";
 
 function TutorContainer() {
   return (
-    <div style={{ display: "flex" }}>
+    <div className="tutor-layout">
       <SidebarTutor />
+      <Header/>
 
-      <div style={{ flex: 1 }}>
-
+      <div className="tutor-main">
         <Routes>
           <Route index element={<Dashboard />} />
           <Route path="sesiones" element={<Sesiones />} />
