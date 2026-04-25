@@ -1,3 +1,4 @@
+/*Generales*/
 .dashboard {
   display: flex;
   flex-direction: column;
@@ -15,14 +16,11 @@
   background-color: #F2F0F7;
 }
 
-
-
 .left-rectangles{
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    flex: 5;
-    
+    flex: 5; 
 }
 
 .right-rectangles{
@@ -30,15 +28,147 @@
     flex-direction: column;
     gap: 1.5rem;
     flex: 3;
-    
 }
 
-.rectangle-one,
-.rectangle-two,
-.rectangle-three,
-.rectangle-four{
+.rectangle{
     background-color: #FFFFFF;
     border-radius: 20px;
     padding: 1rem;
     text-align: left;
 }
+
+.rectangle.grow{
+  flex:1;
+}
+
+.content{
+  padding-top: 1rem;
+}
+
+.side{
+  margin-left: 1rem;
+}
+
+.circle{
+  background-color: #6883BA;
+  height: 20px;
+  width: 20px;
+  border: none;
+  border-radius: 50%;
+}
+
+.groups{
+  color:#BBBEC7;
+  font-size: 15px;
+}
+
+
+/*rectangle one*/
+.info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.line{
+  background-color: #F0F2FA;
+  height: 2.5px;
+  width: 100%;
+  border: none;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+/*rectangle three*/
+.count{
+  font-weight: bold;
+  font-size: 30px;
+  padding-bottom: 1rem;
+}
+
+.content-bar{
+  background-color: #BBBEC7;
+  width: 100%;
+  height: 8px;
+  border-radius: 20px;
+}
+
+.percentage-bar{
+  background-color: #6883BA;
+  width: 50%;
+  height: 8px;
+  border-radius: 20px;
+}
+
+.percentage{
+  color:#BBBEC7;
+  font-weight: bold;
+  font-size: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/*rectangle-two*/
+.calendario{
+  width: 100%;
+  font-size: 0.75rem;
+  margin-top: 1rem;
+  border-collapse: collapse;
+}
+
+.calendario th{
+  text-align: center;
+  color: #BBBEC7;
+  font-weight: 600;
+  padding: 1rem;
+  border-bottom: 3px solid #F0F2FA;
+}
+
+.calendario td{
+  border-bottom: 3px solid #F0F2FA;
+  border-right: 3px solid #F0F2FA;
+  padding: 4px;
+  min-height: 50px;
+  height: 50px;
+  vertical-align: center;
+}
+
+.calendario td.hora{
+  color: #BBBEC7;
+  font-size: 0.75rem;
+  align-items: center;
+  border-bottom: none;
+  border-right: none;
+}
+
+.calendario th:first-child {
+  border-bottom: none;
+}
+
+.calendario td:last-child {
+  border-right: none;
+}
+
+.calendario tr:last-child td {
+  border-bottom: none;
+}
+
+.evento{
+  background-color: #6883BA;
+  color: #FFFFFF;
+  border-radius: 10px;
+  padding: 4px;
+  font-size: 0.7rem;
+}
+
+
+/*rectangle-four*/
+.lessons{
+  padding-bottom: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+

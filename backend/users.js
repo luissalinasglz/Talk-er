@@ -5,4 +5,4 @@ const users = [
     { id: 4, username: "TwinchoSalinasFJ26", password: "TwinchoPro123$", role: "student" }
 ];
 
-module.exports = users;
+module.exports = users; 

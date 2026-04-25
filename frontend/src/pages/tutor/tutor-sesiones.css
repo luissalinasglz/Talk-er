@@ -1,0 +1,28 @@
+.sesiones{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    background-color: #F0F2F7;
+}
+
+.sesiones-lista{
+    width: 250px;
+    background-color: #FFFFFF;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.lista-titulo{
+    color: #BBBEC7;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.lista-clases{
+    padding-left: 1rem;
+    padding-top: 1rem;
+    gap: 0.5rem;
+    color: black;
+}
