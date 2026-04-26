@@ -1,0 +1,49 @@
+import "../tutor-tareas.css"
+import documentoazul from "../../../assets/documento_tarea.png"
+
+function TareasEditar({ tarea }) {
+    return (
+        <div className="homework-form">
+            <h3>Editar Tarea</h3>
+
+            <div className="form-group">
+                <p>Titulo</p>
+                <div className="select-input">
+                    <p>Escribir titulo</p>
+                </div>
+            </div>
+            
+            <div className="form-group">
+                <p>Descripción</p>
+                <div className="select-input">
+                    <p>Explicar actividad</p>
+                </div>
+            </div>
+            
+            <div className="form-group">
+                <p>Material de apoyo</p>
+                <div className="file-attach">
+                    <img className="blue-document" src={documentoazul}/>
+                    <p>Verbo_to_be.pdf</p>
+                </div>
+            </div>
+            
+            <div className="form-row">
+                <div className="form-date">
+                    <p>Fecha de entrega</p>
+                    <div className="select-input">dd/mm/aaaa</div>
+                </div>
+                <div className="form-hour">
+                    <p>Hora límite</p>
+                    <div className="select-input">--:--</div>
+                </div>
+            </div>
+            
+            <div className="save">
+                <div className="button">Guardar Tarea</div>
+            </div>
+        </div>
+    );
+}
+
+export default TareasEditar;
