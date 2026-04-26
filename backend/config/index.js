@@ -1,0 +1,6 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
+const { PORT, SECRET_ACCESS_TOKEN, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, DB_HOST, DB_PORT } = process.env;
+
+export { PORT, SECRET_ACCESS_TOKEN, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, DB_HOST, DB_PORT };
