@@ -23,54 +23,54 @@ function Ligas() {
                 </div>
             </div>
 
-        <div className="ligas-content">
-            <div className="blue-rectangle">
-                <h2>Roberto Castro</h2>
-                <p>Inglés B</p>
-                <div className="hours">
-                    <p>Lunes y Miércoles</p>
-                    <p>5:10 p.m. - 6:50 p.m.</p>
+            <div className="ligas-content">
+                <div className="blue-rectangle">
+                    <h2>Roberto Castro</h2>
+                    <p>Inglés B</p>
+                    <div className="hours">
+                        <p>Lunes y Miércoles</p>
+                        <p>5:10 p.m. - 6:50 p.m.</p>
+                    </div>
                 </div>
-            </div>
 
-            <div className="info-rectangle">
-                <h3>Liga de clases</h3>
-                <div className="line"></div>
-                <div className="link">
-                    <p>Liga</p>
-                    <div className="link-zoom">
-                        <p>https://zoom.us/j/98765432100?pwd=abc123xyz</p>
+                <div className="info-rectangle">
+                    <h3>Liga de clases</h3>
+                    <div className="line"></div>
+                    <div className="link">
+                        <p>Liga</p>
+                        <div className="link-zoom">
+                            <p>https://zoom.us/j/98765432100?pwd=abc123xyz</p>
+                        </div>
+                        
                     </div>
-                    
-                </div>
-                <div className="select-platform">
-                    <p>Plataforma</p>
-                    <div className="platform">
-                        <p className="day active">Zoom</p>
-                        <p className="day">Meet</p>
-                        <p className="day">Teams</p>
-                        <p className="day">Otro</p>
-                    </div>
-                </div>
-                <div className="extra">
-                    <div className="id">
-                        <p>ID reunión (Opcional)</p>
-                        <div className="data">
+                    <div className="select-platform">
+                        <p>Plataforma</p>
+                        <div className="platform">
+                            <p className="day active">Zoom</p>
+                            <p className="day">Meet</p>
+                            <p className="day">Teams</p>
+                            <p className="day">Otro</p>
                         </div>
                     </div>
-                    <div className="password">
-                        <p>Contraseña (Opcional)</p>
-                        <div className="data">
+                    <div className="extra">
+                        <div className="id">
+                            <p>ID reunión (Opcional)</p>
+                            <div className="data">
+                            </div>
+                        </div>
+                        <div className="password">
+                            <p>Contraseña (Opcional)</p>
+                            <div className="data">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="save">
-                    <div className="button">
-                        <p>Guardar Liga</p>
+                    <div className="save">
+                        <div className="button">
+                            <p>Guardar Liga</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
         </div>
     );

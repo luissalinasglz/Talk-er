@@ -1,0 +1,123 @@
+.material {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #F0F2F7;
+}
+
+.line-material{
+    width: 100%;
+    height: 5px;
+    background-color: #F0F2F7;
+}
+
+.material-content {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    text-align: left;
+}
+
+.material-left {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: #F0F2F7;
+}
+
+.type-material{
+    display: flex;
+    flex-direction: row;
+    gap: 4rem;
+}
+
+.type{
+    background-color: #FFFFFF;
+    color: black;
+    padding: 1rem;
+    flex: 1;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.all{
+    background-color: #6883BA;
+    color: #FFFFFF;
+}
+
+.material-title{
+    margin-top: 2rem;
+}
+
+.material-title h2 {
+    color: black;
+    font-weight: bold;
+}
+
+.material-info{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.material-side{
+    display: flex;
+    flex-direction: column;
+}
+
+.material-data{
+    background-color: #FFFFFF;
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 20px;
+}
+
+.material-data h3{
+    color: black;
+}
+
+.material-button{
+    margin-top: 0.5rem;
+    background-color: #252467;
+    color: #FFFFFF;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.material-right {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: #FFFFFF;
+}
+
+.material-right h2{
+    color: black;
+    font-weight: bold;
+}
+
+.document{
+    margin-top: 2rem;
+    background-color: #FFFFFF;
+    border: 2px dashed #000000;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    color: #252467;
+    font-weight: bold;
+}
+
+.material-save{
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.material-save p{
+    background-color: #6883BA;
+    color: #FFFFFF;
+    border-radius: 20px;
+    padding: 1rem 2.5rem;
+}
