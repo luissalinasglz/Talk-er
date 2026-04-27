@@ -18,7 +18,7 @@ function Tareas() {
 };
 
   return (
-    <div className="homework">
+    <div className="tareas">
      <div className="homework-header">
         <div className="line-homework"></div>
         <div className="homework-tabs">
