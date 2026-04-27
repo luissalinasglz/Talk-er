@@ -1,4 +1,8 @@
+import Auth from './auth.js';
+
 const Router = (server) => {
+server.use('/v1/auth', Auth);
+
 server.get("/v1", (req, res) => {
     try {
         res.status(200).json({

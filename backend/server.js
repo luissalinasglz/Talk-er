@@ -2,8 +2,9 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mysql from "mysql2/promise";
-import { PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, DB_HOST } from "./config/index.js";
+import { PORT } from "./config/index.js";
 import Router from "./routes/index.js";
+import pool from "./db/db.js"
 
 const server = express();
 
@@ -12,13 +13,6 @@ server.disable("x-powered-by");
 server.use(cookieParser());
 server.use(express.urlencoded({ extended: false }));
 server.use(express.json());
-
-const pool = mysql.createPool({
-    host: DB_HOST,
-    user: MYSQL_USER,
-    password: MYSQL_PASSWORD,
-    database: MYSQL_DATABASE 
-});
 
 async function connectWithRetry() {
     try {
