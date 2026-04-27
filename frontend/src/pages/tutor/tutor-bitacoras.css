@@ -90,26 +90,36 @@
     margin: 0;
 }
 
-.bitacora-hora {
+.bitacora-hour {
     color: #BBBEC7;
     font-size: 13px;
     margin: 0;
 }
 
-.bitacora-row {
+.bitacoras-side{
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    gap: 2rem;
+}
+
+.bitacoras-right-left{
+    flex: 2;
+}
+
+.bitacoras-right-right{
+    flex: 1;
+}
+
+.bitacora-row{
+    gap: 2rem;
+    display: flex;
+    flex-direction: row;
 }
 
 .bitacora-group {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-}
-
-.bitacora-group.grow {
-    flex: 1;
+    margin-bottom: 2rem;
 }
 
 .bitacora-group p {
@@ -125,9 +135,15 @@
     padding: 0.75rem;
     color: #BBBEC7;
     font-size: 13px;
+    width: 100%;         
+    box-sizing: border-box;
 }
 
-.bitacora-textarea {
+.bitacora-input p{
+    color: #BBBEC7;
+}
+
+.bitacora-text {
     background-color: #FFFFFF;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -135,6 +151,12 @@
     color: #BBBEC7;
     font-size: 13px;
     height: 80px;
+    width: 100%;          
+    box-sizing: border-box;
+}
+
+.bitacora-text p{
+    color: #BBBEC7;
 }
 
 .bitacora-upload {
@@ -162,18 +184,20 @@
     padding: 0.5rem;
     border-radius: 10px;
     cursor: pointer;
-    background-color: #F0F2F7;
-    color: black;
+    background-color: #FFFFFF; 
+    color: #333333;          
     font-weight: 600;
+    border: 1px solid #ddd;   
+    font-size: 13px;
 }
 
 .incidencia-btn.active {
-    background-color: #93E490;  /* verde para Sí */
+    background-color: #93E490;  
     color: white;
 }
 
 .incidencia-btn.active-no {
-    background-color: #E49090;  /* rojo para No */
+    background-color: #E49090;  
     color: white;
 }
 
