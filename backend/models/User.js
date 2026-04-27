@@ -11,7 +11,7 @@ export async function createUser(user) {
         [name, last_name, username, password, role, period]
     );
 
-    return result;
+    return result[0];
 }
 
 export async function findUserByUsername(username) {
@@ -20,7 +20,7 @@ export async function findUserByUsername(username) {
         [username]
     );
     
-    return result;
+    return result[0];
 }
 
 export async function findUserById(id) {
@@ -29,7 +29,7 @@ export async function findUserById(id) {
         [id]
     );
     
-    return result;
+    return result[0];
 }
 
 export function generateAccessJWT(user) {

@@ -12,7 +12,7 @@ export async function Login(req, res) {
                 message: "Invalid email."
             });
 
-        const isPasswordValid = req.body.password == user[0].password_hash;
+        const isPasswordValid = req.body.password == user.password_hash;
         
         if (!isPasswordValid)
             return res.status(401).json({

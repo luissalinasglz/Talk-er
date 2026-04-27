@@ -21,24 +21,20 @@ export default function Login() {
         setMessage("");
 
         try {
-            const response = await fetch("http://localhost:3000/login", {
+            const response = await fetch("http://localhost:3000/v1/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ username: user, password: password, rememberMe: isChecked }),
+                credentials: "include",
+                body: JSON.stringify({ username: user, password: password }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                if (isChecked) {
-                    localStorage.setItem("token", data.token);
-                } else {
-                    sessionStorage.setItem("token", data.token);
-                }
-                const target = roleRoutes[data.user.role];
-                setMessage(`Rol del usuario: ${data.user.role}`);
+                const userData = data.data;
+                const target = roleRoutes[userData.role];
                 if (target) {
                     navigate(target);
                 }
