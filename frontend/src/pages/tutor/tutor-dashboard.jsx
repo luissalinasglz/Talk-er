@@ -33,7 +33,7 @@ function Dashboard() {
       <div className="dashboard-content">
         <div className="left-rectangles">
           
-          <div className="rectangle">
+          <div className="rectangle class-orden">
             <h3>Mis clases</h3>
             
             <div className="content">
@@ -45,7 +45,7 @@ function Dashboard() {
                 </div>
               </div>
               
-              <div className="line"></div>
+              <div className="line-separate"></div>
               
               <div className="info">
                 <div className="circle"></div>
@@ -157,7 +157,7 @@ function Dashboard() {
         
         <div className="right-rectangles">
           
-          <div className="rectangle">
+          <div className="rectangle acreditadas">
             <h5>Horas acreditadas</h5>
             <div className="content">
               <p className="count">90/180 hrs</p>
