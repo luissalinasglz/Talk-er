@@ -25,7 +25,7 @@ export async function findUserByUsername(username) {
 
 export async function findUserById(id) {
     const [result] = await pool.query(
-        "SELECT name, last_name, username, role, period FROM users WHERE id = ?",
+        "SELECT id, name, last_name, username, role, period FROM users WHERE id = ?",
         [id]
     );
     
