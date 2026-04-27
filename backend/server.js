@@ -8,7 +8,10 @@ import pool from "./db/db.js"
 
 const server = express();
 
-server.use(cors());
+server.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+}));
 server.disable("x-powered-by");
 server.use(cookieParser());
 server.use(express.urlencoded({ extended: false }));

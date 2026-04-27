@@ -33,7 +33,7 @@ export default function Login() {
             const data = await response.json();
 
             if (response.ok) {
-                const userData = data.data;
+                const userData = data.data[0];
                 const target = roleRoutes[userData.role];
                 if (target) {
                     navigate(target);
