@@ -34,10 +34,29 @@
     border-radius: 20px;
     padding: 1rem;
     text-align: left;
+    box-shadow: 0 5px 22px rgba(237, 236, 236, 0.05);
 }
 
 .rectangle.grow{
   flex:1;
+  background-color: #252467;
+  color: #FFFFFF;
+}
+
+.acreditadas{
+  text-align: center;
+}
+
+.class-orden{
+  background-color: #6883BA;
+}
+
+.class-orden p{
+  color: #FFFFFF;
+}
+
+.class-orden h3{
+  color: #FFFFFF;
 }
 
 .content{
@@ -46,10 +65,11 @@
 
 .side{
   margin-left: 1rem;
+  font-weight: 600;
 }
 
 .circle{
-  background-color: #6883BA;
+  background-color: #BBBEC7;
   height: 20px;
   width: 20px;
   border: none;
@@ -67,8 +87,8 @@
   align-items: center;
 }
 
-.line{
-  background-color: #F0F2FA;
+.line-separate{
+  background-color: #99AACC;
   height: 2.5px;
   width: 100%;
   border: none;
@@ -85,14 +105,14 @@
 .content-bar{
   background-color: #BBBEC7;
   width: 100%;
-  height: 8px;
+  height: 15px;
   border-radius: 20px;
 }
 
 .percentage-bar{
   background-color: #6883BA;
   width: 50%;
-  height: 8px;
+  height: 15px;
   border-radius: 20px;
 }
 
@@ -120,41 +140,42 @@
   border-bottom: 3px solid #F0F2FA;
 }
 
-.calendario td{
-  border-bottom: 3px solid #F0F2FA;
-  border-right: 3px solid #F0F2FA;
-  padding: 4px;
-  min-height: 50px;
-  height: 50px;
-  vertical-align: center;
+.calendario th {
+    padding: 10px;
+    font-size: 0.8rem;
+    color: #666;
+    text-transform: uppercase;
 }
 
-.calendario td.hora{
-  color: #BBBEC7;
-  font-size: 0.75rem;
-  align-items: center;
-  border-bottom: none;
-  border-right: none;
+.calendario td {
+    padding: 10px;
+    border: 1px solid #F0F2F7;
+    height: 60px;
+    vertical-align: middle;
 }
 
-.calendario th:first-child {
-  border-bottom: none;
+.hora {
+    font-weight: bold;
+    color: #252467;
+    border: none !important;
+    width: 60px;
 }
 
-.calendario td:last-child {
-  border-right: none;
+.evento {
+    background-color: #6883BA;
+    color: white;
+    border-radius: 12px;
+    padding: 8px;
+    font-size: 0.75rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(104, 131, 186, 0.3);
 }
 
-.calendario tr:last-child td {
-  border-bottom: none;
-}
-
-.evento{
-  background-color: #6883BA;
-  color: #FFFFFF;
-  border-radius: 10px;
-  padding: 4px;
-  font-size: 0.7rem;
+.evento p { 
+  margin: 0; 
 }
 
 
