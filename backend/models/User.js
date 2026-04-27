@@ -23,6 +23,15 @@ export async function findUserByUsername(username) {
     return result;
 }
 
+export async function findUserById(id) {
+    const [result] = await pool.query(
+        "SELECT name, last_name, username, role, period FROM users WHERE id = ?",
+        [id]
+    );
+    
+    return result;
+}
+
 export function generateAccessJWT(user) {
     const payload = {
         id: user.id,

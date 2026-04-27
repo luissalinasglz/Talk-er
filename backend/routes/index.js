@@ -1,21 +1,29 @@
+import { Verify } from '../middleware/verify.js';
 import Auth from './auth.js';
 
 const Router = (server) => {
-server.use('/v1/auth', Auth);
+    server.use('/v1/auth', Auth);
 
-server.get("/v1", (req, res) => {
-    try {
+    server.get('/v1/user', Verify, (req, res) => {
         res.status(200).json({
-            status: "success",
-            data: [],
-            message: "Welcome to our API homepage!",
+        status: "success",
+        message: "Welcome to the your Dashboard!",
         });
-    } catch (err) {
-        res.status(500).json({
-            status: "error",
-            message: "Internal Server Error",
-        });
-    }
-})
+    });
+
+    server.get("/v1", (req, res) => {
+        try {
+            res.status(200).json({
+                status: "success",
+                data: [],
+                message: "Welcome to our API homepage!",
+            });
+        } catch (err) {
+            res.status(500).json({
+                status: "error",
+                message: "Internal Server Error",
+            });
+        }
+    })
 };
 export default Router;
