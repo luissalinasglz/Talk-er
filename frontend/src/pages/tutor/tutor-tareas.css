@@ -1,11 +1,10 @@
 .tareas {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
     background-color: #F0F2F7;
 }
 
-/* Header con título y tabs */
 .homework-header {
     background-color: #FFFFFF;
     padding: 1rem 2rem;
@@ -20,7 +19,7 @@
     border-bottom: 1px solid #F0F2F7;
 }
 
-.line-homework{
+.line-homework {
     width: 100%;
     height: 3px;
     background-color: #BBBEC7;
@@ -46,14 +45,12 @@
     border-bottom: 3px solid #6883BA;
 }
 
-/* Contenido */
 .homework-content {
     flex: 1;
     padding: 2rem;
     overflow-y: auto;
 }
 
-/* Lista de tareas */
 .homework-list h3 {
     font-size: 20px;
     font-weight: bold;
@@ -72,6 +69,12 @@
     gap: 1rem;
     cursor: pointer;
     text-align: left;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.homework-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .homework-indicator {
@@ -96,6 +99,7 @@
     color: #BBBEC7;
     font-size: 13px;
     margin: 0;
+    margin-top: 0.25rem;
 }
 
 .homework-class {
@@ -104,20 +108,22 @@
     border-radius: 20px;
     font-size: 13px;
     color: #6883BA;
+    display: flex;
     align-items: center;
+    font-weight: bold;
 }
 
-/*tareas detalles*/
-.homework-details{
+/* Tareas detalles */
+.homework-details {
     display: flex;
     flex-direction: row;
     gap: 2rem;
     height: 100%;
 }
 
-.detail-left{
+.detail-left {
     flex: 1;
-    padding: 1rem;
+    padding: 2rem;
     border-radius: 20px;
     background-color: #252467;
     text-align: left;
@@ -125,21 +131,27 @@
     flex-direction: column;
 }
 
-.detail-left h3{
+.detail-left h3 {
     color: #FFFFFF;
+    margin-top: 0;
 }
 
-.indications{
+.detail-left p {
+    color: #E0E0E0;
+    line-height: 1.5;
+}
+
+.indications {
     display: flex;
     flex-direction: column;
     flex: 1;
 }
 
-.indications-details{
+.indications-details {
     padding-bottom: 1rem;
 }
 
-.file{
+.file {
     margin-top: auto;
     background-color: #FFFFFF20;
     border-radius: 10px;
@@ -148,66 +160,76 @@
     color: #FFFFFF;
 }
 
-.button-edite{
-    background-color: #6883BA;
-    color: #FFFFFF;
-    padding: 0.5rem 4rem;
-    border-radius: 30px;
-    cursor: pointer;
-}
-
 .save {
     display: flex;
     justify-content: center;
+    margin-top: 1rem;
 }
 
-.detail-right{
+.button, .button-edite {
+    background-color: #6883BA;
+    color: #FFFFFF;
+    padding: 0.75rem 3rem;
+    border-radius: 30px;
+    cursor: pointer;
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover, .button-edite:hover {
+    background-color: #4f6ea8;
+}
+
+.detail-right {
     flex: 1.25;
     background-color: #FFFFFF;
     padding: 2rem;
     display: flex;
     flex-direction: column;
     text-align: left;
-    margin-top: -1.25rem;
-    margin-bottom: -2rem;
-    margin-right: -2rem;
+    border-radius: 20px;
 }
 
-.detail-right h3{
+.detail-right h3 {
     color: black;
     font-weight: bold;
     padding-bottom: 1rem;
+    margin-top: 0;
 }
 
-.student{
+.student {
     display: flex;
     flex-direction: row;
     gap: 1rem;
     align-items: center;
 }
 
-.student p{
+.student p {
     color: black;
+    margin: 0;
 }
 
-.info-date{
-    color: #BBBEC7;
-    font-size: 10px;
+.info-date {
+    color: #BBBEC7 !important;
+    font-size: 11px;
+    margin-top: 0.25rem !important;
 }
 
-.circle-student{
+.circle-student {
     background-color: #252467;
-    height: 30px;
-    width: 30px;
+    height: 40px;
+    width: 40px;
     border: none;
     border-radius: 50%;
 }
 
-.file-info{
+.file-info {
     display: flex;
     flex-direction: row;
     background-color: #F0F2F7;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     align-items: center;
     border-radius: 20px;
     gap: 1rem;
@@ -215,65 +237,72 @@
     color: black;
 }
 
-.ver{
+.ver {
     margin-left: auto;
     font-weight: bold;
+    color: #6883BA;
+    cursor: pointer;
 }
 
-.calification{
+.calification {
     display: flex;
     flex-direction: row;
     margin-top: 2rem;
     align-items: center;
 }
 
-.input-cal{
-    background-color: #FFFFFF;
-    border: 3px, solid, #BBBEC7;
-    border-radius: 20px;
-    padding: 0.25rem 3rem;
-    align-items: center;
-    color: black;
-}
-
-.cal{
-    color: black;
-    padding-left: 0.5rem;
-}
-
-.feedback{
-    margin-top: 2rem;
-    background-color: #FFFFFF;
-    border: 3px, solid, #BBBEC7;
-    padding: 1rem;
-    border-radius: 20px;
-    height: 150px;
-}
-
-/*tareas-editar*/
-.homework-form{
+.homework-form {
     color: black;
     text-align: left;
-    width: 40%;
+    width: 50%;
+    min-width: 400px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.select-input{
-    background-color: #FFFFFF;
-    border: 3px, solid, #BBBEC7;
-    padding: 0.5rem;
-    border-radius: 20px;
-    color: #BBBEC7;
-    font-size: 15px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.file-attach{
+.form-group p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.select-input {
     background-color: #FFFFFF;
-    border: 3px, solid, #BBBEC7;
-    padding: 0.5rem;
+    border: 2px solid #BBBEC7;
+    padding: 0.75rem 1rem;
+    border-radius: 20px;
+    color: black;
+    font-size: 15px;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.select-input::placeholder {
+    color: #BBBEC7;
+}
+
+.select-input:focus {
+    border-color: #6883BA;
+}
+
+select.select-input {
+    cursor: pointer;
+}
+
+.file-attach {
+    background-color: #FFFFFF;
+    border: 2px dashed #BBBEC7; 
+    padding: 1rem;
     border-radius: 20px;
     color: black;
     font-size: 15px;
@@ -281,19 +310,24 @@
     flex-direction: row;
     gap: 1rem;
     align-items: center;
+    cursor: pointer;
 }
 
-.blue-document{
+.file-attach p {
+    font-weight: normal !important;
+}
+
+.blue-document {
     height: 27px;
 }
 
-.form-row{
+.form-row {
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
-.form-date, .form-hour{
+.form-date, .form-hour {
     display: flex;
     flex-direction: column;
     flex: 1;
