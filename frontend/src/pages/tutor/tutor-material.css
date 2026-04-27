@@ -5,7 +5,7 @@
     background-color: #F0F2F7;
 }
 
-.line-material{
+.line-material {
     width: 100%;
     height: 5px;
     background-color: #F0F2F7;
@@ -25,27 +25,36 @@
     background-color: #F0F2F7;
 }
 
-.type-material{
+.type-material {
     display: flex;
     flex-direction: row;
-    gap: 4rem;
+    gap: 2rem; /* Reduje un poco el gap para que no se amontone en pantallas chicas */
 }
 
-.type{
+.type {
     background-color: #FFFFFF;
     color: black;
     padding: 1rem;
     flex: 1;
     text-align: center;
     border-radius: 20px;
+    transition: background-color 0.3s ease;
 }
 
-.all{
+.type:hover {
+    background-color: #e0e6f5;
+}
+
+.all {
     background-color: #6883BA;
     color: #FFFFFF;
 }
 
-.material-title{
+.all:hover {
+    background-color: #556b99;
+}
+
+.material-title {
     margin-top: 2rem;
 }
 
@@ -54,36 +63,44 @@
     font-weight: bold;
 }
 
-.material-info{
+.material-info {
     margin-top: 2rem;
     display: flex;
     flex-direction: row;
     gap: 2rem;
 }
 
-.material-side{
+.material-side {
     display: flex;
     flex-direction: column;
+    flex: 1; /* Para que ambas columnas midan lo mismo */
 }
 
-.material-data{
+.material-data {
     background-color: #FFFFFF;
-    margin: 1rem;
-    padding: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
     border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Sombra sutil */
 }
 
-.material-data h3{
+.material-data h3 {
     color: black;
+    margin-bottom: 0.5rem;
 }
 
-.material-button{
-    margin-top: 0.5rem;
+.material-button {
+    margin-top: 1rem;
     background-color: #252467;
     color: #FFFFFF;
     padding: 0.5rem 1rem;
     text-align: center;
     border-radius: 20px;
+    transition: background-color 0.3s;
+}
+
+.material-button:hover {
+    background-color: #1a194d;
 }
 
 .material-right {
@@ -91,33 +108,67 @@
     padding: 2rem;
     overflow-y: auto;
     background-color: #FFFFFF;
+    border-left: 2px solid #E0E4F0;
 }
 
-.material-right h2{
+.material-right h2 {
     color: black;
     font-weight: bold;
+    margin-bottom: 1.5rem;
 }
 
-.document{
-    margin-top: 2rem;
-    background-color: #FFFFFF;
-    border: 2px dashed #000000;
+.document {
+    margin-top: 1rem;
+    background-color: #F8F9FB;
+    border: 2px dashed #6883BA; /* Cambiado al color de tu marca */
     border-radius: 20px;
     padding: 2rem;
     text-align: center;
     color: #252467;
     font-weight: bold;
+    transition: background-color 0.3s;
 }
 
-.material-save{
+.document:hover {
+    background-color: #EBF0FA;
+}
+
+.material-save {
     margin-top: 2rem;
     display: flex;
     justify-content: center;
 }
 
-.material-save p{
+.material-save p {
     background-color: #6883BA;
     color: #FFFFFF;
     border-radius: 20px;
-    padding: 1rem 2.5rem;
+    padding: 1rem 3rem;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.material-save:hover p {
+    background-color: #556b99;
+    transform: scale(1.02); /* Efecto de click/hover */
+}
+
+/* Ajustes limpios para los inputs */
+.exam-form input[type="text"],
+.exam-form input[type="url"],
+.exam-form select {
+    background-color: #F0F2F7;
+    color: black;
+    border: none !important;
+    padding: 1rem !important;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    font-family: inherit;
+}
+
+.exam-form input:focus,
+.exam-form select:focus {
+    box-shadow: 0 0 0 2px #6883BA; /* Efecto focus para accesibilidad */
 }

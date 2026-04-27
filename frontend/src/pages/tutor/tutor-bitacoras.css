@@ -1,184 +1,138 @@
 .bitacoras {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
     background-color: #F0F2F7;
-}
-
-.bitacora-line{
-    width: 100%;
-    background-color: #F0F2F7;
-    height: 5px;
 }
 
 .bitacoras-content {
     display: flex;
-    flex-direction: row;
-    height: 100%;
+    flex: 1;
+    overflow: hidden;
 }
 
-/* Columna izquierda */
 .bitacoras-left {
-    width: 220px;
-    background-color: #FFFFFF;
-    padding: 1rem;
-    flex-shrink: 0;
+    width: 300px;
+    background-color: #F0F2F7;
+    padding: 2rem;
+    border-right: 1px solid #D1D9E6;
     overflow-y: auto;
-    text-align: left;
 }
 
-.bitacoras-left h3 {
-    color: #6883BA;
-    font-size: 13px;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-}
-
-.month {
-    color: #BBBEC7;
-    font-size: 12px;
-    font-weight: 600;
-    margin: 1rem 0 0.5rem 0;
-}
+.bitacoras-left h3 { color: #252467; margin-bottom: 1.5rem; }
+.month { font-weight: bold; margin-top: 1.5rem; color: #666; }
 
 .bitacora-item {
-    padding: 0.25rem;
-    border-radius: 10px;
+    background: white;
+    padding: 1rem;
+    border-radius: 15px;
+    margin-bottom: 1rem;
     cursor: pointer;
-    margin-bottom: 0.75rem;
+    transition: 0.3s;
 }
 
 .bitacora-item.active {
-    background-color: #9D9CE980;
+    background-color: #6883BA;
+    color: white;
 }
 
-.item-name {
-    font-weight: 600;
-    font-size: 13px;
-    color: black;
-    margin: 0;
-}
+.item-name { font-weight: bold; font-size: 0.9rem; }
+.item-hour, .item-class { font-size: 0.8rem; opacity: 0.8; }
 
-.item-hour {
-    font-size: 11px;
-    color: #BBBEC7;
-    font-weight: bold;
-    margin: 0;
-}
-
-.item-class {
-    font-size: 11px;
-    color: #6883BA;
-    margin: 0;
-}
-
-/* Columna derecha */
 .bitacoras-right {
     flex: 1;
     padding: 2rem;
+    background: white;
     overflow-y: auto;
-    background-color: #F0F2F7;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
 }
 
-.bitacoras-right h2 {
-    color: black;
-    font-weight: 800;
-    margin: 0;
-}
-
-.bitacora-hora {
-    color: #BBBEC7;
-    font-size: 13px;
-    margin: 0;
+.bitacoras-side {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
 .bitacora-row {
     display: flex;
-    flex-direction: row;
     gap: 1rem;
 }
 
 .bitacora-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
-
-.bitacora-group.grow {
+    margin-bottom: 1.5rem;
     flex: 1;
 }
 
 .bitacora-group p {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.bitacora-input-real, .bitacora-text-real {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 10px;
+    border: none;
+    background-color: #F0F2F7;
     color: black;
-    font-size: 13px;
-    margin: 0;
+    font-family: inherit;
 }
 
-.bitacora-input {
-    background-color: #FFFFFF;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 0.75rem;
-    color: #BBBEC7;
-    font-size: 13px;
+.bitacora-text-real {
+    height: 100px;
+    resize: none;
 }
 
-.bitacora-textarea {
-    background-color: #FFFFFF;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 0.75rem;
-    color: #BBBEC7;
-    font-size: 13px;
-    height: 80px;
-}
-
-.bitacora-upload {
-    background-color: #FFFFFF;
-    border: 2px dashed #6883BA;
-    border-radius: 10px;
-    padding: 0.5rem;
-    color: #6883BA;
-    font-size: 11px;
-    text-align: center;
-    cursor: pointer;
-}
-
-/* Selector incidencias */
 .incidencia-selector {
     display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-    margin-top: 0.25rem;
+    gap: 1rem;
+    margin-top: 0.5rem;
 }
 
 .incidencia-btn {
-    flex: 1;
-    text-align: center;
-    padding: 0.5rem;
+    padding: 0.5rem 2rem;
+    background: #F0F2F7;
     border-radius: 10px;
     cursor: pointer;
-    background-color: #F0F2F7;
-    color: black;
-    font-weight: 600;
 }
 
-.incidencia-btn.active {
-    background-color: #93E490;  /* verde para Sí */
-    color: white;
+.incidencia-btn.active { background: #E74C3C; color: white; }
+.incidencia-btn.active-no { background: #2ECC71; color: white; }
+
+.bitacora-upload {
+    border: 2px dashed #6883BA;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 10px;
+    color: #6883BA;
+    cursor: pointer;
 }
 
-.incidencia-btn.active-no {
-    background-color: #E49090;  /* rojo para No */
+.save {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.button {
+    background: #252467;
     color: white;
+    padding: 1rem 3rem;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
 }
 
 .incidencia-extra {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: #FFF5F5;
+    border-radius: 15px;
+    border-left: 5px solid #E74C3C;
+}
+
+.month-select {
+    background-color: #F0F2F7;
+    color: black;
+    border-radius: 10px;
 }

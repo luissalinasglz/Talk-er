@@ -1,28 +1,21 @@
+import { useState, useEffect } from "react";
 import "../tutor-examenes.css"
 
-function ExamenesPanel({ onSeleccionar }) {
-    const examenes = [
-        {
-           id: 1, 
-            nombre: "Examen del verbo to be", 
-            vence: "hoy - 5:59 p.m.", 
-            preguntas: 20, 
-            duracion: 45, 
-            clase: "Inglés A"  
-        },
-        { 
-            id: 2, 
-            nombre: "Examen pasado simple", 
-            vence: "miércoles - 3:58 p.m.", 
-            preguntas: 10, 
-            duracion: 30, 
-            clase: "Inglés B" 
-        },
-    ]
+function ExamenesPanel({ onSeleccionar, onCrearNuevo }) {
+    
+    const [examenes, setExamenes] = useState([
+    { id: 1, nombre: "Examen Diagnóstico Unidad 1", clase: "Inglés A", duracion: 60, vence: "2026-05-15 23:59" },
+    { id: 2, nombre: "Quiz Vocabulario", clase: "Inglés B", duracion: 30, vence: "2026-05-20 18:00" }
+  ]);
+
     return (
-        <div className="examenes-panel">
-            <div className="panel-left">
-                <h2>Examenes Activos</h2>
+        <div className="examenes-panel vista-centrada">
+            <div className="panel-left w-100">
+                <div className="header-flex">
+                    <h2>Exámenes Activos</h2>
+                    <button className="button-save" onClick={onCrearNuevo}>+ Crear Examen</button>
+                </div>
+                
                 {examenes.map((examen) => (
                     <div key={examen.id} className="exam-item">
                         <div className="exam-header">
@@ -44,97 +37,8 @@ function ExamenesPanel({ onSeleccionar }) {
                     </div>
                 ))}
             </div>
-            <div className="panel-right">
-                <h2>Crear Examen</h2>
-                <div className="exam-form">
-                    <p>Titulo examen</p>
-                    <div className="space-form">
-                        <p>Ej:Examen unidad 3</p>
-                    </div>
-                </div>
-
-                <div className="exam-form">
-                    <div className="space">
-                        <div className="left-space">
-                            <p>Clase</p>
-                            <div className="space-form">
-                                <p>Inglés(Nivel)</p>
-                            </div>
-                        </div>
-                        <div className="right-space">
-                            <p>Duración(min)</p>
-                            <div className="space-form">
-                                <p>45</p>
-                            </div>
-                        </div> 
-                    </div>
-                </div>
-
-                <div className="exam-form">
-                    <div className="space">
-                        <div className="left-space">
-                            <p>Fecha límite</p>
-                            <div className="space-form">
-                                <p>dd/mm/aaaa</p>
-                            </div>
-                        </div>
-                        <div className="right-space">
-                            <p>Hora límite</p>
-                            <div className="space-form">
-                                <p>--:--</p>
-                            </div>
-                        </div> 
-                    </div>
-                </div>
-
-                <div className="exam-questions">
-                    <h3>Preguntas</h3>
-                    <div className="questions-container">
-                        <p>Pregunta 1 - Opción Múltiple</p>
-                        <div className="question-space">
-                            <p>Escribe una pregunta</p>
-                        </div>
-                        <div className="options-general">
-                            <div className="left-options">
-                                <div className="options">
-                                    <div className="option-circle"></div>
-                                    <div className="option-space">
-                                        <p>Opción A</p>
-                                    </div>
-                                </div>
-                                <div className="options">
-                                    <div className="option-circle"></div>
-                                    <div className="option-space">
-                                        <p>Opción B</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="right-options">
-                                <div className="options">
-                                    <div className="option-circle"></div>
-                                    <div className="option-space">
-                                        <p>Opción C</p>
-                                    </div>
-                                </div>
-                                <div className="options">
-                                    <div className="option-circle"></div>
-                                    <div className="option-space">
-                                        <p>Opción D</p>
-                                    </div>
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-
-                <div className="buttons-container">
-                    <p className="button-add">Agregar Pregunta</p>
-                    <p className="button-save">Publicar examen</p>
-                </div>
-
-            </div>
         </div>
     );
 }
 
-export default ExamenesPanel
+export default ExamenesPanel;
