@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./tutor-bitacoras.css";
 
 function Bitacoras() {
-    const [incidencia, setIncidencia] = useState(false);
+    const [incidencia, setIncidencia] = useState(null);
 
     return (
         <div className="bitacoras">
@@ -33,84 +33,112 @@ function Bitacoras() {
 
                 <div className="bitacoras-right">
                     <h2>Bitácora - Inglés A - Lunes 9 de Marzo</h2>
-                    <p className="bitacora-hora">3:10 p.m. - 4:50 p.m.</p>
+                    <p className="bitacora-hour">3:10 p.m. - 4:50 p.m.</p>
 
-                    <div className="">
-
-                    </div>
-                    
-                    <div className="bitacora-row">
-                        <div className="bitacora-group">
-                            <p>Clase</p>
-                            <div className="bitacora-input"><p>Inglés (Nivel)</p></div>
-                        </div>
-                        <div className="bitacora-group">
-                        <   p>Fecha de Sesión</p>
-                            <div className="bitacora-input"><p>dd/mm/aaaa</p></div>
-                        </div>
-                        <div className="bitacora-group">
-                            <p>Horario de Sesión</p>
-                            <div className="bitacora-input"><p>--:--</p></div>
-                        </div>
-                    </div>
-
-                    <div className="bitacora-group">
-                        <p>Tema visto</p>
-                        <div className="bitacora-input"><p>Ej: Examen Unidad 3</p></div>
-                    </div>
-
-                    <div className="bitacora-row">
-                        <div className="bitacora-group grow">
-                            <p>Descripción de la sesión</p>
-                            <div className="bitacora-textarea"><p>Ej: Examen Unidad 3</p></div>
-                        </div>
-                        <div className="bitacora-group">
-                            <p>Duración de la sesión (min)</p>
-                            <div className="bitacora-input"></div>
-                            <p>Tareas asignadas</p>
-                            <div className="bitacora-input"></div>
-                            <p>Subir evidencia</p>
-                            <div className="bitacora-upload">
-                                <p>Haz Click para adjuntar un archivo</p>
+                    <div className="bitacoras-side">
+                        <div className="bitacora-right-left">
+                            <div className="bitacora-row">
+                                <div className="bitacora-group">
+                                    <p>Clase</p>
+                                    <div className="bitacora-input">
+                                        <p>Inglés (Nivel)</p>
+                                    </div>
+                                </div>
+                                <div className="bitacora-group">
+                                    <p>Fecha de Sesión</p>
+                                    <div className="bitacora-input">
+                                        <p>dd/mm/aaaa</p>
+                                    </div>
+                                </div>
                             </div>
 
-                            <p>Hubo <strong>incidencias</strong> en la clase</p>
-                            <div className="incidencia-selector">
-                                <div
-                                className={`incidencia-btn ${incidencia ? "active" : ""}`}
-                                onClick={() => setIncidencia(true)}>
-                                    Sí
+                            <div className="bitacora-group">
+                                <p>Tema visto</p>
+                                <div className="bitacora-input">
+                                    <p>Ej: Unidad 3</p>
                                 </div>
-                                <div
-                                className={`incidencia-btn ${!incidencia ? "active-no" : ""}`}
-                                onClick={() => setIncidencia(false)}>
-                                    No
+                            </div>
+
+                            <div className="bitacora-group grow">
+                                <p>Descripción de la sesión</p>
+                                <div className="bitacora-text">
+                                    <p>Ej: Se vio la Unidad 3</p>
+                                </div>
+                            </div>
+
+                            <div className="bitacora-group grow">
+                                <p>Planeación de la siguiente sesión</p>
+                                <div className="bitacora-text">
+                                    <p>Ej: Habrá examen de Unidad 3</p>
                                 </div>
                             </div>
                         </div>
+
+                        <div className="bitacora-right-right">
+                            <div className="bitacora-group">
+                                <p>Horario de Sesión</p>
+                                <div className="bitacora-input">
+                                    <p>--:--</p>
+                                </div>
+                            </div>
+
+                            <div className="bitacora-group">
+                                <p>Duración de la sesión(min)</p>
+                                <div className="bitacora-input">
+                                </div>
+                            </div>
+
+                            <div className="bitacora-group">
+                                <p>Tareas asignadas</p>
+                                <div className="bitacora-input">
+                                </div>
+                            </div>
+
+                            <div className="bitacora-group">
+                                <p>Subir evidencia</p>
+                                <div className="bitacora-upload">
+                                    <p>Haz Click para adjuntar un archivo</p>
+                                </div>
+                            </div>
+
+                            <div className="bitacora-group">
+                                <p>Hubo <strong>incidencias</strong> en la clase</p>
+                                <div className="incidencia-selector">
+                                    <div
+                                        className={`incidencia-btn ${incidencia === true ? "active" : ""}`}
+                                        onClick={() => setIncidencia(true)}>
+                                        Sí
+                                    </div>
+                                    <div
+                                        className={`incidencia-btn ${incidencia === false ? "active-no" : ""}`}
+                                        onClick={() => setIncidencia(false)}>
+                                        No
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="bitacora-group">
-                        <p>Planeación de la siguiente sesión</p>
-                        <div className="bitacora-textarea"><p>Ej: Examen Unidad 3</p></div>
-                    </div>
-
-                    {incidencia && (
+                    {incidencia === true && (
                         <div className="incidencia-extra">
-                        <div className="bitacora-group">
-                            <p>Resumen</p>
-                            <div className="bitacora-textarea"><p>Ej: Examen Unidad 3</p></div>
-                        </div>
-                        <div className="bitacora-group">
-                            <p>Descripción de la incidencia</p>
-                            <div className="bitacora-textarea"><p>Ej: Examen Unidad 3</p></div>
-                        </div>
+                            <div className="bitacora-group">
+                                <p>Resumen</p>
+                                <div className="bitacora-text">
+                                    <p>Ej: Llegada tarde 3</p>
+                                </div>
+                            </div>
+                            <div className="bitacora-group">
+                                <p>Descripción de la incidencia</p>
+                                <div className="bitacora-text">
+                                    <p>Ej: El alumno se presento 30min tarde 3</p>
+                                </div>
+                            </div>
                         </div>
                     )}
 
                     <div className="save">
                         <div className="button">Guardar Bitácora</div>
-                    </div>
+                    </div>       
                 </div>
             </div>
         </div>

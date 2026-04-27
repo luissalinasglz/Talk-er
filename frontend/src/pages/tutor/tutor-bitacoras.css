@@ -1,23 +1,18 @@
+/*Estructura General*/
 .bitacoras {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
     background-color: #F0F2F7;
-}
-
-.bitacora-line{
-    width: 100%;
-    background-color: #F0F2F7;
-    height: 5px;
 }
 
 .bitacoras-content {
     display: flex;
     flex-direction: row;
-    height: 100%;
+    height: calc(100vh - 5px); 
 }
 
-/* Columna izquierda */
+/*Left side*/
 .bitacoras-left {
     width: 220px;
     background-color: #FFFFFF;
@@ -72,50 +67,63 @@
     margin: 0;
 }
 
-/* Columna derecha */
+
+/* Right-side*/
 .bitacoras-right {
     flex: 1;
-    padding: 2rem;
+    padding: 2rem 3rem;
     overflow-y: auto;
     background-color: #F0F2F7;
     text-align: left;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
 }
 
+/* Títulos y horas */
 .bitacoras-right h2 {
     color: black;
     font-weight: 800;
     margin: 0;
+    font-size: 24px;
 }
 
-.bitacora-hora {
+.bitacora-hour {
     color: #BBBEC7;
-    font-size: 13px;
-    margin: 0;
+    font-size: 14px;
+    margin-bottom: 1.5rem;
 }
 
-.bitacora-row {
+.bitacoras-side {
     display: flex;
     flex-direction: row;
-    gap: 1rem;
+    gap: 2.5rem; 
+    width: 100%;
+}
+
+.bitacora-right-left {
+    flex: 1.1; 
+    display: flex;
+    flex-direction: column;
+}
+
+.bitacora-right-right {
+    flex: 0.9; 
+    display: flex;
+    flex-direction: column;
 }
 
 .bitacora-group {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
-}
-
-.bitacora-group.grow {
-    flex: 1;
+    margin-bottom: 1.2rem;
+    width: 100%;
 }
 
 .bitacora-group p {
     color: black;
     font-size: 13px;
-    margin: 0;
+    font-weight: 600;
+    margin: 0 0 8px 0; 
 }
 
 .bitacora-input {
@@ -123,18 +131,40 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 0.75rem;
-    color: #BBBEC7;
-    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 45px;
+    display: flex;
+    align-items: center;
 }
 
-.bitacora-textarea {
+.bitacora-input p {
+    color: #BBBEC7 !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+}
+
+.bitacora-text {
     background-color: #FFFFFF;
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 0.75rem;
-    color: #BBBEC7;
-    font-size: 13px;
-    height: 80px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 100px; 
+}
+
+.bitacora-text p {
+    color: #BBBEC7 !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+}
+
+.bitacora-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%;
 }
 
 .bitacora-upload {
@@ -143,42 +173,69 @@
     border-radius: 10px;
     padding: 0.5rem;
     color: #6883BA;
-    font-size: 11px;
+    font-size: 12px;
     text-align: center;
     cursor: pointer;
 }
 
-/* Selector incidencias */
 .incidencia-selector {
     display: flex;
     flex-direction: row;
     gap: 0.5rem;
-    margin-top: 0.25rem;
 }
 
 .incidencia-btn {
     flex: 1;
     text-align: center;
-    padding: 0.5rem;
+    padding: 0.6rem;
     border-radius: 10px;
     cursor: pointer;
-    background-color: #F0F2F7;
-    color: black;
+    background-color: #FFFFFF;
+    color: #333;
     font-weight: 600;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    transition: 0.3s;
 }
 
 .incidencia-btn.active {
-    background-color: #93E490;  /* verde para Sí */
+    background-color: #93E490;
     color: white;
+    border-color: #93E490;
 }
 
 .incidencia-btn.active-no {
-    background-color: #E49090;  /* rojo para No */
+    background-color: #E49090;
     color: white;
+    border-color: #E49090;
 }
 
 .incidencia-extra {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #ddd;
+}
+
+.save {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem;
+}
+
+.save .button {
+    background-color: #6883BA;
+    color: white;
+    padding: 0.8rem 4rem;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.save .button:hover {
+    background-color: #5571A8;
 }
