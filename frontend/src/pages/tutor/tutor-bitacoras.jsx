@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./tutor-bitacoras.css";
 
 function Bitacoras() {
-    const [incidencia, setIncidencia] = useState(false);
+    const [incidencia, setIncidencia] = useState(null);
 
     return (
         <div className="bitacoras">
@@ -55,21 +55,21 @@ function Bitacoras() {
                             <div className="bitacora-group">
                                 <p>Tema visto</p>
                                 <div className="bitacora-input">
-                                    <p>Ej: Examen Unidad 3</p>
+                                    <p>Ej: Unidad 3</p>
                                 </div>
                             </div>
 
                             <div className="bitacora-group grow">
                                 <p>Descripción de la sesión</p>
                                 <div className="bitacora-text">
-                                    <p>Ej: Examen Unidad 3</p>
+                                    <p>Ej: Se vio la Unidad 3</p>
                                 </div>
                             </div>
 
                             <div className="bitacora-group grow">
                                 <p>Planeación de la siguiente sesión</p>
                                 <div className="bitacora-text">
-                                    <p>Ej: Examen Unidad 3</p>
+                                    <p>Ej: Habrá examen de Unidad 3</p>
                                 </div>
                             </div>
                         </div>
@@ -105,12 +105,12 @@ function Bitacoras() {
                                 <p>Hubo <strong>incidencias</strong> en la clase</p>
                                 <div className="incidencia-selector">
                                     <div
-                                        className={`incidencia-btn ${incidencia ? "active" : ""}`}
+                                        className={`incidencia-btn ${incidencia === true ? "active" : ""}`}
                                         onClick={() => setIncidencia(true)}>
                                         Sí
                                     </div>
                                     <div
-                                        className={`incidencia-btn ${!incidencia ? "active-no" : ""}`}
+                                        className={`incidencia-btn ${incidencia === false ? "active-no" : ""}`}
                                         onClick={() => setIncidencia(false)}>
                                         No
                                     </div>
@@ -119,18 +119,18 @@ function Bitacoras() {
                         </div>
                     </div>
 
-                    {incidencia && (
+                    {incidencia === true && (
                         <div className="incidencia-extra">
                             <div className="bitacora-group">
                                 <p>Resumen</p>
                                 <div className="bitacora-text">
-                                    <p>Ej: Examen Unidad 3</p>
+                                    <p>Ej: Llegada tarde 3</p>
                                 </div>
                             </div>
                             <div className="bitacora-group">
                                 <p>Descripción de la incidencia</p>
                                 <div className="bitacora-text">
-                                    <p>Ej: Examen Unidad 3</p>
+                                    <p>Ej: El alumno se presento 30min tarde 3</p>
                                 </div>
                             </div>
                         </div>
