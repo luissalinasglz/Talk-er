@@ -91,6 +91,27 @@ CREATE TABLE IF NOT EXISTS `periods` (
 	PRIMARY KEY (`id`)
 );
 
+CREATE TABLE IF NOT EXISTS examenes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tutor_id INT NOT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    clase VARCHAR(100),
+    duracion INT,
+    fecha_limite DATETIME,
+    FOREIGN KEY (tutor_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS preguntas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    examen_id INT NOT NULL,
+    texto_pregunta TEXT NOT NULL,
+    opcion_a VARCHAR(255),
+    opcion_b VARCHAR(255),
+    opcion_c VARCHAR(255),
+    opcion_d VARCHAR(255),
+    FOREIGN KEY (examen_id) REFERENCES examenes(id) ON DELETE CASCADE
+);
+
 ALTER TABLE `users` ADD CONSTRAINT `users_fk6` FOREIGN KEY (`period`) REFERENCES `periods`(`id`);
 ALTER TABLE `sessions` ADD CONSTRAINT `sessions_fk1` FOREIGN KEY (`student_tutor`) REFERENCES `student_tutor`(`id`);
 ALTER TABLE `student_tutor` ADD CONSTRAINT `student_tutor_fk1` FOREIGN KEY (`tutor`) REFERENCES `users`(`id`);
@@ -112,3 +133,32 @@ VALUES ('Admin', 'Admin', 'A01752364', 'Admin134679$', 'admin', 1),
 ('Beto', 'Supervisor', 'A01425602', 'Beto258369$', 'supervisor', 1),
 ('Dari', 'Tutora', 'A01425755', 'DArI1607#$', 'teacher', 1),
 ('Wicho', 'Estudiante', 'TwinchoSalinasFJ26', 'TwinchoPro123$', 'student', 1);
+
+
+INSERT INTO student_tutor (tutor, student, idioma, start_date, end_date)
+VALUES (3, 4, 'english', '2026-02-10', '2026-06-25');
+
+INSERT INTO assignments (`group`, title, description, due_date)
+VALUES (1, 'Lección del verbo to be', 'Completa los ejercicios de la página 24 de tu libro de trabajo.', '2026-04-28 23:59:59'),
+       (1, 'Lección pasado simple', 'Escribe un ensayo corto de 300 palabras.', '2026-04-30 18:00:00');
+
+INSERT INTO submissions (assignment, file, grade, feedback, submitted_at)
+VALUES (1, 'Verbo_to_be-Wicho.pdf', NULL, '', '2026-04-27 10:15:00');
+
+INSERT INTO sessions (student_tutor, session_url, start_time, end_time)
+VALUES 
+(1, 'https://zoom.us/j/1234567890?pwd=demo', '2026-05-05 16:00:00', '2026-05-05 17:00:00'),
+(1, 'https://zoom.us/j/1234567890?pwd=demo', '2026-05-12 16:00:00', '2026-05-12 17:00:00');
+
+INSERT INTO sessions (student_tutor, session_url, start_time, end_time)
+VALUES 
+(1, 'https://zoom.us/j/1112223333', '2026-04-20 16:00:00', '2026-04-20 17:00:00'),
+(1, 'https://zoom.us/j/4445556666', '2026-04-22 16:00:00', '2026-04-22 17:00:00');
+
+INSERT INTO session_logs (session_id, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
+VALUES 
+(3, 'El alumno repasó el verbo to be de forma excelente. Mostró buena actitud y participamos en un juego de roles.', 'https://drive.google.com/file/d/demo1', 'Se planeó repasar la unidad 1 del libro.', FALSE, NULL, NULL, TRUE, '', TRUE);
+
+INSERT INTO session_logs (session_id, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
+VALUES 
+(4, 'Se intentó avanzar con el pasado simple, pero no hubo mucho tiempo.', 'https://drive.google.com/file/d/demo2', 'Avanzar a la unidad 2.', TRUE, 'assistance', 'El alumno se conectó 25 minutos tarde a la sesión sin avisar.', FALSE, 'Favor de contactar a coordinación para justificar.', FALSE);

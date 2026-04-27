@@ -1,9 +1,14 @@
 import "../tutor-examenes.css"
 
-function ExamenesResultados({ examen }) {
+function ExamenesResultados({ examen, onVolver }) {
     return (
         <div className="examenes-resultados">
             <div className="results-left">
+                {/* Botón para regresar */}
+                <button className="button-add" onClick={onVolver} style={{ width: 'auto', marginBottom: '1.5rem', backgroundColor: '#e0e0e0', color: '#333' }}>
+                    ← Volver al Panel
+                </button>
+                
                 <h2>Resultados - Examen: Verbo To Be</h2>
                 <div className="general-info">
                     <div className="student-info">
@@ -23,7 +28,7 @@ function ExamenesResultados({ examen }) {
                         <p>20</p>
                     </div>
                     <div className="answers">
-                        <p>Inorrectas</p>
+                        <p>Incorrectas</p>
                         <p>0</p>
                     </div>
                     <div className="answers">
@@ -42,7 +47,7 @@ function ExamenesResultados({ examen }) {
                                 usa correctamente el verbo "to be" 
                                 en presente?</p>
                         </div>
-                        <div className="options-general">
+                        <div className="options-general-results">
                             <div className="answers-side">
                                 <div className="answers-left">
                                     <div className="option-circle"></div>
@@ -72,12 +77,14 @@ function ExamenesResultados({ examen }) {
             <div className="results-right">
                 <h2>Retroalimentación</h2>
                 <p>Mensaje al alumno:</p>
-                <div className="fedback-space">
-                    <p>Ej: Mejorar expresiones</p>
-                </div>
+                <textarea 
+                    className="feedback-input" 
+                    placeholder="Ej: Muy buen trabajo, solo recuerda repasar las expresiones..."
+                ></textarea>
+                <button className="button-save" style={{marginTop: '1rem', width: '100%'}}>Enviar Feedback</button>
             </div>
         </div>
     );
 }
 
-export default ExamenesResultados
+export default ExamenesResultados;

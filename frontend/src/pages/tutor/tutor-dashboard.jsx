@@ -41,7 +41,7 @@ function Dashboard() {
                 <div className="circle"></div>
                 <div className="side">
                   <p>Inglés A</p>
-                  <p className="groups">Lunes y Jueves 3:10 p.m. - 4:50 p.m.</p>
+                  <p className="groups">Lunes y Jueves 3:10 p.m. - 4:10 p.m.</p>
                 </div>
               </div>
               
@@ -73,7 +73,7 @@ function Dashboard() {
                 <tr>
                   <td className="hora">2:00</td>
                   <td></td>
-                  <td rowspan={2}>
+                  <td rowSpan={2}>
                     <div className="evento">
                       <p>Inglés A</p> 
                       <p>3:10 - 4:50</p>
@@ -81,7 +81,7 @@ function Dashboard() {
                   </td>
                   <td></td>
                   <td></td>
-                  <td rowspan={2}>
+                  <td rowSpan={2}>
                     <div className="evento">
                       <p>Inglés A</p> 
                       <p>3:10 - 4:50</p>
@@ -113,14 +113,14 @@ function Dashboard() {
                 <tr>
                   <td className="hora">5:00</td>
                   <td></td>
-                 <td rowspan={2}>
+                 <td rowSpan={2}>
                     <div className="evento">
                       <p>Inglés B</p> 
                       <p>5:10 - 6:50</p>
                     </div>
                   </td>
                   <td></td>
-                  <td rowspan={2}>
+                  <td rowSpan={2}>
                     <div className="evento">
                       <p>Inglés B</p> 
                       <p>5:10 - 6:50</p>
@@ -196,7 +196,6 @@ function Dashboard() {
                   <p className="groups">Inglés B</p>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>

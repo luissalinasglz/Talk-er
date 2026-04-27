@@ -1,24 +1,31 @@
-import "../tutor-tareas.css"
+import "../tutor-tareas.css";
 
-function TareasLista({ onSeleccionar }) {
-  const tareas = [
-    { id: 1, nombre: "Lección del verbo to be", vence: "hoy - 11:59 p.m.", grupo: "Inglés A" },
-    { id: 2, nombre: "Lección pasado simple",   vence: "hoy - 11:59 p.m.", grupo: "Inglés B" },
-  ];
-
+function TareasLista({ tareas, onSeleccionar }) {
   return (
     <div className="homework-list">
       <h3>Tareas Activas</h3>
-      {tareas.map((tarea) => (
-        <div key={tarea.id} className="homework-item" onClick={() => onSeleccionar(tarea)}>
-          <div className="homework-indicator"></div>
-          <div className="homework-info">
-            <p className="homework-name">{tarea.nombre}</p>
-            <p className="homework-date">Vence {tarea.vence}</p>
+      
+      {tareas.length === 0 ? (
+        <p>No hay tareas activas en este momento.</p>
+      ) : (
+        tareas.map((tarea) => (
+          <div
+            key={tarea.id}
+            className="homework-item"
+            onClick={() => onSeleccionar(tarea)}
+            style={{ cursor: "pointer" }}
+          >
+            <div className="homework-indicator"></div>
+            <div className="homework-info">
+              <p className="homework-name">{tarea.titulo}</p>
+              <p className="homework-date">
+                Vence {tarea.fechaEntrega} a las {tarea.horaLimite}
+              </p>
+            </div>
+            <p className="homework-class">{tarea.beneficiario}</p>
           </div>
-          <p className="homework-class">{tarea.grupo}</p>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }
