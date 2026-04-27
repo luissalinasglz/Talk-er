@@ -10,19 +10,3 @@ html, body, #root{
     margin: 0;
     padding: 0;
 }
-
-.app{
-    display: grid;
-    grid-template-columns: 7% 1fr;
-    grid-template-rows: 10% 1fr;
-    grid-template-areas: "sidebar header" "sidebar main";
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-}
-
-.main{
-    grid-area: main;
-    overflow-y: auto;
-    background-color:#F0F2F7;
-}

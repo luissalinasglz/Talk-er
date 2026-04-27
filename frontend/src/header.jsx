@@ -5,7 +5,7 @@ function Header(){
 
     const daysWeek = [
         'Domingo', 'Lunes', 'Martes', 'Miércoles', 
-        'Jueves', 'Viernes', 'Sábado', 'Domingo'
+        'Jueves', 'Viernes', 'Sábado'
     ]
 
     const months = [

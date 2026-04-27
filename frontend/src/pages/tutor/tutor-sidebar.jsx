@@ -7,7 +7,6 @@ import ligasIcon from "../../assets/ligas.png";
 import tareasIcon from "../../assets/tarea.png";
 import examenIcon from "../../assets/examenes.png";
 import materialIcon from "../../assets/material.png";
-import anunciosIcon from "../../assets/anuncios.png";
 import bitacoraIcon from "../../assets/bitacora.png";
 import dashboardIcon from "../../assets/dashboard.png";
 import profileWhite from "../../assets/profile-white.png";
@@ -50,11 +49,6 @@ function SidebarTutor() {
         <NavLink to={`${base}/material`} className="option">
           <img className="icon" src={materialIcon} alt="" />
           <p>Material</p>
-        </NavLink>
-
-        <NavLink to={`${base}/anuncios`} className="option">
-          <img className="icon" src={anunciosIcon} alt="" />
-          <p>Anuncios</p>
         </NavLink>
 
         <NavLink to={`${base}/bitacora`} className="option">
