@@ -144,6 +144,14 @@ function Ligas() {
           <div className="line"></div>
 
           <div className="form-group">
+            <p>Seleccionar Clase</p>
+            <input
+                type="text"
+                placeholder="Ej: Inglés(Nivel)"
+              />
+          </div>
+
+          <div className="form-group">
             <p>Plataforma</p>
             <select
               value={platform}
