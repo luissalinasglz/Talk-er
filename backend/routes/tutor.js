@@ -5,7 +5,6 @@ import { Verify } from "../middleware/verify.js";
 const router = express.Router();
 
 // get groups
-
 router.get("/my-groups", Verify, async (req, res) => {
   try {
     const tutorId = req.user.id;
@@ -23,6 +22,38 @@ router.get("/my-groups", Verify, async (req, res) => {
     res.json(rows);
   } catch (error) {
     res.status(500).json({ message: "Error obteniendo grupos" });
+  }
+});
+
+router.get("/my-groups/today", Verify, async (req, res) => {
+  try {
+    const tutorId = req.user.id;
+
+    const diaHoy = new Date().getDay(); 
+
+    const [rows] = await pool.query(`
+      SELECT 
+        st.id,
+        st.idioma,
+        CONCAT(u.name, ' ', u.last_name) AS student_name,
+        h.hora_inicio,
+        h.hora_fin
+      FROM student_tutor st
+      JOIN users u ON u.id = st.student
+      JOIN horarios h ON h.student_tutor_id = st.id
+      WHERE st.tutor = ? 
+      AND h.dia_semana = ?
+      AND NOT EXISTS (
+          SELECT 1 FROM sessions s 
+          WHERE s.student_tutor = st.id 
+          AND DATE(s.start_time) = CURDATE()
+      )
+    `, [tutorId, diaHoy]);
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Error al consultar pendientes de hoy:", error);
+    res.status(500).json({ message: "Error obteniendo grupos de hoy" });
   }
 });
 
@@ -80,7 +111,7 @@ router.get("/examenes", Verify, async (req, res) => {
 router.get("/tareas", Verify, async (req, res) => {
   try {
     const tutorId = req.user.id;
-    
+
     const [rows] = await pool.query(`
       SELECT 
         a.id, 
@@ -109,12 +140,12 @@ router.post("/tareas", Verify, async (req, res) => {
     let { titulo, descripcion, fechaEntrega, horaLimite, group_id } = req.body;
 
     if (!group_id) {
-       const [groups] = await pool.query("SELECT id FROM student_tutor WHERE tutor = ? LIMIT 1", [tutorId]);
-       if (groups.length > 0) {
-           group_id = groups[0].id;
-       } else {
-           return res.status(400).json({ message: "El tutor no tiene alumnos asignados" });
-       }
+      const [groups] = await pool.query("SELECT id FROM student_tutor WHERE tutor = ? LIMIT 1", [tutorId]);
+      if (groups.length > 0) {
+        group_id = groups[0].id;
+      } else {
+        return res.status(400).json({ message: "El tutor no tiene alumnos asignados" });
+      }
     }
 
     const due_date = `${fechaEntrega} ${horaLimite}:00`;
@@ -124,15 +155,15 @@ router.post("/tareas", Verify, async (req, res) => {
       VALUES (?, ?, ?, ?)
     `, [group_id, titulo, descripcion, due_date]);
 
-    res.json({ 
-        message: "Tarea creada con éxito", 
-        tarea: {
-            id: result.insertId,
-            titulo,
-            descripcion,
-            fechaEntrega,
-            horaLimite
-        }
+    res.json({
+      message: "Tarea creada con éxito",
+      tarea: {
+        id: result.insertId,
+        titulo,
+        descripcion,
+        fechaEntrega,
+        horaLimite
+      }
     });
 
   } catch (error) {
@@ -166,6 +197,32 @@ router.post("/examenes", Verify, async (req, res) => {
   } catch (error) {
     await connection.rollback();
     res.status(500).json({ message: "Error al guardar el examen" });
+  } finally {
+    connection.release();
+  }
+});
+
+router.post("/horarios", Verify, async (req, res) => {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    const { group_id, dias, hora_inicio, hora_fin } = req.body;
+
+    await connection.query("DELETE FROM horarios WHERE student_tutor_id = ?", [group_id]);
+
+    for (const dia of dias) {
+      await connection.query(
+        "INSERT INTO horarios (student_tutor_id, dia_semana, hora_inicio, hora_fin) VALUES (?, ?, ?, ?)",
+        [group_id, dia, hora_inicio, hora_fin]
+      );
+    }
+
+    await connection.commit();
+    res.json({ message: "Horario guardado con éxito" });
+  } catch (error) {
+    await connection.rollback();
+    console.error("Error al guardar horario:", error);
+    res.status(500).json({ message: "Error al guardar el horario" });
   } finally {
     connection.release();
   }

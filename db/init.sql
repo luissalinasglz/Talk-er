@@ -80,6 +80,16 @@ CREATE TABLE IF NOT EXISTS `reviewer_tutor` (
 	PRIMARY KEY (`id`)
 );
 
+CREATE TABLE IF NOT EXISTS `horarios` (
+    `id` int AUTO_INCREMENT NOT NULL UNIQUE,
+    `student_tutor_id` int NOT NULL,
+    `dia_semana` int NOT NULL, -- 0=Domingo, 1=Lunes, 2=Martes, 3=Miércoles, 4=Jueves, 5=Viernes, 6=Sábado
+    `hora_inicio` time NOT NULL,
+    `hora_fin` time NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`student_tutor_id`) REFERENCES `student_tutor`(`id`) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS `periods` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`name` varchar(50) NOT NULL UNIQUE,
@@ -132,11 +142,12 @@ INSERT INTO users (name, last_name, username, password_hash, role, period)
 VALUES ('Admin', 'Admin', 'A01752364', 'Admin134679$', 'admin', 1),
 ('Beto', 'Supervisor', 'A01425602', 'Beto258369$', 'supervisor', 1),
 ('Dari', 'Tutora', 'A01425755', 'DArI1607#$', 'teacher', 1),
-('Wicho', 'Estudiante', 'TwinchoSalinasFJ26', 'TwinchoPro123$', 'student', 1);
-
+('Wicho', 'Estudiante', 'TwinchoSalinasFJ26', 'TwinchoPro123$', 'student', 1),
+('Sebastian', 'Estudiante', 'SebastianPonceFJ26', 'SebasPro123', 'student', '1');
 
 INSERT INTO student_tutor (tutor, student, idioma, start_date, end_date)
-VALUES (3, 4, 'english', '2026-02-10', '2026-06-25');
+VALUES (3, 4, 'english', '2026-02-10', '2026-06-25'),
+(3, 5, 'french', '2026-02-10', '2026-06-25');
 
 INSERT INTO assignments (`group`, title, description, due_date)
 VALUES (1, 'Lección del verbo to be', 'Completa los ejercicios de la página 24 de tu libro de trabajo.', '2026-04-28 23:59:59'),
@@ -162,3 +173,6 @@ VALUES
 INSERT INTO session_logs (session_id, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
 VALUES 
 (4, 'Se intentó avanzar con el pasado simple, pero no hubo mucho tiempo.', 'https://drive.google.com/file/d/demo2', 'Avanzar a la unidad 2.', TRUE, 'assistance', 'El alumno se conectó 25 minutos tarde a la sesión sin avisar.', FALSE, 'Favor de contactar a coordinación para justificar.', FALSE);
+
+INSERT INTO horarios (student_tutor_id, dia_semana, hora_inicio, hora_fin)
+VALUES (1, 4, '15:00:00', '16:00:00');
