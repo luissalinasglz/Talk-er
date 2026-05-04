@@ -1,7 +1,7 @@
 .ligas {
   display: flex;
   flex-direction: row;
-  height: 100vh; 
+  height: 100vh;
   background-color: #F0F2F7;
 }
 
@@ -52,12 +52,7 @@
 
 .class-item.active {
   background-color: #6883BA80;
-  border: 3px solid #6883BA;
-}
-
-.info-class {
-  color: #8c8f97;
-  font-size: 10px;
+  border-color: #6883BA;
 }
 
 .info-student {
@@ -66,6 +61,20 @@
   margin-top: 0.2rem !important;
 }
 
+.class-time {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.class-time--active {
+  color: #fff;
+}
+
+.empty-message {
+  padding: 1rem;
+  color: #666;
+}
 
 .ligas-content {
   display: flex;
@@ -116,6 +125,47 @@
   width: 100%;
   height: 3px;
   margin-bottom: 2rem;
+}
+
+.schedule-box {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.schedule-box__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schedule-box__label {
+  margin: 0;
+  color: #333;
+}
+
+.schedule-box__toggle {
+  background: none;
+  border: none;
+  color: #252467;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.schedule-box__fields {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  border-top: 1px solid #ddd;
+  padding-top: 1rem;
+}
+
+.schedule-box__fields .form-group {
+  flex: 1;
+  margin: 0;
 }
 
 .form-group {
@@ -191,7 +241,7 @@
 
 .success-message {
   color: #1f7a1f;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   font-weight: bold;
   text-align: right;
 }

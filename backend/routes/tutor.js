@@ -25,6 +25,29 @@ router.get("/my-groups", Verify, async (req, res) => {
   }
 });
 
+router.get("/horario", Verify, async (req, res) => {
+  try {
+    const tutorId = req.user.id;
+
+    const [rows] = await pool.query(`
+      SELECT 
+        CONCAT(u.name, ' ', u.last_name) AS student_name,
+        h.dia_semana,
+        h.hora_inicio,
+        h.hora_fin
+      FROM horarios h
+      JOIN student_tutor st ON h.student_tutor_id = st.id
+      JOIN users u ON st.student = u.id
+      WHERE st.tutor = ?
+      `, [tutorId]);
+
+      res.json(rows);
+  } catch(error){
+    console.log("Error en el horario: ", error);
+    res.status(500).json({ message: "Error al cargar el horario" });
+  }
+});
+
 router.get("/my-groups/today", Verify, async (req, res) => {
   try {
     const tutorId = req.user.id;
@@ -80,16 +103,22 @@ router.get("/sessions/:groupId", Verify, async (req, res) => {
 
 router.post("/sessions", Verify, async (req, res) => {
   try {
-    const { student_tutor, session_url, start_time, end_time } = req.body;
+    const { student_tutor, session_url, platform, password, start_time, end_time } = req.body;
 
-    await pool.query(`
-      INSERT INTO sessions(student_tutor, session_url, start_time, end_time)
-      VALUES (?, ?, ?, ?)
-    `, [student_tutor, session_url, start_time, end_time]);
+    console.log(`\n--- INTENTANDO GUARDAR SESIÓN ---`);
+    console.log(`Datos recibidos:`, req.body);
+ await pool.query(`
+      INSERT INTO sessions (student_tutor, session_url, platform, password, start_time, end_time)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `, [student_tutor, session_url, platform, password, start_time, end_time]);
+
+    console.log("Sesion insertada en la DB");
+    console.log(`---------------------------------\n`);
 
     res.json({ message: "Guardado correctamente" });
-  } catch {
-    res.status(500).json({ message: "Error guardando sesión" });
+  } catch (error) {
+    console.error("\nERROR AL GUARDAR SESION:", error);
+    res.status(500).json({ message: "Error guardando sesión", details: error.message });
   }
 });
 
@@ -206,14 +235,14 @@ router.post("/horarios", Verify, async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
-    const { group_id, dias, hora_inicio, hora_fin } = req.body;
+   const { group_id, horarios } = req.body;
 
     await connection.query("DELETE FROM horarios WHERE student_tutor_id = ?", [group_id]);
 
-    for (const dia of dias) {
+    for (const horario of horarios) {
       await connection.query(
         "INSERT INTO horarios (student_tutor_id, dia_semana, hora_inicio, hora_fin) VALUES (?, ?, ?, ?)",
-        [group_id, dia, hora_inicio, hora_fin]
+        [group_id, horario.dia, horario.hora_inicio, horario.hora_fin]
       );
     }
 

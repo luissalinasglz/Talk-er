@@ -26,7 +26,6 @@
 }
 
 .class-item {
-    padding-left: 0.75rem;
     padding: 0.6rem 1rem;
     margin-top: 2rem;
 }
@@ -38,7 +37,12 @@
     padding: 0.75rem;
 }
 
-/*Contenido*/
+.info-student {
+    color: #6883BA;
+    font-size: 12px;
+    margin-top: 0.2rem;
+}
+
 .sessions-content {
     display: flex;
     flex-direction: column;
@@ -53,6 +57,15 @@
     text-align: left;
     padding: 1.5rem;
     border-radius: 20px;
+}
+
+.blue-rectangle h2 {
+    margin: 0 0 0.5rem 0;
+}
+
+.blue-rectangle p {
+    margin: 0;
+    color: #BBBEC7;
 }
 
 .info-rectangle {
@@ -75,10 +88,59 @@
     flex-direction: column;
 }
 
+.select-day__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.custom-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #666;
+    user-select: none;
+}
+
+.custom-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-track {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    background-color: #BBBEC7;
+    border-radius: 20px;
+    transition: background-color 0.25s ease;
+    flex-shrink: 0;
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.25s ease;
+}
+
+.custom-toggle input:checked+.toggle-track {
+    background-color: #6883BA;
+}
+
+.custom-toggle input:checked+.toggle-track .toggle-thumb {
+    transform: translateX(18px);
+}
+
 .weekdays {
     display: flex;
     flex-direction: row;
-    gap: 3.5rem;
+    gap: 3rem;
     padding-top: 2rem;
     padding-left: 1rem;
 }
@@ -89,11 +151,14 @@
     border-radius: 20px;
     width: 130px;
     text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .day.active {
     background-color: #6883BA80;
-    border: 3px solid #6883BA;
+    border: 1px solid #6883BA;
+    transform: scale(1.1);
 }
 
 .select-hour {
@@ -117,6 +182,34 @@
     padding: 1rem;
 }
 
+.time input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 1rem;
+    color: #666;
+}
+
+.custom-times {
+    margin-top: 20px;
+}
+
+.custom-times__row {
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.custom-times__label {
+    width: 80px;
+    font-weight: bold;
+}
+
+.form-message {
+    color: #252467;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
 .save {
     display: flex;
     justify-content: center;
@@ -128,13 +221,12 @@
     color: #FFFFFF;
     padding: 1rem 2rem;
     border-radius: 30px;
+    border: none;
+    font-size: 1rem;
+    font-family: inherit;
     cursor: pointer;
 }
 
-.time input {
-    border: none;
-    background: transparent;
-    outline: none;
-    font-size: 1rem;
-    color: #666;
+.button:hover {
+    background-color: #4f6ea8;
 }

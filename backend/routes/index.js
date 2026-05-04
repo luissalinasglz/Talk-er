@@ -1,10 +1,12 @@
 import { Verify } from '../middleware/verify.js';
 import Auth from './auth.js';
 import Tutor from './tutor.js';
+import Student from './student.js';
 
 const Router = (server) => {
     server.use('/v1/auth', Auth);
     server.use('/v1/tutor', Tutor);
+    server.use('/v1/student', Student);
 
     server.get('/v1/user', Verify, (req, res) => {
         res.status(200).json({

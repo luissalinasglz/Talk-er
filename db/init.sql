@@ -12,12 +12,14 @@ CREATE TABLE IF NOT EXISTS `users` (
 );
 
 CREATE TABLE IF NOT EXISTS `sessions` (
-	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
-	`student_tutor` int NOT NULL,
-	`session_url` varchar(150) NOT NULL,
-	`start_time` timestamp NOT NULL,
-	`end_time` timestamp NOT NULL,
-	PRIMARY KEY (`id`)
+    `id` int AUTO_INCREMENT NOT NULL UNIQUE,
+    `student_tutor` int NOT NULL,
+    `session_url` varchar(150) NOT NULL,
+    `platform` varchar(50) DEFAULT 'Zoom',
+    `password` varchar(50) DEFAULT NULL,
+    `start_time` timestamp NOT NULL,
+    `end_time` timestamp NOT NULL,
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `student_tutor` (
@@ -139,11 +141,11 @@ INSERT INTO periods (name, session_log_percentage, letter_percentage, video_perc
 VALUES ('Febrero Junio 2026', 80, 10, 10, '2026-02-10 00:00:01', '2026-06-25 23:59:59');
 
 INSERT INTO users (name, last_name, username, password_hash, role, period)
-VALUES ('Admin', 'Admin', 'A01752364', 'Admin134679$', 'admin', 1),
-('Beto', 'Supervisor', 'A01425602', 'Beto258369$', 'supervisor', 1),
-('Dari', 'Tutora', 'A01425755', 'DArI1607#$', 'teacher', 1),
-('Wicho', 'Estudiante', 'TwinchoSalinasFJ26', 'TwinchoPro123$', 'student', 1),
-('Sebastian', 'Estudiante', 'SebastianPonceFJ26', 'SebasPro123', 'student', '1');
+VALUES ('Admin', 'Apellido', 'A01752364', 'Admin134679$', 'admin', 1),
+('Beto', 'Castro', 'A01425602', 'Beto258369$', 'supervisor', 1),
+('Dari', 'Gonzales', 'A01425755', 'DArI1607#$', 'teacher', 1),
+('Wicho', 'Ponce', 'TwinchoSalinasFJ26', 'TwinchoPro123$', 'student', 1),
+('Sebastian', 'Rodriguez', 'SebastianPonceFJ26', 'SebasPro123', 'student', '1');
 
 INSERT INTO student_tutor (tutor, student, idioma, start_date, end_date)
 VALUES (3, 4, 'english', '2026-02-10', '2026-06-25'),
@@ -156,23 +158,15 @@ VALUES (1, 'Lección del verbo to be', 'Completa los ejercicios de la página 24
 INSERT INTO submissions (assignment, file, grade, feedback, submitted_at)
 VALUES (1, 'Verbo_to_be-Wicho.pdf', NULL, '', '2026-04-27 10:15:00');
 
-INSERT INTO sessions (student_tutor, session_url, start_time, end_time)
+INSERT INTO sessions (student_tutor, session_url, platform, password, start_time, end_time)
 VALUES 
-(1, 'https://zoom.us/j/1234567890?pwd=demo', '2026-05-05 16:00:00', '2026-05-05 17:00:00'),
-(1, 'https://zoom.us/j/1234567890?pwd=demo', '2026-05-12 16:00:00', '2026-05-12 17:00:00');
-
-INSERT INTO sessions (student_tutor, session_url, start_time, end_time)
-VALUES 
-(1, 'https://zoom.us/j/1112223333', '2026-04-20 16:00:00', '2026-04-20 17:00:00'),
-(1, 'https://zoom.us/j/4445556666', '2026-04-22 16:00:00', '2026-04-22 17:00:00');
+(1, 'https://zoom.us/j/1112223333', 'Zoom', '12345', '2026-04-20 16:00:00', '2026-04-20 17:00:00'),
+(1, 'https://zoom.us/j/4445556666', 'Zoom', '54321', '2026-04-22 16:00:00', '2026-04-22 17:00:00');
 
 INSERT INTO session_logs (session_id, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
 VALUES 
-(3, 'El alumno repasó el verbo to be de forma excelente. Mostró buena actitud y participamos en un juego de roles.', 'https://drive.google.com/file/d/demo1', 'Se planeó repasar la unidad 1 del libro.', FALSE, NULL, NULL, TRUE, '', TRUE);
-
-INSERT INTO session_logs (session_id, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
-VALUES 
-(4, 'Se intentó avanzar con el pasado simple, pero no hubo mucho tiempo.', 'https://drive.google.com/file/d/demo2', 'Avanzar a la unidad 2.', TRUE, 'assistance', 'El alumno se conectó 25 minutos tarde a la sesión sin avisar.', FALSE, 'Favor de contactar a coordinación para justificar.', FALSE);
+(1, 'El alumno repasó el verbo to be de forma excelente. Mostró buena actitud y participamos en un juego de roles.', 'https://drive.google.com/file/d/demo1', 'Se planeó repasar la unidad 1 del libro.', FALSE, NULL, NULL, TRUE, '', TRUE);
 
 INSERT INTO horarios (student_tutor_id, dia_semana, hora_inicio, hora_fin)
-VALUES (1, 4, '15:00:00', '16:00:00');
+VALUES (1, 4, '15:00:00', '16:00:00'),
+(1, 0, '20:15:00', '21:15:00');

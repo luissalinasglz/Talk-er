@@ -13,8 +13,10 @@ function Ligas() {
   const [sessionDate, setSessionDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  
+
   const [isEditingTime, setIsEditingTime] = useState(false);
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     fetchTodayGroups();
@@ -23,9 +25,8 @@ function Ligas() {
   const getTodayString = () => {
     const d = new Date();
     const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    console.log("Día de hoy: ", `${year}-${month}-${day}`);
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
@@ -36,12 +37,12 @@ function Ligas() {
 
   async function fetchTodayGroups() {
     try {
-      const res = await fetch("http://localhost:3000/v1/tutor/my-groups/today", {
+      const res = await fetch(`${API_URL}/tutor/my-groups/today`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
-      
+
       if (res.ok) {
         const data = await res.json();
         setGroups(data);
@@ -56,58 +57,60 @@ function Ligas() {
 
   function loadSession(group) {
     setSelected(group);
-    setMessage(""); 
+    setMessage("");
     setInputValue("");
     setPlatform("Zoom");
     setPassword("");
     setIsEditingTime(false);
-
     setSessionDate(getTodayString());
     setStartTime(formatTime(group.hora_inicio));
     setEndTime(formatTime(group.hora_fin));
   }
 
+  function resetForm() {
+    setSelected(null);
+    setMessage("");
+    setInputValue("");
+    setPlatform("Zoom");
+    setPassword("");
+    setIsEditingTime(false);
+  }
+
   const handleStartTimeChange = (e) => {
     const newStartTime = e.target.value;
     setStartTime(newStartTime);
-    console.log("Hora inicio: ", newStartTime);
 
     if (newStartTime) {
-      const [hours, minutes] = newStartTime.split(':');
+      const [hours, minutes] = newStartTime.split(":");
       const date = new Date();
       date.setHours(parseInt(hours));
       date.setMinutes(parseInt(minutes));
-
       date.setHours(date.getHours() + 1);
 
-      const endHour = String(date.getHours()).padStart(2, '0');
-      const endMinutes = String(date.getMinutes()).padStart(2, '0');
-
-      const formattedEndTime = `${endHour}:${endMinutes}`;
-      setEndTime(formattedEndTime);
-      console.log("Hora final: ", formattedEndTime);
+      const endHour = String(date.getHours()).padStart(2, "0");
+      const endMinutes = String(date.getMinutes()).padStart(2, "0");
+      setEndTime(`${endHour}:${endMinutes}`);
     }
   };
 
   const handleInputChange = (e) => {
     const text = e.target.value;
-    setInputValue(text);
 
-    const passMatch = text.match(/(?:Passcode|Código de acceso|Contraseña|Password):\s*([A-Za-z0-9@*#]+)/i);
-    if (passMatch && passMatch[1]) {
+    const passMatch = text.match(
+      /(?:Passcode|Código de acceso|Contraseña|Password):\s*([A-Za-z0-9@*#]+)/i
+    );
+    if (passMatch?.[1]) {
       setPassword(passMatch[1]);
     }
 
     const linkMatch = text.match(/(https?:\/\/[^\s]+)/);
-    if (linkMatch && linkMatch[1]) {
-      setInputValue(linkMatch[1]);
-    }
+    setInputValue(linkMatch ? linkMatch[1] : text);
   };
 
   const generateFinalUrl = () => {
     const trimmed = inputValue.trim();
     if (!trimmed) return "";
-    
+
     if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
       return trimmed;
     }
@@ -117,7 +120,6 @@ function Ligas() {
     switch (platform) {
       case "Zoom": return `https://zoom.us/j/${cleanId}`;
       case "Meet": return `https://meet.google.com/${cleanId}`;
-      case "Teams": return trimmed;
       default: return trimmed;
     }
   };
@@ -139,13 +141,13 @@ function Ligas() {
       const body = {
         student_tutor: selected.id,
         session_url: finalUrl,
-        platform: platform,
-        password: password,
+        platform,
+        password,
         start_time: `${sessionDate} ${startTime}:00`,
         end_time: `${sessionDate} ${endTime}:00`,
       };
 
-      const res = await fetch("http://localhost:3000/v1/tutor/sessions", {
+      const res = await fetch(`${API_URL}/tutor/sessions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -153,10 +155,11 @@ function Ligas() {
       });
 
       const data = await res.json();
-      
+
       if (res.ok) {
         setMessage(data.message || "Liga guardada con éxito");
-        fetchTodayGroups(); // Recargar la lista para quitar al alumno
+        await fetchTodayGroups();
+        resetForm();
       } else {
         setMessage(data.message || "Error al guardar");
       }
@@ -174,7 +177,7 @@ function Ligas() {
 
         <div className="list-classes">
           {groups.length === 0 ? (
-            <p style={{ padding: "1rem", color: "#666" }}>No hay clases pendientes hoy.</p>
+            <p className="empty-message">No hay clases pendientes hoy.</p>
           ) : (
             groups.map((group) => (
               <div
@@ -184,7 +187,7 @@ function Ligas() {
               >
                 <p><strong>{group.idioma}</strong></p>
                 <p className="info-student">{group.student_name}</p>
-                <p style={{ fontSize: "0.85rem", color: selected?.id === group.id ? "#fff" : "#666", marginTop: "4px" }}>
+                <p className={`class-time ${selected?.id === group.id ? "class-time--active" : ""}`}>
                   {formatTime(group.hora_inicio)} - {formatTime(group.hora_fin)}
                 </p>
               </div>
@@ -197,7 +200,7 @@ function Ligas() {
         <div className="blue-rectangle">
           <h2>{selected?.student_name || "Sin alumno seleccionado"}</h2>
           <p>
-            {selected?.idioma || "N/A"} 
+            {selected?.idioma || "N/A"}
             {selected && ` | ${formatTime(selected.hora_inicio)} a ${formatTime(selected.hora_fin)}`}
           </p>
         </div>
@@ -206,43 +209,43 @@ function Ligas() {
           <h3>Liga de clases</h3>
           <div className="line"></div>
 
-          <div style={{ marginBottom: "1.5rem", padding: "1rem", backgroundColor: "#f9f9f9", borderRadius: "8px", border: "1px solid #eee" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <p style={{ margin: 0, color: "#333" }}>
+          <div className="schedule-box">
+            <div className="schedule-box__header">
+              <p className="schedule-box__label">
                 <strong>Horario a registrar:</strong> {sessionDate} | {startTime} - {endTime}
               </p>
-              <button 
+              <button
+                className="schedule-box__toggle"
                 onClick={() => setIsEditingTime(!isEditingTime)}
-                style={{ background: "none", border: "none", color: "#252467", cursor: "pointer", textDecoration: "none", fontWeight: "bold" }}
               >
                 {isEditingTime ? "Ocultar opciones" : "Modificar horario de hoy"}
               </button>
             </div>
 
             {isEditingTime && (
-              <div style={{ display: "flex", gap: "1rem", marginTop: "1rem", flexWrap: "wrap", borderTop: "1px solid #ddd", paddingTop: "1rem" }}>
-                <div className="form-group" style={{ flex: 1, margin: 0 }}>
+              <div className="schedule-box__fields">
+                <div className="form-group">
                   <p>Fecha</p>
-                  <input 
-                    type="date" 
-                    value={sessionDate} 
-                    onChange={(e) => setSessionDate(e.target.value)} 
+                  <input
+                    type="date"
+                    value={sessionDate}
+                    onChange={(e) => setSessionDate(e.target.value)}
                   />
                 </div>
-                <div className="form-group" style={{ flex: 1, margin: 0 }}>
+                <div className="form-group">
                   <p>Hora de inicio</p>
-                  <input 
-                    type="time" 
-                    value={startTime} 
-                    onChange={handleStartTimeChange} 
+                  <input
+                    type="time"
+                    value={startTime}
+                    onChange={handleStartTimeChange}
                   />
                 </div>
-                <div className="form-group" style={{ flex: 1, margin: 0 }}>
+                <div className="form-group">
                   <p>Hora de fin</p>
-                  <input 
-                    type="time" 
-                    value={endTime} 
-                    onChange={(e) => setEndTime(e.target.value)} 
+                  <input
+                    type="time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
                   />
                 </div>
               </div>
@@ -287,11 +290,7 @@ function Ligas() {
             </button>
           </div>
 
-          {message && (
-            <p className="success-message" style={{ marginTop: "1rem", fontWeight: "bold" }}>
-              {message}
-            </p>
-          )}
+          {message && <p className="success-message">{message}</p>}
         </div>
       </div>
     </div>
