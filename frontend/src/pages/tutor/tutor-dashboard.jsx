@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import "./tutor-dashboard.css";
 
 function Dashboard() {
   const [horarios, setHorarios] = useState([]);
-
+  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -91,6 +92,10 @@ function Dashboard() {
     return `${h}:00 ${period}`;
   };
 
+  const moveToLink = () => {
+    navigate(`/tutor/ligas`)
+  }
+
   const renderCalendarBody = () => {
     const celdasSaltadas = {};
 
@@ -117,7 +122,7 @@ function Dashboard() {
             }
 
             return (
-              <td key={diaIndex} rowSpan={span}>
+              <td key={diaIndex} rowSpan={span} onClick={moveToLink}>
                 <div className="evento">
                   <p>{clase.student_name}</p>
                   <p>{formatTime(clase.hora_inicio)} - {formatTime(clase.hora_fin)}</p>

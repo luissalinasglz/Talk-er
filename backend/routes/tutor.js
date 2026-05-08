@@ -41,42 +41,42 @@ router.get("/horario", Verify, async (req, res) => {
       WHERE st.tutor = ?
       `, [tutorId]);
 
-      res.json(rows);
-  } catch(error){
+    res.json(rows);
+  } catch (error) {
     console.log("Error en el horario: ", error);
     res.status(500).json({ message: "Error al cargar el horario" });
   }
 });
 
-router.get("/my-groups/today", Verify, async (req, res) => {
+router.get("/my-groups/week", Verify, async (req, res) => {
   try {
     const tutorId = req.user.id;
 
-    const diaHoy = new Date().getDay(); 
-
     const [rows] = await pool.query(`
       SELECT 
+        h.id AS horario_id,
         st.id,
         st.idioma,
         CONCAT(u.name, ' ', u.last_name) AS student_name,
+        h.dia_semana,
         h.hora_inicio,
         h.hora_fin
       FROM student_tutor st
       JOIN users u ON u.id = st.student
       JOIN horarios h ON h.student_tutor_id = st.id
-      WHERE st.tutor = ? 
-      AND h.dia_semana = ?
+      WHERE st.tutor = ?
       AND NOT EXISTS (
           SELECT 1 FROM sessions s 
           WHERE s.student_tutor = st.id 
-          AND DATE(s.start_time) = CURDATE()
+          AND YEARWEEK(s.start_time, 0) = YEARWEEK(CURDATE(), 0)
       )
-    `, [tutorId, diaHoy]);
+      ORDER BY h.dia_semana, h.hora_inicio
+    `, [tutorId]);
 
     res.json(rows);
   } catch (error) {
-    console.error("Error al consultar pendientes de hoy:", error);
-    res.status(500).json({ message: "Error obteniendo grupos de hoy" });
+    console.error("Error al consultar pendientes de la semana:", error);
+    res.status(500).json({ message: "Error obteniendo grupos de la semana" });
   }
 });
 
@@ -99,6 +99,71 @@ router.get("/sessions/:groupId", Verify, async (req, res) => {
   }
 });
 
+
+// --- Bitacoras ---
+router.get("/clases", Verify, async (req, res) => {
+  const tutorId = req.user.id;
+  try {
+    const [rows] = await pool.query(`
+      SELECT 
+        s.id,
+        s.start_time,
+        s.end_time,
+        DATE(s.start_time) AS fecha,
+        TIME(s.start_time) AS hora_inicio,
+        TIME(s.end_time) AS hora_fin,
+        TIMESTAMPDIFF(MINUTE, s.start_time, s.end_time) AS duracion,
+        st.idioma,
+        CONCAT(u.name, ' ', u.last_name) AS nombre_alumno,
+        sl.id AS log_id,
+        sl.description,
+        sl.planning,
+        sl.incidence,
+        sl.incidence_type,
+        sl.incidence_description
+      FROM sessions s
+      JOIN student_tutor st ON s.student_tutor = st.id
+      JOIN users u ON st.student = u.id
+      LEFT JOIN session_logs sl ON sl.session_id = s.id
+      WHERE st.tutor = ?
+      ORDER BY s.start_time DESC
+    `, [tutorId]);
+
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al obtener sesiones" });
+  }
+});
+
+router.post("/bitacoras", Verify, async (req, res) => {
+  const { sesion_id, description, planning, tareas, incidence, incidence_type, incidence_description } = req.body;
+
+  try {
+    const [existing] = await pool.query(
+      `SELECT id FROM session_logs WHERE session_id = ?`, [sesion_id]
+    );
+
+    if (existing.length > 0) {
+      await pool.query(`
+        UPDATE session_logs 
+        SET description = ?, planning = ?, incidence = ?, incidence_type = ?, incidence_description = ?
+        WHERE session_id = ?
+      `, [description, planning, incidence, incidence_type || null, incidence_description || null, sesion_id]);
+    } else {
+      await pool.query(`
+        INSERT INTO session_logs (session_id, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, approved)
+        VALUES (?, ?, '', ?, ?, ?, ?, false, false)
+      `, [sesion_id, description, planning, incidence, incidence_type || null, incidence_description || null]);
+    }
+
+    res.json({ message: "Bitácora guardada correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error guardando bitácora" });
+  }
+});
+
 // save
 
 router.post("/sessions", Verify, async (req, res) => {
@@ -107,7 +172,7 @@ router.post("/sessions", Verify, async (req, res) => {
 
     console.log(`\n--- INTENTANDO GUARDAR SESIÓN ---`);
     console.log(`Datos recibidos:`, req.body);
- await pool.query(`
+    await pool.query(`
       INSERT INTO sessions (student_tutor, session_url, platform, password, start_time, end_time)
       VALUES (?, ?, ?, ?, ?, ?)
     `, [student_tutor, session_url, platform, password, start_time, end_time]);
@@ -235,7 +300,7 @@ router.post("/horarios", Verify, async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
-   const { group_id, horarios } = req.body;
+    const { group_id, horarios } = req.body;
 
     await connection.query("DELETE FROM horarios WHERE student_tutor_id = ?", [group_id]);
 
@@ -255,6 +320,127 @@ router.post("/horarios", Verify, async (req, res) => {
   } finally {
     connection.release();
   }
+});
+
+// --- Materiales ---
+
+import multer from "multer";
+import path from "path";
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/materials");
+  },
+
+  filename: (req, file, cb) => {
+    const unique = Date.now() + path.extname(file.originalname);
+    cb(null, unique);
+  }
+});
+
+export const uploadMaterial = multer({ storage });
+router.get("/materials", Verify, async (req, res) => {
+  try {
+
+    const tutorId = req.user.id;
+
+    const [rows] = await pool.query(`
+      SELECT
+          m.id,
+          m.title,
+          m.type,
+          m.file_url,
+          m.external_url,
+          m.uploaded_at,
+
+          st.id AS student_tutor_id,
+
+          CONCAT(u.name, ' ', u.last_name) AS nombre_alumno
+
+      FROM materials m
+
+      INNER JOIN student_tutor st
+          ON st.id = m.student_tutor_id
+
+      INNER JOIN users u
+          ON u.id = st.student
+
+      WHERE st.tutor = ?
+
+      ORDER BY m.uploaded_at DESC
+    `, [tutorId]);
+
+    res.json(rows);
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error obteniendo materiales"
+    });
+  }
+});
+
+router.post("/materials", Verify, uploadMaterial.single("file"), async (req, res) => {
+    try {
+        const tutorId = req.user.id;
+        const { student_tutor_ids, title, type, external_url } = req.body;
+
+        if (!student_tutor_ids) {
+            return res.status(400).json({ message: "Grupo inválido" });
+        }
+        
+        let idsArray;
+        try {
+            idsArray = JSON.parse(student_tutor_ids);
+        } catch (e) {
+            return res.status(400).json({ message: "Formato de alumnos inválido" });
+        }
+
+        if (!Array.isArray(idsArray) || idsArray.length === 0) {
+            return res.status(400).json({ message: "Selecciona al menos un alumno" });
+        }
+
+        if (!title || !title.trim()) return res.status(400).json({ message: "Título requerido" });
+        if (!type) return res.status(400).json({ message: "Tipo requerido" });
+
+        const placeholders = idsArray.map(() => '?').join(',');
+        const [grupos] = await pool.query(` 
+            SELECT id 
+            FROM student_tutor 
+            WHERE id IN (${placeholders}) AND tutor = ?
+        `, [...idsArray, tutorId]);
+
+        if (grupos.length !== idsArray.length) {
+            return res.status(403).json({ message: "Uno o más alumnos no autorizados" });
+        }
+
+        let fileUrl = null;
+        if (req.file) {
+            fileUrl = `/uploads/materials/${req.file.filename}`;
+        }
+
+        if (type !== "LINK" && !fileUrl) return res.status(400).json({ message: "Archivo requerido" });
+        if (type === "LINK" && (!external_url || !external_url.trim())) return res.status(400).json({ message: "Enlace requerido" });
+
+        for (const studentId of idsArray) {
+            await pool.query(`
+                INSERT INTO materials (
+                    student_tutor_id, title, type, file_url, external_url
+                ) VALUES (?, ?, ?, ?, ?)
+            `, [studentId, title.trim(), type, fileUrl, external_url || null]);
+        }
+
+        res.status(201).json({
+            message: "Material publicado a los alumnos seleccionados",
+            file_url: fileUrl
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error subiendo material" });
+    }
 });
 
 export default router;

@@ -18,15 +18,22 @@ function Ligas() {
 
   const API_URL = import.meta.env.VITE_API_URL;
 
+  const DAY_NAMES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+
   useEffect(() => {
-    fetchTodayGroups();
+    fetchWeekGroups();
   }, []);
 
-  const getTodayString = () => {
-    const d = new Date();
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
+  const getDateForDayOfWeek = (targetDay) => {
+    const today = new Date();
+    const currentDay = today.getDay();
+    const diff = targetDay - currentDay;
+    const target = new Date(today);
+    target.setDate(today.getDate() + diff);
+
+    const year = target.getFullYear();
+    const month = String(target.getMonth() + 1).padStart(2, "0");
+    const day = String(target.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
@@ -35,9 +42,9 @@ function Ligas() {
     return timeStr.substring(0, 5);
   };
 
-  async function fetchTodayGroups() {
+  async function fetchWeekGroups() {
     try {
-      const res = await fetch(`${API_URL}/tutor/my-groups/today`, {
+      const res = await fetch(`${API_URL}/tutor/my-groups/week`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -62,7 +69,7 @@ function Ligas() {
     setPlatform("Zoom");
     setPassword("");
     setIsEditingTime(false);
-    setSessionDate(getTodayString());
+    setSessionDate(getDateForDayOfWeek(group.dia_semana));
     setStartTime(formatTime(group.hora_inicio));
     setEndTime(formatTime(group.hora_fin));
   }
@@ -158,7 +165,7 @@ function Ligas() {
 
       if (res.ok) {
         setMessage(data.message || "Liga guardada con éxito");
-        await fetchTodayGroups();
+        await fetchWeekGroups();
         resetForm();
       } else {
         setMessage(data.message || "Error al guardar");
@@ -172,22 +179,23 @@ function Ligas() {
     <div className="ligas">
       <div className="sessions-list">
         <div className="list-title">
-          <p>Clases de Hoy</p>
+          <p>Clases de la semana</p>
         </div>
 
         <div className="list-classes">
           {groups.length === 0 ? (
-            <p className="empty-message">No hay clases pendientes hoy.</p>
+            <p className="empty-message">No hay clases pendientes esta semana.</p>
           ) : (
             groups.map((group) => (
               <div
-                key={group.id}
-                className={`class-item ${selected?.id === group.id ? "active" : ""}`}
+                key={group.horario_id}
+                className={`class-item ${selected?.horario_id === group.horario_id ? "active" : ""}`}
                 onClick={() => loadSession(group)}
               >
                 <p><strong>{group.idioma}</strong></p>
                 <p className="info-student">{group.student_name}</p>
-                <p className={`class-time ${selected?.id === group.id ? "class-time--active" : ""}`}>
+                <p className="class-day">{DAY_NAMES[group.dia_semana]}</p>
+                <p className={`class-time ${selected?.horario_id === group.horario_id ? "class-time--active" : ""}`}>
                   {formatTime(group.hora_inicio)} - {formatTime(group.hora_fin)}
                 </p>
               </div>

@@ -52,12 +52,13 @@ CREATE TABLE IF NOT EXISTS `submissions` (
 );
 
 CREATE TABLE IF NOT EXISTS `materials` (
-	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
-	`group` int NOT NULL,
-	`title` varchar(100) NOT NULL,
-	`file` varchar(100) NOT NULL,
-	`uploaded_at` timestamp NOT NULL,
-	PRIMARY KEY (`id`)
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `student_tutor_id` INT NOT NULL,
+    `title` VARCHAR(100) NOT NULL,
+    `type` enum('PDF','DOC','IMAGE','VIDEO','LINK') NOT NULL,
+    `file_url` VARCHAR(255),
+    `external_url` VARCHAR(255),
+    `uploaded_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `session_logs` (
@@ -124,6 +125,7 @@ CREATE TABLE IF NOT EXISTS preguntas (
     FOREIGN KEY (examen_id) REFERENCES examenes(id) ON DELETE CASCADE
 );
 
+
 ALTER TABLE `users` ADD CONSTRAINT `users_fk6` FOREIGN KEY (`period`) REFERENCES `periods`(`id`);
 ALTER TABLE `sessions` ADD CONSTRAINT `sessions_fk1` FOREIGN KEY (`student_tutor`) REFERENCES `student_tutor`(`id`);
 ALTER TABLE `student_tutor` ADD CONSTRAINT `student_tutor_fk1` FOREIGN KEY (`tutor`) REFERENCES `users`(`id`);
@@ -131,7 +133,7 @@ ALTER TABLE `student_tutor` ADD CONSTRAINT `student_tutor_fk1` FOREIGN KEY (`tut
 ALTER TABLE `student_tutor` ADD CONSTRAINT `student_tutor_fk2` FOREIGN KEY (`student`) REFERENCES `users`(`id`);
 ALTER TABLE `assignments` ADD CONSTRAINT `assignments_fk1` FOREIGN KEY (`group`) REFERENCES `student_tutor`(`id`);
 ALTER TABLE `submissions` ADD CONSTRAINT `submissions_fk1` FOREIGN KEY (`assignment`) REFERENCES `assignments`(`id`);
-ALTER TABLE `materials` ADD CONSTRAINT `materials_fk1` FOREIGN KEY (`group`) REFERENCES `student_tutor`(`id`);
+ALTER TABLE `materials` ADD CONSTRAINT `materials_fk1` FOREIGN KEY (`student_tutor_id`) REFERENCES `student_tutor`(`id`);
 ALTER TABLE `session_logs` ADD CONSTRAINT `session_logs_fk1` FOREIGN KEY (`session_id`) REFERENCES `sessions`(`id`);
 ALTER TABLE `reviewer_tutor` ADD CONSTRAINT `reviewer_tutor_fk1` FOREIGN KEY (`tutor_id`) REFERENCES `users`(`id`);
 
