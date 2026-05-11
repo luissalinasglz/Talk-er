@@ -1,11 +1,11 @@
-.sessions{
+.sessions {
     display: flex;
     flex-direction: row;
     height: 100%;
     background-color: #F0F2F7;
 }
 
-.sessions-list{
+.sessions-list {
     width: 250px;
     background-color: #FFFFFF;
     padding: 1rem;
@@ -14,32 +14,36 @@
     text-align: left;
 }
 
-.list-title{
+.list-title {
     color: #BBBEC7;
     font-weight: bold;
     font-size: 20px;
     text-transform: uppercase;
 }
 
-.list-classes{
+.list-classes {
     color: black;
 }
 
-.class-item{
-    padding-left: 0.75rem;
+.class-item {
     padding: 0.6rem 1rem;
-    margin-top:2rem ;
+    margin-top: 2rem;
 }
 
-.class-item.active{
+.class-item.active {
     background-color: #6883BA80;
     border: 3px solid #6883BA;
     border-radius: 20px;
     padding: 0.75rem;
 }
 
-/*Contenido*/
-.sessions-content{
+.info-student {
+    color: #6883BA;
+    font-size: 12px;
+    margin-top: 0.2rem;
+}
+
+.sessions-content {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -47,7 +51,7 @@
     gap: 1.5rem;
 }
 
-.blue-rectangle{
+.blue-rectangle {
     background-color: #252467;
     color: #FFFFFF;
     text-align: left;
@@ -55,7 +59,16 @@
     border-radius: 20px;
 }
 
-.info-rectangle{
+.blue-rectangle h2 {
+    margin: 0 0 0.5rem 0;
+}
+
+.blue-rectangle p {
+    margin: 0;
+    color: #BBBEC7;
+}
+
+.info-rectangle {
     background-color: #FFFFFF;
     color: black;
     border-radius: 20px;
@@ -63,69 +76,157 @@
     text-align: left;
 }
 
-.line{
+.line {
     background-color: #F0F2F7;
     width: 100%;
     height: 3px;
 }
 
-.select-day{
+.select-day {
     padding-top: 0.5rem;
     display: flex;
     flex-direction: column;
 }
 
-.weekdays{
+.select-day__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.custom-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #666;
+    user-select: none;
+}
+
+.custom-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-track {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    background-color: #BBBEC7;
+    border-radius: 20px;
+    transition: background-color 0.25s ease;
+    flex-shrink: 0;
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.25s ease;
+}
+
+.custom-toggle input:checked+.toggle-track {
+    background-color: #6883BA;
+}
+
+.custom-toggle input:checked+.toggle-track .toggle-thumb {
+    transform: translateX(18px);
+}
+
+.weekdays {
     display: flex;
     flex-direction: row;
-    gap: 3.5rem;
+    gap: 3rem;
     padding-top: 2rem;
     padding-left: 1rem;
 }
 
-.day{
+.day {
     background-color: #F0F2F7;
     padding: 1rem;
     border-radius: 20px;
     width: 130px;
     text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.day.active{
+.day.active {
     background-color: #6883BA80;
-    border: 3px solid #6883BA;
+    border: 1px solid #6883BA;
+    transform: scale(1.1);
 }
 
-.select-hour{
+.select-hour {
     display: flex;
     flex-direction: row;
     padding-top: 2rem;
     gap: 2rem;
 }
 
-.start-time, .end-time{
+.start-time,
+.end-time {
     display: flex;
     flex-direction: column;
     flex: 1;
     gap: 0.5rem;
 }
 
-.time{
+.time {
     background-color: #F0F2F7;
     border-radius: 20px;
     padding: 1rem;
 }
 
-.save{
+.time input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 1rem;
+    color: #666;
+}
+
+.custom-times {
+    margin-top: 20px;
+}
+
+.custom-times__row {
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.custom-times__label {
+    width: 80px;
+    font-weight: bold;
+}
+
+.form-message {
+    color: #252467;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+.save {
     display: flex;
-    justify-content: center;  
+    justify-content: center;
     margin-top: 3rem;
 }
 
-.button{
+.button {
     background-color: #6883BA;
     color: #FFFFFF;
     padding: 1rem 2rem;
     border-radius: 30px;
+    border: none;
+    font-size: 1rem;
+    font-family: inherit;
     cursor: pointer;
+}
+
+.button:hover {
+    background-color: #4f6ea8;
 }

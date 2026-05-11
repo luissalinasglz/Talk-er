@@ -3,6 +3,7 @@
     flex-direction: column;
     height: 100%;
     background-color: #F0F2F7;
+    font-family: inherit;
 }
 
 .line-material {
@@ -15,7 +16,12 @@
     display: flex;
     flex-direction: row;
     height: 100%;
-    text-align: left;
+    overflow: hidden;
+}
+
+.loading-text {
+    padding: 2rem;
+    font-weight: 600;
 }
 
 .material-left {
@@ -27,31 +33,39 @@
 
 .type-material {
     display: flex;
-    flex-direction: row;
-    gap: 2rem; /* Reduje un poco el gap para que no se amontone en pantallas chicas */
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
-.type {
+.type-tab {
     background-color: #FFFFFF;
     color: black;
-    padding: 1rem;
-    flex: 1;
+    padding: 0.9rem 1.2rem;
     text-align: center;
-    border-radius: 20px;
-    transition: background-color 0.3s ease;
+    border-radius: 16px;
+    transition: all 0.2s ease;
+    user-select: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    cursor: pointer;
 }
 
-.type:hover {
-    background-color: #e0e6f5;
+.type-tab p {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.95rem;
 }
 
-.all {
+.type-tab:hover {
+    background-color: #E8EDF8;
+}
+
+.type-tab.active {
     background-color: #6883BA;
-    color: #FFFFFF;
+    color: white;
 }
 
-.all:hover {
-    background-color: #556b99;
+.type-tab.active:hover {
+    background-color: #5870A3;
 }
 
 .material-title {
@@ -60,20 +74,21 @@
 
 .material-title h2 {
     color: black;
-    font-weight: bold;
+    font-weight: 700;
+    margin: 0;
 }
 
 .material-info {
     margin-top: 2rem;
     display: flex;
     flex-direction: row;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .material-side {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    flex: 1; /* Para que ambas columnas midan lo mismo */
 }
 
 .material-data {
@@ -81,26 +96,41 @@
     margin-bottom: 1.5rem;
     padding: 1.5rem;
     border-radius: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Sombra sutil */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .material-data h3 {
     color: black;
-    margin-bottom: 0.5rem;
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+}
+
+.material-data p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
 }
 
 .material-button {
-    margin-top: 1rem;
+    margin-top: 1.2rem;
     background-color: #252467;
-    color: #FFFFFF;
-    padding: 0.5rem 1rem;
+    color: white;
+    padding: 0.8rem 1rem;
     text-align: center;
-    border-radius: 20px;
-    transition: background-color 0.3s;
+    border-radius: 14px;
+    transition: background-color 0.2s ease;
+    user-select: none;
+    cursor: pointer;
+}
+
+.material-button p {
+    margin: 0;
+    color: white;
+    font-weight: 600;
 }
 
 .material-button:hover {
-    background-color: #1a194d;
+    background-color: #1A194D;
 }
 
 .material-right {
@@ -108,67 +138,158 @@
     padding: 2rem;
     overflow-y: auto;
     background-color: #FFFFFF;
-    border-left: 2px solid #E0E4F0;
+    border-left: 2px solid #E3E7F0;
 }
 
 .material-right h2 {
     color: black;
-    font-weight: bold;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 2rem;
+}
+
+.group-spacing {
     margin-bottom: 1.5rem;
 }
 
-.document {
-    margin-top: 1rem;
-    background-color: #F8F9FB;
-    border: 2px dashed #6883BA; /* Cambiado al color de tu marca */
-    border-radius: 20px;
-    padding: 2rem;
-    text-align: center;
-    color: #252467;
+.form-label {
+    margin-bottom: 0.5rem;
+    color: black;
     font-weight: bold;
-    transition: background-color 0.3s;
 }
 
-.document:hover {
-    background-color: #EBF0FA;
-}
-
-.material-save {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: center;
-}
-
-.material-save p {
-    background-color: #6883BA;
-    color: #FFFFFF;
-    border-radius: 20px;
-    padding: 1rem 3rem;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.1s;
-}
-
-.material-save:hover p {
-    background-color: #556b99;
-    transform: scale(1.02); /* Efecto de click/hover */
-}
-
-/* Ajustes limpios para los inputs */
-.exam-form input[type="text"],
-.exam-form input[type="url"],
-.exam-form select {
+.input-field {
     background-color: #F0F2F7;
     color: black;
-    border: none !important;
-    padding: 1rem !important;
+    border: 1px solid #ccc;
+    padding: 0.8rem;
     border-radius: 10px;
     width: 100%;
     box-sizing: border-box;
     outline: none;
-    font-family: inherit;
+    font-size: 0.95rem;
+    transition: box-shadow 0.2s ease;
 }
 
-.exam-form input:focus,
-.exam-form select:focus {
-    box-shadow: 0 0 0 2px #6883BA; /* Efecto focus para accesibilidad */
+.input-field:focus {
+    box-shadow: 0 0 0 2px #6883BA;
+    border-color: transparent;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.upload-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 1rem;
+    background-color: #F8F9FB;
+    border: 2px dashed #6883BA;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.upload-zone:hover {
+    background-color: #EEF3FC;
+    border-color: #252467;
+}
+
+.upload-icon-text {
+    color: #6883BA;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    margin-top: 0;
+}
+
+.upload-btn {
+    background-color: #252467;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.upload-zone:hover .upload-btn {
+    background-color: #1A194D;
+}
+
+.file-name-preview {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #252467;
+    word-break: break-word;
+    background-color: #E8EDF8;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+}
+
+.alumnos-selection-box {
+    background-color: #F0F2F7;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 1rem;
+    max-height: 180px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    color: black;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #6883BA;
+}
+
+.select-all-divider {
+    height: 1px;
+    background-color: #ccc;
+    margin: 0.2rem 0;
+}
+
+.material-save-btn {
+    margin-top: 2rem;
+    width: 100%;
+    cursor: pointer;
+}
+
+.material-save-btn p {
+    background-color: #6883BA;
+    color: white;
+    border-radius: 18px;
+    padding: 1rem;
+    font-weight: 700;
+    text-align: center;
+    transition: all 0.2s ease;
+    user-select: none;
+    margin: 0;
+}
+
+.material-save-btn:hover p {
+    background-color: #5870A3;
+    transform: scale(1.01);
+}
+
+.material-save-btn.disabled {
+    opacity: 0.6;
+    pointer-events: none;
 }
