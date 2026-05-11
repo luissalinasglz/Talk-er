@@ -1,0 +1,319 @@
+/*Estructura General*/
+.bitacoras {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #F0F2F7;
+}
+
+.bitacora-line{
+    background-color: F0F2F7;
+    width: 100%;
+    height: 3px;
+}
+
+.bitacoras-content {
+    display: flex;
+    flex-direction: row;
+    min-width: 800px;    
+    overflow-x: auto;
+}
+
+/*Left side*/
+.bitacoras-left {
+    width: 220px;
+    background-color: #FFFFFF;
+    padding: 1rem;
+    flex-shrink: 0;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.bitacoras-left h3 {
+    color: #6883BA;
+    margin-bottom: 1rem;
+}
+
+.month {
+    color: #BBBEC7;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.bitacora-item {
+    padding: 0.25rem;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 0.75rem;
+}
+
+.bitacora-item.active {
+    background-color: #9D9CE980;
+}
+
+.item-name {
+    font-size: 13px;
+    color: black;
+    margin: 0;
+}
+
+.item-hour {
+    font-size: 11px;
+    color: #BBBEC7;
+    font-weight: bold;
+    margin: 0;
+}
+
+.item-class {
+    font-size: 11px;
+    color: #6883BA;
+    margin: 0;
+}
+
+
+/* Right-side*/
+.bitacoras-right {
+    flex: 1;
+    padding: 2rem 3rem;
+    overflow-y: auto;
+    background-color: #F0F2F7;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Títulos y horas */
+.bitacoras-right h2 {
+    color: black;
+    margin: 0;
+   
+}
+
+.bitacora-hour {
+    color: #BBBEC7;
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+}
+
+.bitacoras-side {
+    display: flex;
+    flex-direction: row;
+    gap: 2.5rem; 
+    width: 100%;
+}
+
+.bitacora-right-left {
+    flex: 1.1; 
+    display: flex;
+    flex-direction: column;
+}
+
+.bitacora-right-right {
+    flex: 0.9; 
+    display: flex;
+    flex-direction: column;
+}
+
+.bitacora-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
+    width: 100%;
+}
+
+.bitacora-group p {
+    color: black;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 8px 0; 
+}
+
+.bitacora-input {
+    background-color: #FFFFFF;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+}
+
+.bitacora-input p {
+    color: #BBBEC7 !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+}
+
+.bitacora-text {
+    background-color: #FFFFFF;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
+    height: 100px; 
+}
+
+.bitacora-text p {
+    color: #BBBEC7 !important;
+    font-weight: 400 !important;
+    margin: 0 !important;
+}
+
+.bitacora-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%;
+}
+
+.bitacora-upload {
+    background-color: #FFFFFF;
+    border: 2px dashed #6883BA;
+    border-radius: 10px;
+    padding: 0.5rem;
+    color: #6883BA;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.incidencia-selector {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.incidencia-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.6rem;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #FFFFFF;
+    color: #333;
+    font-weight: 600;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.incidencia-btn.active {
+    background-color: #E49090;
+    color: white;
+    border-color: #E49090;
+}
+
+.incidencia-btn.active-no {
+    background-color: #93E490;
+    color: white;
+    border-color: #93E490;
+}
+
+.incidencia-extra {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #ddd;
+}
+
+.save {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem;
+}
+
+.save .button {
+    background-color: #6883BA;
+    color: white;
+    padding: 0.8rem 4rem;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.save .button:hover {
+    background-color: #5571A8;
+}
+
+.bitacoras-review {
+    flex: 0.5;       
+    flex-shrink: 0;
+    background-color: #FFFFFF;
+    padding: 1rem;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    border-left: 2px solid #F0F2F7;
+}
+
+.bitacoras-review h4 {
+    color: #6883BA;
+    margin-bottom: 1rem;
+}
+
+.review-subtitle {
+    color: black;
+    font-weight: 600;
+    margin: 1rem 0rem;
+}
+
+.review-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.review-field {
+    background-color: #F0F2F7;
+    border-radius: 10px;
+    padding: 0.6rem 0.75rem;
+    font-size: 12px;
+    color: black;
+    cursor: pointer;
+}
+
+.review-field.active {
+    background-color: #6883BA40;
+    color: #252467;
+    font-weight: 600;
+}
+
+.review-comments {
+    background-color: #F0F2F7;
+    border-radius: 10px;
+    height: 100px;
+    margin-top: 0.5rem;
+    flex: 1;
+}
+
+.review-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.btn-correction {
+    background-color: #6883BA;
+    color: white;
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.btn-approve {
+    background-color: #6883BA;
+    color: white;
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 20px;
+    cursor: pointer;
+}

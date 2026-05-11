@@ -2,7 +2,12 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+}
+
+.bitacora-line{
     background-color: #F0F2F7;
+    width: 100%;
+    height: 3px;
 }
 
 .bitacora-line {
@@ -17,10 +22,9 @@
 }
 
 .bitacoras-left {
+    background-color: #FFFFFF;
     width: 300px;
-    background-color: #F0F2F7;
     padding: 2rem;
-    border-right: 1px solid #D1D9E6;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -107,7 +111,7 @@
 .bitacoras-right {
     flex: 1;
     padding: 2rem;
-    background: white;
+    background-color: #F0F2F7;
     overflow-y: auto;
 }
 
