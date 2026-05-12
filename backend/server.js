@@ -16,6 +16,7 @@ server.disable("x-powered-by");
 server.use(cookieParser());
 server.use(express.urlencoded({ extended: false }));
 server.use(express.json());
+server.use("/v1/uploads", express.static("uploads"));
 
 async function connectWithRetry() {
     try {
@@ -29,14 +30,6 @@ async function connectWithRetry() {
 }
 
 connectWithRetry();
-
-/*pool.getConnection()
-    .then((conn) => {
-        console.log("Connected to database");
-        conn.release();
-    })
-    .catch((err) => console.log(err));*/
-
 Router(server);
 
 server.listen(PORT, () =>

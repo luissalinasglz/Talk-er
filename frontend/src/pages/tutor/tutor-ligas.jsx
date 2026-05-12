@@ -2,62 +2,122 @@ import { useEffect, useState } from "react";
 import "./tutor-ligas.css";
 
 function Ligas() {
-  const [groups, setGroups] = useState([
-    { id: 1, idioma: "english", student_name: "Wicho Estudiante" }
-  ]);
-  const [selected, setSelected] = useState(groups[0]);
+  const [groups, setGroups] = useState([]);
+  const [selected, setSelected] = useState(null);
 
   const [inputValue, setInputValue] = useState("");
   const [password, setPassword] = useState("");
   const [platform, setPlatform] = useState("Zoom");
   const [message, setMessage] = useState("");
 
+  const [sessionDate, setSessionDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
+  const [isEditingTime, setIsEditingTime] = useState(false);
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const DAY_NAMES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+
   useEffect(() => {
-    loadSession(groups[0]);
+    fetchWeekGroups();
   }, []);
 
-  async function loadSession(group) {
-    setSelected(group);
-    setMessage(""); 
-    
-    setInputValue("");
-    setPlatform("Zoom");
+  const getDateForDayOfWeek = (targetDay) => {
+    const today = new Date();
+    const currentDay = today.getDay();
+    const diff = targetDay - currentDay;
+    const target = new Date(today);
+    target.setDate(today.getDate() + diff);
+
+    const year = target.getFullYear();
+    const month = String(target.getMonth() + 1).padStart(2, "0");
+    const day = String(target.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatTime = (timeStr) => {
+    if (!timeStr) return "";
+    return timeStr.substring(0, 5);
+  };
+
+  async function fetchWeekGroups() {
+    try {
+      const res = await fetch(`${API_URL}/tutor/my-groups/week`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setGroups(data);
+        if (data.length > 0) {
+          loadSession(data[0]);
+        }
+      }
+    } catch (error) {
+      console.error("Error al cargar los grupos de hoy", error);
+    }
   }
 
-  async function guardarLiga() {
-    setMessage("Liga guardada con éxito (Modo Demo)");
+  function loadSession(group) {
+    setSelected(group);
+    setMessage("");
+    setInputValue("");
+    setPlatform("Zoom");
+    setPassword("");
+    setIsEditingTime(false);
+    setSessionDate(getDateForDayOfWeek(group.dia_semana));
+    setStartTime(formatTime(group.hora_inicio));
+    setEndTime(formatTime(group.hora_fin));
   }
 
   function resetForm() {
+    setSelected(null);
+    setMessage("");
     setInputValue("");
-    setPassword("");
-    setStartTime("");
-    setEndTime("");
     setPlatform("Zoom");
+    setPassword("");
+    setIsEditingTime(false);
   }
+
+  const handleStartTimeChange = (e) => {
+    const newStartTime = e.target.value;
+    setStartTime(newStartTime);
+
+    if (newStartTime) {
+      const [hours, minutes] = newStartTime.split(":");
+      const date = new Date();
+      date.setHours(parseInt(hours));
+      date.setMinutes(parseInt(minutes));
+      date.setHours(date.getHours() + 1);
+
+      const endHour = String(date.getHours()).padStart(2, "0");
+      const endMinutes = String(date.getMinutes()).padStart(2, "0");
+      setEndTime(`${endHour}:${endMinutes}`);
+    }
+  };
 
   const handleInputChange = (e) => {
     const text = e.target.value;
-    setInputValue(text);
 
-    const passMatch = text.match(/(?:Passcode|Código de acceso|Contraseña|Password):\s*([A-Za-z0-9@*#]+)/i);
-    if (passMatch && passMatch[1]) {
+    const passMatch = text.match(
+      /(?:Passcode|Código de acceso|Contraseña|Password):\s*([A-Za-z0-9@*#]+)/i
+    );
+    if (passMatch?.[1]) {
       setPassword(passMatch[1]);
     }
 
     const linkMatch = text.match(/(https?:\/\/[^\s]+)/);
-    if (linkMatch && linkMatch[1]) {
-      setInputValue(linkMatch[1]);
-    }
+    setInputValue(linkMatch ? linkMatch[1] : text);
   };
 
   const generateFinalUrl = () => {
     const trimmed = inputValue.trim();
     if (!trimmed) return "";
-    
+
     if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
       return trimmed;
     }
@@ -65,14 +125,9 @@ function Ligas() {
     const cleanId = trimmed.replace(/\s+/g, "");
 
     switch (platform) {
-      case "Zoom":
-        return `https://zoom.us/j/${cleanId}`;
-      case "Meet":
-        return `https://meet.google.com/${cleanId}`;
-      case "Teams":
-        return trimmed;
-      default:
-        return trimmed;
+      case "Zoom": return `https://zoom.us/j/${cleanId}`;
+      case "Meet": return `https://meet.google.com/${cleanId}`;
+      default: return trimmed;
     }
   };
 
@@ -82,31 +137,41 @@ function Ligas() {
       return;
     }
 
+    if (!sessionDate || !startTime || !endTime) {
+      setMessage("Por favor verifica la fecha y hora de la sesión.");
+      return;
+    }
+
     const finalUrl = generateFinalUrl();
 
     try {
       const body = {
         student_tutor: selected.id,
         session_url: finalUrl,
-        platform: platform,
-        password: password,
-        start_time: startTime || new Date(),
-        end_time: endTime || new Date(Date.now() + 60 * 60 * 1000),
+        platform,
+        password,
+        start_time: `${sessionDate} ${startTime}:00`,
+        end_time: `${sessionDate} ${endTime}:00`,
       };
 
-      const res = await fetch("http://localhost:3000/v1/tutor/sessions", {
+      const res = await fetch(`${API_URL}/tutor/sessions`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(body),
       });
 
       const data = await res.json();
-      setMessage(data.message || "Liga guardada con éxito");
+
+      if (res.ok) {
+        setMessage(data.message || "Liga guardada con éxito");
+        await fetchWeekGroups();
+        resetForm();
+      } else {
+        setMessage(data.message || "Error al guardar");
+      }
     } catch {
-      setMessage("Error guardando liga");
+      setMessage("Error de conexión guardando liga");
     }
   }
 
@@ -114,49 +179,90 @@ function Ligas() {
     <div className="ligas">
       <div className="sessions-list">
         <div className="list-title">
-          <p>Clases</p>
+          <p>Clases de la semana</p>
         </div>
 
         <div className="list-classes">
-          {groups.map((group) => (
-            <div
-              key={group.id}
-              className={`class-item ${
-                selected?.id === group.id ? "active" : ""
-              }`}
-              onClick={() => loadSession(group)}
-            >
-              <p>{group.idioma}</p>
-              <p className="info-student">{group.student_name}</p>
-            </div>
-          ))}
+          {groups.length === 0 ? (
+            <p className="empty-message">No hay clases pendientes esta semana.</p>
+          ) : (
+            groups.map((group) => (
+              <div
+                key={group.horario_id}
+                className={`class-item ${selected?.horario_id === group.horario_id ? "active" : ""}`}
+                onClick={() => loadSession(group)}
+              >
+                <p><strong>{group.idioma}</strong></p>
+                <p className="info-student">{group.student_name}</p>
+                <p className="class-day">{DAY_NAMES[group.dia_semana]}</p>
+                <p className={`class-time ${selected?.horario_id === group.horario_id ? "class-time--active" : ""}`}>
+                  {formatTime(group.hora_inicio)} - {formatTime(group.hora_fin)}
+                </p>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
       <div className="ligas-content">
         <div className="blue-rectangle">
-          <h2>{selected?.student_name || "Sin alumno"}</h2>
-          <p>{selected?.idioma || ""}</p>
+          <h2>{selected?.student_name || "Sin alumno seleccionado"}</h2>
+          <p>
+            {selected?.idioma || "N/A"}
+            {selected && ` | ${formatTime(selected.hora_inicio)} a ${formatTime(selected.hora_fin)}`}
+          </p>
         </div>
 
         <div className="info-rectangle">
           <h3>Liga de clases</h3>
           <div className="line"></div>
 
-          <div className="form-group">
-            <p>Seleccionar Clase</p>
-            <input
-                type="text"
-                placeholder="Ej: Inglés(Nivel)"
-              />
+          <div className="schedule-box">
+            <div className="schedule-box__header">
+              <p className="schedule-box__label">
+                <strong>Horario a registrar:</strong> {sessionDate} | {startTime} - {endTime}
+              </p>
+              <button
+                className="schedule-box__toggle"
+                onClick={() => setIsEditingTime(!isEditingTime)}
+              >
+                {isEditingTime ? "Ocultar opciones" : "Modificar horario de hoy"}
+              </button>
+            </div>
+
+            {isEditingTime && (
+              <div className="schedule-box__fields">
+                <div className="form-group">
+                  <p>Fecha</p>
+                  <input
+                    type="date"
+                    value={sessionDate}
+                    onChange={(e) => setSessionDate(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <p>Hora de inicio</p>
+                  <input
+                    type="time"
+                    value={startTime}
+                    onChange={handleStartTimeChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <p>Hora de fin</p>
+                  <input
+                    type="time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="form-group">
             <p>Plataforma</p>
-            <select
-              value={platform}
-              onChange={(e) => setPlatform(e.target.value)}
-            >
+            <select value={platform} onChange={(e) => setPlatform(e.target.value)}>
               <option value="Zoom">Zoom</option>
               <option value="Meet">Google Meet</option>
               <option value="Teams">Microsoft Teams</option>
@@ -187,7 +293,7 @@ function Ligas() {
           )}
 
           <div className="save">
-            <button className="button" onClick={guardarLiga}>
+            <button className="button" onClick={guardarLiga} disabled={!selected}>
               Guardar Liga
             </button>
           </div>
