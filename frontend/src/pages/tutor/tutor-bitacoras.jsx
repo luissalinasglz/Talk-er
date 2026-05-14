@@ -86,6 +86,10 @@ function Bitacoras() {
             setMessage("La descripción de la sesión es obligatoria.");
             return;
         }
+        if(!planning.trim()) {
+            setMessage("La planeación de la siguiente sesión es obligatoria");
+            return;
+        }
         if (incidence === null) {
             setMessage("Indica si hubo incidencias.");
             return;
@@ -253,6 +257,16 @@ function Bitacoras() {
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="Ej: Se practicó conversación sobre experiencias pasadas..."
+                                />
+                            </div>
+
+                            <div className="bitacora-group grow">
+                                <p>Planeación de la siguiente sesión</p>
+                                <textarea
+                                className="bitacora-text-real"
+                                value={planning}
+                                onChange={(e) => setPlanning(e.target.value)}
+                                placeholder="Ej: Habrá examen de Unidad 3..."
                                 />
                             </div>
                         </div>

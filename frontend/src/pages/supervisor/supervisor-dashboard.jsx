@@ -1,13 +1,40 @@
+import { useEffect, useState } from "react";
 import "./supervisor-dashboard.css";
 
 function Dashboard() {
-    return (
+
+  const [groups, setGroups] = useState([]);
+  
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    page();
+  }, []);
+
+  async function page() {
+    try {
+      const res = await fetch(`${API_URL}/supervisor/super`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setGroups(data)
+        console.log("HOLA");
+      }
+    } catch (error) {
+      console.log("Error al cargar grupos", error);
+    }
+  }
+
+  return (
     <div className="dashboardsupervisor">
       <div className="supervisor-content">
-        
+
         <div className="dashboard-left">
           <div className="widgets">
-            
+
             <div className="wid-side">
               <div className="wid">
                 <p>Tutores</p>
@@ -20,7 +47,7 @@ function Dashboard() {
                 <p>Por revisar</p>
               </div>
             </div>
-            
+
             <div className="wid-side">
               <div className="wid">
                 <p>Tutores</p>
@@ -33,8 +60,8 @@ function Dashboard() {
                 <p>Por revisar</p>
               </div>
             </div>
-          
-          </div> 
+
+          </div>
           <div className="supervise">
             <h2>Tutores Supervisados</h2>
             {[
@@ -64,11 +91,11 @@ function Dashboard() {
             ))}
           </div>
         </div>
-        
+
         <div className="dashboard-right">
           <h2>Pendientes de revisión</h2>
           <div className="right-data">
-            
+
             <div className="revision-data">
               <div className="circle-data"></div>
               <div className="revision-datainfo">
@@ -100,13 +127,13 @@ function Dashboard() {
                 <p>Roberto Castro</p>
               </div>
             </div>
-            
+
           </div>
         </div>
-      
+
       </div>
     </div>
-    );
+  );
 
 }
 
