@@ -1,11 +1,11 @@
 import express from "express";
 import pool from "../db/db.js";
-import { Verify } from "../middleware/verify.js";
+import { Verify, VerifyRoleTeacher } from "../middleware/verify.js";
 
 const router = express.Router();
 
 // get groups
-router.get("/my-groups", Verify, async (req, res) => {
+router.get("/my-groups", Verify, VerifyRoleTeacher, async (req, res) => {
   try {
     const tutorId = req.user.id;
 
@@ -25,7 +25,7 @@ router.get("/my-groups", Verify, async (req, res) => {
   }
 });
 
-router.get("/horario", Verify, async (req, res) => {
+router.get("/horario", Verify, VerifyRoleTeacher, async (req, res) => {
   try {
     const tutorId = req.user.id;
 
@@ -48,7 +48,7 @@ router.get("/horario", Verify, async (req, res) => {
   }
 });
 
-router.get("/my-groups/week", Verify, async (req, res) => {
+router.get("/my-groups/week", Verify, VerifyRoleTeacher, async (req, res) => {
   try {
     const tutorId = req.user.id;
 
@@ -82,7 +82,7 @@ router.get("/my-groups/week", Verify, async (req, res) => {
 
 // group session
 
-router.get("/sessions/:groupId", Verify, async (req, res) => {
+router.get("/sessions/:groupId", Verify, VerifyRoleTeacher, async (req, res) => {
   try {
     const { groupId } = req.params;
 
@@ -101,7 +101,7 @@ router.get("/sessions/:groupId", Verify, async (req, res) => {
 
 
 // --- Bitacoras ---
-router.get("/clases", Verify, async (req, res) => {
+router.get("/clases", Verify, VerifyRoleTeacher, async (req, res) => {
   const tutorId = req.user.id;
   try {
     const [rows] = await pool.query(`
@@ -136,7 +136,7 @@ router.get("/clases", Verify, async (req, res) => {
   }
 });
 
-router.post("/bitacoras", Verify, async (req, res) => {
+router.post("/bitacoras", Verify, VerifyRoleTeacher, async (req, res) => {
   const { sesion_id, description, planning, tareas, incidence, incidence_type, incidence_description } = req.body;
 
   try {
@@ -166,7 +166,7 @@ router.post("/bitacoras", Verify, async (req, res) => {
 
 // save
 
-router.post("/sessions", Verify, async (req, res) => {
+router.post("/sessions", Verify, VerifyRoleTeacher, async (req, res) => {
   try {
     const { student_tutor, session_url, platform, password, start_time, end_time } = req.body;
 
@@ -188,7 +188,7 @@ router.post("/sessions", Verify, async (req, res) => {
 });
 
 // exams
-router.get("/examenes", Verify, async (req, res) => {
+router.get("/examenes", Verify, VerifyRoleTeacher, async (req, res) => {
   try {
     const tutorId = req.user.id;
     const [rows] = await pool.query(
@@ -202,7 +202,7 @@ router.get("/examenes", Verify, async (req, res) => {
 });
 
 
-router.get("/tareas", Verify, async (req, res) => {
+router.get("/tareas", Verify, VerifyRoleTeacher, async (req, res) => {
   try {
     const tutorId = req.user.id;
 
@@ -228,7 +228,7 @@ router.get("/tareas", Verify, async (req, res) => {
 
 
 // -------POST--------
-router.post("/tareas", Verify, async (req, res) => {
+router.post("/tareas", Verify, VerifyRoleTeacher, async (req, res) => {
   try {
     const tutorId = req.user.id;
     let { titulo, descripcion, fechaEntrega, horaLimite, group_id } = req.body;
@@ -266,7 +266,7 @@ router.post("/tareas", Verify, async (req, res) => {
   }
 });
 
-router.post("/examenes", Verify, async (req, res) => {
+router.post("/examenes", Verify, VerifyRoleTeacher, async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -296,7 +296,7 @@ router.post("/examenes", Verify, async (req, res) => {
   }
 });
 
-router.post("/horarios", Verify, async (req, res) => {
+router.post("/horarios", Verify, VerifyRoleTeacher, async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -339,7 +339,7 @@ const storage = multer.diskStorage({
 });
 
 export const uploadMaterial = multer({ storage });
-router.get("/materials", Verify, async (req, res) => {
+router.get("/materials", Verify, VerifyRoleTeacher, async (req, res) => {
   try {
 
     const tutorId = req.user.id;
@@ -382,7 +382,7 @@ router.get("/materials", Verify, async (req, res) => {
   }
 });
 
-router.post("/materials", Verify, uploadMaterial.single("file"), async (req, res) => {
+router.post("/materials", Verify, VerifyRoleTeacher, uploadMaterial.single("file"), async (req, res) => {
     try {
         const tutorId = req.user.id;
         const { student_tutor_ids, title, type, external_url } = req.body;
