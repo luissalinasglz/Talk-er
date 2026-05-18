@@ -368,4 +368,8 @@ router.put("/tareas/:id", async (req, res) => {
   }
 });
 
+router.put("/HOLA", async (req, res) => {
+  res.json("HOLA MUNDO PUTO")
+})
+
 export default router;

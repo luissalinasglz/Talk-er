@@ -1,10 +1,11 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../../sidebar.css";
 
 import sesionesIcon from "../../assets/calendario.png";
 import bitacoraIcon from "../../assets/bitacora.png";
 import dashboardIcon from "../../assets/dashboard.png";
 import profileWhite from "../../assets/profile-white.png";
+import Logout from "../../LogoutButton.jsx"
 
 function SidebarSupervisor() {
   const base = "/supervisor";
@@ -28,9 +29,10 @@ function SidebarSupervisor() {
 
         <NavLink to={`${base}/bitacora`} className="option">
           <img className="icon" src={bitacoraIcon} alt="" />
-          <p>Bitácora</p>
+          <p>Bitacora</p>
         </NavLink>
 
+        <Logout/>
       </nav>
     </aside>
   );

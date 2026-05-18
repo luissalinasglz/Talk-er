@@ -10,26 +10,10 @@ import materialIcon from "../../assets/material.png";
 import bitacoraIcon from "../../assets/bitacora.png";
 import dashboardIcon from "../../assets/dashboard.png";
 import profileWhite from "../../assets/profile-white.png";
-import logoutIcon from "../../assets/logout.png";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import Logout from "../../LogoutButton";
 
 function SidebarTutor() {
   const base = "/tutor";
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await fetch(`${API_URL}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-    } catch (err) {
-      console.error("Logout error:", err);
-    } finally {
-      navigate("/");
-    }
-  };
 
   return (
     <aside className="sidebar">
@@ -77,11 +61,8 @@ function SidebarTutor() {
           <img className="icon" src={horasIcon} alt="" />
           <p>Horas</p>
         </NavLink>
-        
-        <button className="logout-btn" onClick={handleLogout}>
-          <img className="icon" src={logoutIcon} alt="" />
-          <p>Cerrar Sesion</p>
-        </button>
+
+        <Logout/>
         
       </nav>
     </aside>
