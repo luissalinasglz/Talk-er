@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `materials` (
 CREATE TABLE IF NOT EXISTS `session_logs` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`session_id` int NOT NULL,
+	`title` varchar(300) NOT NULL,
 	`description` varchar(300) NOT NULL,
 	`evidence_url` varchar(100) NOT NULL,
 	`planning` varchar(200) NOT NULL,
@@ -168,9 +169,9 @@ VALUES
 (1, 'https://zoom.us/j/1112223333', 'Zoom', '12345', '2026-04-20 16:00:00', '2026-04-20 17:00:00'),
 (1, 'https://zoom.us/j/4445556666', 'Zoom', '54321', '2026-04-22 16:00:00', '2026-04-22 17:00:00');
 
-INSERT INTO session_logs (session_id, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
+INSERT INTO session_logs (session_id, title, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
 VALUES 
-(1, 'El alumno repasó el verbo to be de forma excelente. Mostró buena actitud y participamos en un juego de roles.', 'https://drive.google.com/file/d/demo1', 'Se planeó repasar la unidad 1 del libro.', FALSE, NULL, NULL, TRUE, '', FALSE);
+(1, 'verbo to be' ,'El alumno repasó el verbo to be de forma excelente. Mostró buena actitud y participamos en un juego de roles.',  'http://localhost:3000/v1/uploads/bitacoras/evidencia-demo-1.png', 'Se planeó repasar la unidad 1 del libro.', FALSE, NULL, NULL, TRUE, '', FALSE);
 
 INSERT INTO horarios (student_tutor_id, dia_semana, hora_inicio, hora_fin)
 VALUES (1, 4, '15:00:00', '16:00:00'),
