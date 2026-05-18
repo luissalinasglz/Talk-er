@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import pool from "../db/db.js";
-import { Verify } from "../middleware/verify.js";
+import { Verify, VerifyRoleTeacher } from "../middleware/verify.js";
 
 const router = express.Router();
 
@@ -24,6 +24,8 @@ const uploadBitacora = multer({
 export const uploadMaterial = multer({ storage: diskStorage("materials") });
 
 // --- GET ---
+
+router.use(VerifyRoleTeacher)
 router.get("/my-groups", Verify, async (req, res) => {
   try {
     const [rows] = await pool.query(`
