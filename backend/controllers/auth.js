@@ -9,7 +9,7 @@ export async function Login(req, res) {
             return res.status(401).json({
                 status: "failed",
                 data: [],
-                message: "Invalid email."
+                message: "Nombre de usuario invalido"
             });
 
         const isPasswordValid = req.body.password == user.password_hash;
@@ -18,7 +18,7 @@ export async function Login(req, res) {
             return res.status(401).json({
                 status: "failed",
                 data: [],
-                message: "Invalid password."
+                message: "Contraseña incorrecta"
             });
         
         let options = {
@@ -42,7 +42,7 @@ export async function Login(req, res) {
             status: "error",
             code: 500,
             data: [],
-            message: "Internal Server Error",
+            message: "Error interno del servidor",
         });
     }
     res.end();

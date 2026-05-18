@@ -68,6 +68,9 @@ export default function Login() {
                 </label>
 
                 <button type="submit">Iniciar sesión</button>
+
+                <p className="message">{message}</p>
+                
             </form>
         </div>
     );
