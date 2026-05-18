@@ -343,4 +343,29 @@ router.post("/materials",  uploadMaterial.single("file"), async (req, res) => {
   }
 });
 
+router.put("/tareas/:id", async (req, res) => {
+  try {
+    const { titulo, descripcion, fechaEntrega, horaLimite } = req.body;
+
+    await pool.query(
+      `
+      UPDATE assignments
+      SET title = ?, description = ?, due_date = ?
+      WHERE id = ?
+      `,
+      [
+        titulo,
+        descripcion,
+        `${fechaEntrega} ${horaLimite}:00`,
+        req.params.id,
+      ]
+    );
+
+    res.json({ message: "Tarea actualizada correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error actualizando tarea" });
+  }
+});
+
 export default router;
