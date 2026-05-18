@@ -25,8 +25,9 @@ export const uploadMaterial = multer({ storage: diskStorage("materials") });
 
 // --- GET ---
 
+router.use(Verify)
 router.use(VerifyRoleTeacher)
-router.get("/my-groups", Verify, async (req, res) => {
+router.get("/my-groups",  async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT st.id, st.idioma, CONCAT(u.name,' ',u.last_name) AS student_name
@@ -40,7 +41,7 @@ router.get("/my-groups", Verify, async (req, res) => {
   }
 });
 
-router.get("/horario", Verify, async (req, res) => {
+router.get("/horario",  async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT CONCAT(u.name, ' ', u.last_name) AS student_name,
@@ -57,7 +58,7 @@ router.get("/horario", Verify, async (req, res) => {
   }
 });
 
-router.get("/my-groups/week", Verify, async (req, res) => {
+router.get("/my-groups/week",  async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT h.id AS horario_id, st.id, st.idioma,
@@ -81,7 +82,7 @@ router.get("/my-groups/week", Verify, async (req, res) => {
   }
 });
 
-router.get("/sessions/:groupId", Verify, async (req, res) => {
+router.get("/sessions/:groupId",  async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT * FROM sessions WHERE student_tutor = ? ORDER BY id DESC LIMIT 1
@@ -92,7 +93,7 @@ router.get("/sessions/:groupId", Verify, async (req, res) => {
   }
 });
 
-router.get("/clases", Verify, async (req, res) => {
+router.get("/clases",  async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT s.id, s.start_time, s.end_time,
@@ -120,7 +121,7 @@ router.get("/clases", Verify, async (req, res) => {
   }
 });
 
-router.get("/examenes", Verify, async (req, res) => {
+router.get("/examenes",  async (req, res) => {
   try {
     const [rows] = await pool.query(
       "SELECT id, nombre, clase, duracion, DATE_FORMAT(fecha_limite, '%Y-%m-%d %H:%i') AS vence FROM examenes WHERE tutor_id = ?",
@@ -132,7 +133,7 @@ router.get("/examenes", Verify, async (req, res) => {
   }
 });
 
-router.get("/tareas", Verify, async (req, res) => {
+router.get("/tareas",  async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT a.id, a.title AS titulo, a.description AS descripcion,
@@ -150,7 +151,7 @@ router.get("/tareas", Verify, async (req, res) => {
   }
 });
 
-router.get("/materials", Verify, async (req, res) => {
+router.get("/materials",  async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT m.id, m.title, m.type, m.file_url, m.external_url, m.uploaded_at,
@@ -170,7 +171,7 @@ router.get("/materials", Verify, async (req, res) => {
 });
 
 // --- POST ---
-router.post("/bitacoras/upload", Verify, uploadBitacora.single("evidence"), async (req, res) => {
+router.post("/bitacoras/upload",  uploadBitacora.single("evidence"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "No se subió ningún archivo" });
     const fileUrl = `${req.protocol}://${req.get("host")}/uploads/bitacoras/${req.file.filename}`;
@@ -181,7 +182,7 @@ router.post("/bitacoras/upload", Verify, uploadBitacora.single("evidence"), asyn
   }
 });
 
-router.post("/bitacoras", Verify, async (req, res) => {
+router.post("/bitacoras",  async (req, res) => {
   const { sesion_id, title, description, planning, evidence_url, incidence, incidence_type, incidence_description } = req.body;
   try {
     const [existing] = await pool.query("SELECT id FROM session_logs WHERE session_id = ?", [sesion_id]);
@@ -211,7 +212,7 @@ router.post("/bitacoras", Verify, async (req, res) => {
   }
 });
 
-router.post("/sessions", Verify, async (req, res) => {
+router.post("/sessions",  async (req, res) => {
   try {
     const { student_tutor, session_url, platform, password, start_time, end_time } = req.body;
     await pool.query(
@@ -225,7 +226,7 @@ router.post("/sessions", Verify, async (req, res) => {
   }
 });
 
-router.post("/tareas", Verify, async (req, res) => {
+router.post("/tareas",  async (req, res) => {
   try {
     let { titulo, descripcion, fechaEntrega, horaLimite, group_id } = req.body;
 
@@ -247,7 +248,7 @@ router.post("/tareas", Verify, async (req, res) => {
   }
 });
 
-router.post("/examenes", Verify, async (req, res) => {
+router.post("/examenes",  async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -275,7 +276,7 @@ router.post("/examenes", Verify, async (req, res) => {
   }
 });
 
-router.post("/horarios", Verify, async (req, res) => {
+router.post("/horarios",  async (req, res) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -301,7 +302,7 @@ router.post("/horarios", Verify, async (req, res) => {
   }
 });
 
-router.post("/materials", Verify, uploadMaterial.single("file"), async (req, res) => {
+router.post("/materials",  uploadMaterial.single("file"), async (req, res) => {
   try {
     const { student_tutor_ids, title, type, external_url } = req.body;
 
