@@ -1,0 +1,107 @@
+.tareas-student{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.line-student{
+    background-color: #F0F2F7;
+    width: 100%;
+    height: 3px;
+}
+
+.student-homework-sides{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.homework-left{
+    flex:1;
+    padding: 1rem;
+    background-color: #FFFFFF;
+    text-align: left;
+    
+}
+
+.homework-left h3{
+    color: #6883BA;
+    margin-bottom: 1rem;
+}
+
+.homework-urgent h4{
+    color: #BBBEC7;
+    margin-top: 2rem;
+}
+
+.homework-student-general{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 0.5rem;
+    color: #000000;
+}
+
+.homework-next h4{
+    color: #BBBEC7;
+    margin-top: 2rem;
+}
+
+.homework-right{
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+}
+
+.homework-details-student{
+    margin: 2rem;
+    color: #E05C5C;
+    text-align: left;
+}
+
+.homework-details-student h2{
+    color: #000000;
+}
+
+.homework-indications{
+    margin-top: 1rem;
+    background-color: #252467;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    border-radius: 20px;
+}
+
+.homework-sent{
+    background-color: #FFFFFF;
+    margin: 2rem;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: left;
+}
+
+.homework-sent h2{
+    color: #BBBEC7;
+    text-align: left;
+}
+
+.file-sent{
+    margin-top: 1rem;
+    text-align: center;
+    border: 3px dotted #000000;
+    border-radius: 20px;
+    color: #252467;
+    padding: 2rem;   
+}
+
+.homework-save{
+    background-color: #6883BA;
+    color: #FFFFFF;
+    padding: 1rem 0.75rem;
+    margin: 0.5rem 2rem;
+    border-radius: 20px;
+}

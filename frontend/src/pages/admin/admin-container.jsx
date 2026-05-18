@@ -2,23 +2,27 @@ import { Routes, Route } from "react-router-dom";
 import SidebarAdmin from "./admin-sidebar";
 import Dashboard from "./admin-dashboard";
 
-import Sesiones from "./admin-sesiones";
-import Bitacoras from "./admin-bitacoras";
+import AdminEstadisticas from "./admin-estadistica";
+import AdminUsuarios from "./admin-usuarios";
+import AdminHoras from "./admin-horas";
+import AdminMaterial from "./admin-material";
 import Header from "../../header";
 import "./admin-container.css";
 
 function AdminContainer() {
   return (
-    <div style={{ display: "flex" }}>
+    <div className="admin-layout">
       <SidebarAdmin />
       <Header/>
 
-      <div style={{ flex: 1 }}>
+      <div className="admin-main">
 
         <Routes>
           <Route index element={<Dashboard />} />
-          <Route path="sesiones" element={<Sesiones />} />
-          <Route path="bitacora" element={<Bitacoras />} />
+          <Route path="estadisticas" element={<AdminEstadisticas />} />
+          <Route path="usuarios" element={<AdminUsuarios />} />
+          <Route path="horas" element={<AdminHoras />} />
+          <Route path="material" element={<AdminMaterial />} />
         </Routes>
       </div>
     </div>

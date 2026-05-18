@@ -1,33 +1,28 @@
 import { Routes, Route } from "react-router-dom";
-// import SidebarTutor from "./student-sidebar";
+import SidebarStudent from "./student-sidebar";
 import Dashboard from "./student-dashboard";
 
-// import Sesiones from "./student-sesiones";
-// import Ligas from "./student-ligas";
-// import Tareas from "./student-tareas";
-// import Examenes from "./student-examenes";
-// import Material from "./student-material";
-// import Anuncios from "./student-anuncios";
-// import Bitacoras from "./student-bitacoras";
-// import Horas from "./student-horas";
+import StudentSesiones from "./student-sesiones";
+import StudentTareas  from "./student-tareas";
+import StudentExamenes from "./student-examenes";
+import StudentMaterial from "./student-material";
+import Header from "../../header";
+import "./student-container.css";
 
 function StudentContainer() {
   return (
-    <div style={{ display: "flex" }}>
-      <Sidebarstudent />
+    <div className="student-layout">
+      <SidebarStudent />
+      <Header/>
 
-      <div style={{ flex: 1 }}>
+      <div className="student-main">
 
         <Routes>
           <Route index element={<Dashboard />} />
-          <Route path="sesiones" element={<Sesiones />} />
-          <Route path="ligas" element={<Ligas />} />
-          <Route path="tareas" element={<Tareas />} />
-          <Route path="examenes" element={<Examenes />} />
-          <Route path="material" element={<Material />} />
-          <Route path="anuncios" element={<Anuncios />} />
-          <Route path="bitacora" element={<Bitacoras />} />
-          <Route path="horas" element={<Horas />} />
+          <Route path="sesiones" element={<StudentSesiones />} />
+          <Route path="tareas" element={<StudentTareas />} />
+          <Route path="examenes" element={<StudentExamenes />} />
+          <Route path="material" element={<StudentMaterial />} />
         </Routes>
       </div>
     </div>

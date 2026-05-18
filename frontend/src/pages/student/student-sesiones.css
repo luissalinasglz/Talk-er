@@ -1,0 +1,177 @@
+.sesiones-student{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.session-student-general{
+    margin: 2rem;
+    padding: 1rem;
+    border-radius: 20px;
+    background-color: #252467;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #FFFFFF;
+    text-align: left;
+}
+
+.session-details{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.image-video{
+    background-color: #8D8CC9;
+    padding: 1rem;
+    border-radius: 20px;
+}
+
+.video-student{
+    height: 50px;
+    width: 70px;
+}
+
+.link-join-student{
+    background-color: #FFFFFF;
+    color: #000000;
+    padding: 1.5rem;
+    border-radius: 20px;
+}
+
+.student-side{
+    display: flex;
+    flex-direction: row;
+}
+
+.left-session-student{
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: left;
+    margin: 0.5rem 2rem;
+    flex:2;
+}
+
+.calendario{
+  width: 100%;
+  font-size: 0.75rem;
+  margin-top: 1rem;
+  border-collapse: collapse;
+}
+
+.calendario th{
+  text-align: center;
+  color: #BBBEC7;
+  font-weight: 600;
+  padding: 1rem;
+  border-bottom: 3px solid #F0F2FA;
+}
+
+.calendario td{
+  border-bottom: 3px solid #F0F2FA;
+  border-right: 3px solid #F0F2FA;
+  padding: 4px;
+  min-height: 50px;
+  height: 50px;
+  vertical-align: center;
+}
+
+.calendario td.hora{
+  color: #BBBEC7;
+  font-size: 0.75rem;
+  align-items: center;
+  border-bottom: none;
+  border-right: none;
+}
+
+.calendario th:first-child {
+  border-bottom: none;
+}
+
+.calendario td:last-child {
+  border-right: none;
+}
+
+.calendario tr:last-child td {
+  border-bottom: none;
+}
+
+.evento{
+  background-color: #6883BA;
+  color: #FFFFFF;
+  border-radius: 10px;
+  padding: 4px;
+  font-size: 0.7rem;
+}
+
+.right-session-student{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.student-tutors{
+    display: flex;
+    flex-direction: column;
+    color: #000000;
+    background-color: #FFFFFF;
+    margin-top: 1rem;
+    margin-right: 2rem;
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: left;
+}
+
+.student-tutors h2{
+    color: #000000;
+}
+
+.tutor-student{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profileblue{
+    width: 40px;
+    height: 40px;
+}
+
+.tutor-detail-student{
+    margin-top: 1rem;
+}
+
+.student-class-week{
+    background-color: #FFFFFF;
+    margin-top: 1rem;
+    margin-right: 2rem;
+    border-radius: 20px;
+    text-align: left;
+    padding: 1rem;
+    color: #000000;
+}
+
+.student-class-week h2{
+    color: #000000;
+}
+
+.circle-student-class{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #252467;
+}
+
+.week-student{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    padding-top: 0.5rem;
+}

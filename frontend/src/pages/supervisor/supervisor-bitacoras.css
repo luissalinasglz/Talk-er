@@ -153,6 +153,7 @@
     flex-direction: column;
     text-align: left;
     border-left: 2px solid #F0F2F7;
+    height: 100vh;
 }
 
 .bitacoras-review h4 { color: #6883BA; margin-bottom: 1rem; }

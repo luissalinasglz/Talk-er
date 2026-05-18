@@ -1,0 +1,205 @@
+.estadisticas-admin{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.estadistic-line{
+    background-color: #F0F2F7;
+    width: 100%;
+    height: 3px;
+}
+
+.estadistic{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.estadistic-left{
+    flex: 1;
+    text-align: left;
+    background-color: #FFFFFF;
+    padding: 1rem;
+}
+
+.estadistic-left h3{
+    color: #6883BA;
+    margin-bottom: 1rem;
+}
+
+.date-estadistic{
+    padding: 1rem;
+    border-radius: 20px;
+}
+
+.date-estadistic h4{
+    color: #000000;
+}
+
+.active-estadistic{
+    background-color: #6883BA;
+    
+}
+
+.estadistic-right{
+    flex: 3;
+    text-align: left;
+}
+
+.general-estadistic{
+    background-color: #252467;
+    padding: 2rem;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    justify-content: space-around;
+    margin: 2rem;
+}
+
+.program-info{
+    display: flex;
+    flex-direction: column;
+}
+
+.general-estadistic-info{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    gap: 2rem;
+}
+
+.metrics-program{
+    margin: 2rem;
+    background-color: #FFFFFF;
+    padding: 2rem;
+    border-radius: 20px;
+}
+
+.metrics-program h2{
+    color: #000000;
+}
+
+.progress-hours{
+    margin: 2rem;
+    background-color: #FFFFFF;
+    padding: 2rem;
+    border-radius: 20px;
+}
+
+.progress-hours h2{
+    color: #000000;
+}
+
+.stats-table-card {
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: left;
+    margin: 2rem;
+}
+
+.stats-table-card h2 {
+    color: black;
+    margin-bottom: 1.5rem;
+}
+
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stats-table th {
+    color: #BBBEC7;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid #F0F2F7;
+}
+
+.stats-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #F0F2F7;
+    vertical-align: middle;
+}
+
+.stats-table tr:last-child td {
+    border-bottom: none;
+}
+
+.ciclo-nombre {
+    color: black;
+    margin: 0;
+}
+
+.ciclo-detalle {
+    color: #BBBEC7;
+    font-size: 11px;
+    margin: 0;
+}
+
+.stat-num {
+    color: black;
+    margin: 0 0 4px 0;
+}
+
+.mini-bar-container {
+    background-color: #BBBEC7;
+    border-radius: 10px;
+    height: 6px;
+    width: 100%;
+}
+
+.mini-bar-fill.dark {
+    background-color: #6883BA;
+    height: 6px;
+    border-radius: 10px;
+}
+
+.progress-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.progress-pct {
+    color: black;
+    font-weight: 600;
+    font-size: 13px;
+    margin: 0;
+    min-width: 35px;
+}
+
+.tendencia-badge {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    width: fit-content;
+}
+
+.tendencia-badge.base {
+    background-color: #DCDFE7;
+    color: #BBBEC7;
+}
+
+.tendencia-badge.positivo {
+    background-color: #B1ECB1;
+    color: #74C271;
+}
+
+.estado-badge {
+    background-color: #B1ECB1;
+    color: #74C271;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    width: fit-content;
+}
