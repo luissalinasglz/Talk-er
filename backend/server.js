@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import mysql from "mysql2/promise";
 import { PORT } from "./config/index.js";
 import Router from "./routes/index.js";
 import pool from "./db/db.js"
+import { purgeExpiredTokens } from "./models/Blacklist.js";
 
 const server = express();
 

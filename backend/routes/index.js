@@ -11,6 +11,7 @@ const Router = (server) => {
     server.get('/v1/user', Verify, (req, res) => {
         res.status(200).json({
         status: "success",
+        data: [req.user],
         message: "Welcome to the your Dashboard!",
         });
     });

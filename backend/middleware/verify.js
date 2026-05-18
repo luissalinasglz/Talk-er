@@ -1,4 +1,5 @@
 import { findUserById } from "../models/User.js";
+import { isTokenBlacklisted } from "../models/Blacklist.js";
 import jwt from "jsonwebtoken";
 import { SECRET_ACCESS_TOKEN } from "../config/index.js";
 
@@ -9,9 +10,14 @@ export async function Verify(req, res, next) {
         if (!authHeader) return res.sendStatus(401);
         const cookie = authHeader.split("=")[1];
 
+        const blacklisted = await isTokenBlacklisted(cookie);
+        if (blacklisted) {
+            return res.status(401).json({ message: "Esta sesion ha expirado. Por favor, inicia sesion de nuevo" });
+        }
+
         jwt.verify(cookie, SECRET_ACCESS_TOKEN, async (err, decoded) => {
             if (err) {
-                return res.status(401).json({ message: "This session has expired. Please login" })
+                return res.status(401).json({ message: "Esta sesion ha expirado. Por favor, inicia sesion de nuevo" });
             }
             
             const { id } = decoded;
