@@ -126,6 +126,14 @@ CREATE TABLE IF NOT EXISTS preguntas (
     FOREIGN KEY (examen_id) REFERENCES examenes(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS blacklist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    token VARCHAR(512) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_token (token(255))
+);
+
 
 ALTER TABLE `users` ADD CONSTRAINT `users_fk6` FOREIGN KEY (`period`) REFERENCES `periods`(`id`);
 ALTER TABLE `sessions` ADD CONSTRAINT `sessions_fk1` FOREIGN KEY (`student_tutor`) REFERENCES `student_tutor`(`id`);

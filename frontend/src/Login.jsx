@@ -68,9 +68,11 @@ export default function Login() {
                 </label>
 
                 <button data-cy="login-btn" type="submit">Iniciar sesión</button>
+
+                <p className="message" data-cy="error-message">{message}</p>
+                
             </form>
 
-            {message && <p className="error-message" data-cy="error-message">{message}</p>}
         </div>
     );
 }
