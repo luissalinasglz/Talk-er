@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./tutor-tareas.css";
 import TareasLista from "./tareas/tareas-lista";
 import TareasDetalle from "./tareas/tareas-detalle";
@@ -6,51 +6,108 @@ import TareasEditar from "./tareas/tareas-editar";
 import TareasCrear from "./tareas/tareas-crear";
 
 function Tareas() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const [tab, setTab] = useState("gestionar");
   const [vista, setVista] = useState("lista");
   const [tareaActiva, setTareaActiva] = useState(null);
 
-  const [tareas, setTareas] = useState([
-    {
-      id: 1,
-      titulo: "Lección del verbo to be",
-      descripcion: "Completa los ejercicios de la página 24 de tu libro de trabajo. Escribe 5 oraciones usando el verbo 'to be'.",
-      beneficiario: "Inglés A",
-      fechaEntrega: "2026-04-28",
-      horaLimite: "23:59",
-      archivo: "Verbo_to_be.pdf",
-    },
-    {
-      id: 2,
-      titulo: "Lección pasado simple",
-      descripcion: "Escribe un ensayo corto de 300 palabras sobre tus últimas vacaciones usando el pasado simple.",
-      beneficiario: "Inglés B",
-      fechaEntrega: "2026-04-30",
-      horaLimite: "18:00",
-      archivo: "Past_Simple_Guide.pdf",
-    },
-  ]);
+  const [tareas, setTareas] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleCrearTarea = (nuevaTarea) => {
-    const tareaConId = { ...nuevaTarea, id: Date.now() };
-    setTareas([...tareas, tareaConId]);
-    setTab("gestionar");
-    setVista("lista");
-  };
+  useEffect(() => {
+    fetchTareas();
+  }, []);
 
-  const handleEditarTarea = (tareaEditada) => {
-    const tareasActualizadas = tareas.map((t) =>
-      t.id === tareaEditada.id ? tareaEditada : t
-    );
-    setTareas(tareasActualizadas);
-    setTareaActiva(tareaEditada);
-    setVista("detalle");
-  };
+  async function fetchTareas() {
+    try {
+      setLoading(true);
+
+      const res = await fetch(`${API_URL}/tutor/tareas`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setTareas(data);
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error("Error obteniendo tareas", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleCrearTarea(nuevaTarea) {
+    try {
+      const res = await fetch(`${API_URL}/tutor/tareas`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(nuevaTarea),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        await fetchTareas();
+        setTab("gestionar");
+        setVista("lista");
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error("Error creando tarea", error);
+    }
+  }
+
+  async function handleEditarTarea(tareaEditada) {
+    try {
+      const res = await fetch(
+        `${API_URL}/tutor/tareas/${tareaEditada.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(tareaEditada),
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        await fetchTareas();
+
+        setTareaActiva(tareaEditada);
+        setVista("detalle");
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error("Error editando tarea", error);
+    }
+  }
 
   const renderContenido = () => {
+    if (loading) {
+      return <p>Cargando tareas...</p>;
+    }
+
     if (tab === "crear") {
       return <TareasCrear onCrear={handleCrearTarea} />;
     }
+
     if (vista === "lista") {
       return (
         <TareasLista
@@ -62,6 +119,7 @@ function Tareas() {
         />
       );
     }
+
     if (vista === "detalle") {
       return (
         <TareasDetalle
@@ -71,6 +129,7 @@ function Tareas() {
         />
       );
     }
+
     if (vista === "editar") {
       return (
         <TareasEditar
@@ -86,6 +145,7 @@ function Tareas() {
     <div className="tareas">
       <div className="homework-header">
         <div className="line-homework"></div>
+
         <div className="homework-tabs">
           <div
             className={`tab ${tab === "gestionar" ? "active" : ""}`}
@@ -96,6 +156,7 @@ function Tareas() {
           >
             Gestionar Tareas
           </div>
+
           <div
             className={`tab ${tab === "crear" ? "active" : ""}`}
             onClick={() => setTab("crear")}
@@ -105,7 +166,9 @@ function Tareas() {
         </div>
       </div>
 
-      <div className="homework-content">{renderContenido()}</div>
+      <div className="homework-content">
+        {renderContenido()}
+      </div>
     </div>
   );
 }

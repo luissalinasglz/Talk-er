@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import mysql from "mysql2/promise";
 import { PORT } from "./config/index.js";
 import Router from "./routes/index.js";
 import pool from "./db/db.js"
+import { purgeExpiredTokens } from "./models/Blacklist.js";
 
 const server = express();
 
@@ -16,7 +16,7 @@ server.disable("x-powered-by");
 server.use(cookieParser());
 server.use(express.urlencoded({ extended: false }));
 server.use(express.json());
-server.use("/v1/uploads", express.static("uploads"));
+server.use("/uploads", express.static("uploads"));
 
 async function connectWithRetry() {
     try {

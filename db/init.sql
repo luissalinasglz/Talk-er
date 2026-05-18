@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `materials` (
 CREATE TABLE IF NOT EXISTS `session_logs` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`session_id` int NOT NULL,
+	`title` varchar(300) NOT NULL,
 	`description` varchar(300) NOT NULL,
 	`evidence_url` varchar(100) NOT NULL,
 	`planning` varchar(200) NOT NULL,
@@ -79,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `session_logs` (
 CREATE TABLE IF NOT EXISTS `reviewer_tutor` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`tutor_id` int NOT NULL,
-	`group_id` int NOT NULL,
+	`supervisor_id` int NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -125,6 +126,14 @@ CREATE TABLE IF NOT EXISTS preguntas (
     FOREIGN KEY (examen_id) REFERENCES examenes(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS blacklist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    token VARCHAR(512) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_token (token(255))
+);
+
 
 ALTER TABLE `users` ADD CONSTRAINT `users_fk6` FOREIGN KEY (`period`) REFERENCES `periods`(`id`);
 ALTER TABLE `sessions` ADD CONSTRAINT `sessions_fk1` FOREIGN KEY (`student_tutor`) REFERENCES `student_tutor`(`id`);
@@ -135,9 +144,9 @@ ALTER TABLE `assignments` ADD CONSTRAINT `assignments_fk1` FOREIGN KEY (`group`)
 ALTER TABLE `submissions` ADD CONSTRAINT `submissions_fk1` FOREIGN KEY (`assignment`) REFERENCES `assignments`(`id`);
 ALTER TABLE `materials` ADD CONSTRAINT `materials_fk1` FOREIGN KEY (`student_tutor_id`) REFERENCES `student_tutor`(`id`);
 ALTER TABLE `session_logs` ADD CONSTRAINT `session_logs_fk1` FOREIGN KEY (`session_id`) REFERENCES `sessions`(`id`);
-ALTER TABLE `reviewer_tutor` ADD CONSTRAINT `reviewer_tutor_fk1` FOREIGN KEY (`tutor_id`) REFERENCES `users`(`id`);
 
-ALTER TABLE `reviewer_tutor` ADD CONSTRAINT `reviewer_tutor_fk2` FOREIGN KEY (`group_id`) REFERENCES `student_tutor`(`id`);
+ALTER TABLE `reviewer_tutor` ADD CONSTRAINT `reviewer_tutor_fk1` FOREIGN KEY (`tutor_id`) REFERENCES `users`(`id`);
+ALTER TABLE `reviewer_tutor` ADD CONSTRAINT `reviewer_tutor_fk2` FOREIGN KEY (`supervisor_id`) REFERENCES `users`(`id`);
 
 INSERT INTO periods (name, session_log_percentage, letter_percentage, video_percentage, start_date, end_date)
 VALUES ('Febrero Junio 2026', 80, 10, 10, '2026-02-10 00:00:01', '2026-06-25 23:59:59');
@@ -153,6 +162,9 @@ INSERT INTO student_tutor (tutor, student, idioma, start_date, end_date)
 VALUES (3, 4, 'english', '2026-02-10', '2026-06-25'),
 (3, 5, 'french', '2026-02-10', '2026-06-25');
 
+INSERT INTO reviewer_tutor (tutor_id, supervisor_id)
+VALUES (3, 2);
+
 INSERT INTO assignments (`group`, title, description, due_date)
 VALUES (1, 'Lección del verbo to be', 'Completa los ejercicios de la página 24 de tu libro de trabajo.', '2026-04-28 23:59:59'),
        (1, 'Lección pasado simple', 'Escribe un ensayo corto de 300 palabras.', '2026-04-30 18:00:00');
@@ -165,9 +177,9 @@ VALUES
 (1, 'https://zoom.us/j/1112223333', 'Zoom', '12345', '2026-04-20 16:00:00', '2026-04-20 17:00:00'),
 (1, 'https://zoom.us/j/4445556666', 'Zoom', '54321', '2026-04-22 16:00:00', '2026-04-22 17:00:00');
 
-INSERT INTO session_logs (session_id, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
+INSERT INTO session_logs (session_id, title, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
 VALUES 
-(1, 'El alumno repasó el verbo to be de forma excelente. Mostró buena actitud y participamos en un juego de roles.', 'https://drive.google.com/file/d/demo1', 'Se planeó repasar la unidad 1 del libro.', FALSE, NULL, NULL, TRUE, '', TRUE);
+(1, 'verbo to be' ,'El alumno repasó el verbo to be de forma excelente. Mostró buena actitud y participamos en un juego de roles.',  'http://localhost:3000/v1/uploads/bitacoras/evidencia-demo-1.png', 'Se planeó repasar la unidad 1 del libro.', FALSE, NULL, NULL, TRUE, '', FALSE);
 
 INSERT INTO horarios (student_tutor_id, dia_semana, hora_inicio, hora_fin)
 VALUES (1, 4, '15:00:00', '16:00:00'),
