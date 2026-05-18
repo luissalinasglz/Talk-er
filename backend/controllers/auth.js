@@ -1,4 +1,6 @@
 import { findUserByUsername, generateAccessJWT } from "../models/User.js";
+import jwt from "jsonwebtoken";
+import { blacklistToken } from "../models/Blacklist.js";
 import bcrypt from "bcrypt";
 
 export async function Login(req, res) {
@@ -46,4 +48,34 @@ export async function Login(req, res) {
         });
     }
     res.end();
+}
+
+export async function Logout(req, res) {
+    try {
+        const authHeader = req.headers["cookie"];
+        if (!authHeader) return res.sendStatus(401);
+
+        const cookie = authHeader.split("=")[1];
+
+        const decoded = jwt.decode(cookie);
+        if (decoded?.exp) {
+            const expiresAt = new Date(decoded.exp * 1000);
+            await blacklistToken(cookie, expiresAt);
+        }
+
+        res.clearCookie("SessionID", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+        });
+
+        res.status(200).json({ status: "success", message: "Se ha cerrado sesion de manera exitosa" });
+    } catch (err) {
+        res.status(500).json({
+            status: "error",
+            code: 500,
+            data: [],
+            message: "Internal Server Error",
+        });
+    }
 }
