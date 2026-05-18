@@ -1,10 +1,12 @@
 import { NavLink } from "react-router-dom";
 import "../../sidebar.css";
 
-import sesionesIcon from "../../assets/calendario.png";
-import bitacoraIcon from "../../assets/bitacora.png";
-import dashboardIcon from "../../assets/dashboard.png";
 import profileWhite from "../../assets/profile-white.png";
+import dashboardIcon from "../../assets/dashboard.png";
+import estadisticasIcon from "../../assets/estadistica.png";
+import usuariosIcon from "../../assets/usuarios.png";
+import horasIcon from "../../assets/horas.png"
+import materialIcon from "../../assets/material.png"
 
 function SidebarAdmin() {
   const base = "/admin";
@@ -21,14 +23,24 @@ function SidebarAdmin() {
           <p>Dashboard</p>
         </NavLink>
 
-        <NavLink to={`${base}/sesiones`} className="option">
-          <img className="icon" src={sesionesIcon} alt="" />
-          <p>Sesiones</p>
+        <NavLink to={`${base}/estadisticas`} className="option">
+          <img className="icon" src={estadisticasIcon} alt="" />
+          <p>Estadistica</p>
         </NavLink>
 
-        <NavLink to={`${base}/bitacora`} className="option">
-          <img className="icon" src={bitacoraIcon} alt="" />
-          <p>Bitácora</p>
+        <NavLink to={`${base}/usuarios`} className="option">
+          <img className="icon" src={usuariosIcon} alt="" />
+          <p>Usuarios</p>
+        </NavLink>
+
+         <NavLink to={`${base}/horas`} className="option">
+          <img className="icon" src={horasIcon} alt="" />
+          <p>Horas</p>
+        </NavLink>
+
+         <NavLink to={`${base}/material`} className="option">
+          <img className="icon" src={materialIcon} alt="" />
+          <p>Material</p>
         </NavLink>
       </nav>
     </aside>

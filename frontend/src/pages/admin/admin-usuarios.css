@@ -1,0 +1,232 @@
+.usuarios-admin{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.user-line{
+    background-color: #F0F2F7;
+    width: 100%;
+    height: 3px;
+}
+
+.users-admin{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.user-left{
+    flex: 4;
+}
+
+.type-users{
+    margin: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.options-user{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.opti-user{
+    padding: 1rem;
+    color: #000000;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    width: 120px
+}
+
+.active-user{
+    background-color: #6883BA;
+    color: #FFFFFF;
+}
+
+.add-user{
+    padding: 1rem;
+    color: #FFFFFF;
+    background-color: #252467;
+    border-radius: 20px;
+    width: 200px;
+}
+
+.table-users{
+    text-align: left;
+    background-color: #FFFFFF;
+    margin: 2rem;
+    padding: 1rem;
+    color: #000000;
+    border-radius: 20px;
+}
+
+.user-right{
+    flex: 2;
+    background-color: #FFFFFF;
+    text-align: left;
+    padding: 2rem;
+}
+
+.user-right h3{
+    color: #000000;
+    margin-bottom: 1rem;
+}
+
+.data-user{
+    display: flex;
+    flex-direction: column;
+}
+
+.data-detail{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.user-detail{
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+input{
+    background-color: #FFFFFF;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 3px solid #BBBEC7;
+    border-radius: 20px;
+    color: #000000;
+    box-sizing: border-box; 
+    outline: none;
+}
+
+.tutor-assigned{
+    background-color: #252467;
+    padding: 1rem;
+    border-radius: 20px;
+    color: #FFFFFF;
+}
+
+.tutor-assigned-data{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 1rem 0rem;
+}
+
+.unlink{
+    background-color: #E79090;
+    border: 3px solid #E05C5C;
+    border-radius: 20px;
+    color: #E05C5C;
+    padding: 0rem 0.75rem;
+}
+
+.save-changes{
+    color: #FFFFFF;
+    background-color: #6883BA;
+    justify-content: center;
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.table-users {
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem;
+    text-align: left;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.users-table th {
+    color: #BBBEC7;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid #F0F2F7;
+}
+
+.users-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #F0F2F7;
+    vertical-align: middle;
+}
+
+.users-table tr:last-child td {
+    border-bottom: none;
+}
+
+.user-nombre {
+    font-weight: 600;
+    color: black;
+    margin: 0;
+}
+
+.user-email {
+    color: #BBBEC7;
+    font-size: 11px;
+    margin: 0;
+}
+
+.user-idioma {
+    color: black;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+}
+
+.rol-badge {
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    width: fit-content;
+}
+
+.rol-badge.alumno {
+    background-color: #6883BA40;
+    color: #6883BA;
+}
+
+.rol-badge.tutor {
+    background-color: #25246740;
+    color: #252467;
+}
+
+.rol-badge.revisor {
+    background-color: #BBBEC740;
+    color: #6c6f7a;
+}
+
+.estado-badge-user {
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    width: fit-content;
+}
+
+.estado-badge-user.activo {
+    background-color: #93E49040;
+    color: #3a8a37;
+}
+
+.estado-badge-user.inactivo {
+    background-color: #F0F2F7;
+    color: #BBBEC7;
+}

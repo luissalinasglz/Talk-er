@@ -30,6 +30,12 @@
   }
 }
 
+.nunito {
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #9ca3af;

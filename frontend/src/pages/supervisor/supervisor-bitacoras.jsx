@@ -66,21 +66,9 @@ function SupervisorBitacoras() {
                                 </div>
                             </div>
 
-                            <div className="bitacora-group grow">
-                                <p>Planeación de la siguiente sesión</p>
-                                <div className="bitacora-text">
-                                    <p>Ej: Habrá examen de Unidad 3</p>
-                                </div>
-                            </div>
                         </div>
 
                         <div className="bitacora-right-right">
-                            <div className="bitacora-group">
-                                <p>Horario de Sesión</p>
-                                <div className="bitacora-input">
-                                    <p>--:--</p>
-                                </div>
-                            </div>
 
                             <div className="bitacora-group">
                                 <p>Duración de la sesión(min)</p>
@@ -89,15 +77,9 @@ function SupervisorBitacoras() {
                             </div>
 
                             <div className="bitacora-group">
-                                <p>Tareas asignadas</p>
-                                <div className="bitacora-input">
-                                </div>
-                            </div>
-
-                            <div className="bitacora-group">
-                                <p>Subir evidencia</p>
+                                <p>Evidencia de la clase</p>
                                 <div className="bitacora-upload">
-                                    <p>Haz Click para adjuntar un archivo</p>
+                                    <p>Seleccionar archivo</p>
                                 </div>
                             </div>
 
@@ -148,7 +130,6 @@ function SupervisorBitacoras() {
                     <div className="review-fields">
                         <div className="review-field">Tema visto en clase</div>
                         <div className="review-field active">Descripción de la sesión</div>
-                        <div className="review-field">Planeación de la siguiente</div>
                         <div className="review-field">Descripción de incidencia</div>
                     </div>
 

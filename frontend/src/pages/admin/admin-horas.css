@@ -1,0 +1,104 @@
+.horas-admin{
+    display: flex;
+    flex-direction: row;
+}
+
+.horas-left,
+.horas-right{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin: 2rem 3rem;
+    background-color: #FFFFFF;
+    text-align: left;
+    border-radius: 20px;
+    padding: 2rem;
+    color: #000000;
+}
+
+.horas-left h2,
+.horas-right h2{
+    color: #000000;
+}
+
+.hours-period{
+    background-color: #F0F5F7;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 1rem;
+    align-items: center;
+    border-radius: 20px;
+}
+
+.activity-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    gap: 1rem;
+    color: #888888;
+    font-size: 0.8rem;
+    margin-top: 1rem;
+}
+
+.activity-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #F0F5F7;
+    padding: 0.75rem 1rem;
+    border-radius: 20px;
+    margin-top: 0.75rem;
+    gap: 1rem;
+}
+
+.col-activity {
+    flex: 2;
+    font-weight: 500;
+    color: #000000;
+}
+
+.col-hrs,
+.col-pct {
+    flex: 1;
+    text-align: center;
+}
+
+.activity-input {
+    flex: 1;
+    text-align: center;
+    border: 1.5px solid #CCCCCC;
+    border-radius: 20px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.9rem;
+    background-color: #FFFFFF;
+    color: #000000;
+    outline: none;
+    width: 60px;
+}
+
+.add-activity-btn {
+    margin-top: 1.5rem;
+    background-color: #FFFFFF;
+    border: 2px dashed #6883BA;
+    color: #6883BA;
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.save-activity-btn {
+    margin-top: 0.75rem;
+    background-color: #6883BA;
+    color: #FFFFFF;
+    padding: 0.75rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+}
