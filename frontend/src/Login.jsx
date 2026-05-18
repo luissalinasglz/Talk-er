@@ -58,20 +58,21 @@ export default function Login() {
                 <h2>Bienvenido</h2>
 
                 <label>Usuario </label>
-                <input type="text" value={user} onChange={(e) => setUser(e.target.value)} required />
+                <input data-cy="username-input" type="text" value={user} onChange={(e) => setUser(e.target.value)} required />
 
                 <label>Contraseña</label>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <input data-cy="password-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
                 <label>
                     <input type="checkbox" checked={isChecked} onChange={handleOnChange} /> Recuérdame
                 </label>
 
-                <button type="submit">Iniciar sesión</button>
+                <button data-cy="login-btn" type="submit">Iniciar sesión</button>
 
-                <p className="message">{message}</p>
+                <p className="message" data-cy="error-message">{message}</p>
                 
             </form>
+
         </div>
     );
 }
