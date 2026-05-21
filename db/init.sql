@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `session_logs` (
 	`validated` boolean NOT NULL,
 	`corrections` varchar(300),
 	`approved` boolean NOT NULL,
+	'approved_by' int,
 	PRIMARY KEY (`id`)
 );
 
@@ -143,7 +144,9 @@ ALTER TABLE `student_tutor` ADD CONSTRAINT `student_tutor_fk2` FOREIGN KEY (`stu
 ALTER TABLE `assignments` ADD CONSTRAINT `assignments_fk1` FOREIGN KEY (`group`) REFERENCES `student_tutor`(`id`);
 ALTER TABLE `submissions` ADD CONSTRAINT `submissions_fk1` FOREIGN KEY (`assignment`) REFERENCES `assignments`(`id`);
 ALTER TABLE `materials` ADD CONSTRAINT `materials_fk1` FOREIGN KEY (`student_tutor_id`) REFERENCES `student_tutor`(`id`);
+
 ALTER TABLE `session_logs` ADD CONSTRAINT `session_logs_fk1` FOREIGN KEY (`session_id`) REFERENCES `sessions`(`id`);
+ALTER TABLE `session_logs`ADD CONSTRAINT `session_logs_fk2` FOREIGN KEY (`approved_by`) REFERENCES `users`( `id`);
 
 ALTER TABLE `reviewer_tutor` ADD CONSTRAINT `reviewer_tutor_fk1` FOREIGN KEY (`tutor_id`) REFERENCES `users`(`id`);
 ALTER TABLE `reviewer_tutor` ADD CONSTRAINT `reviewer_tutor_fk2` FOREIGN KEY (`supervisor_id`) REFERENCES `users`(`id`);
