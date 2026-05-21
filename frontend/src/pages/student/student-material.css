@@ -1,0 +1,78 @@
+.material-student{
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+}
+
+.type-material{
+    margin: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.type-material-admin{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.options-material{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.opti-material{
+    padding: 1rem;
+    color: #000000;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    width: 120px
+}
+
+.active-material{
+    background-color: #6883BA;
+    color: #FFFFFF;
+}
+
+.search-material{
+    padding: 1rem;
+    color: #000000;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    width: 300px;
+}
+
+.mat-admin{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.material-data-admin{
+    background-color: #FFFFFF;
+    margin-top: 2rem;
+    margin-right: 2rem;
+    padding: 1rem 2rem;
+    border-radius: 20px;
+}
+
+.material-side-admin{
+    display: flex;
+    flex-direction: row;
+}
+
+.material-data-admin h3{
+    color: black;
+}
+
+.material-button-admin{
+    margin-top: 0.5rem;
+    background-color: #252467;
+    color: #FFFFFF;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    border-radius: 20px;
+}
+

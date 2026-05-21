@@ -1,0 +1,158 @@
+.horas {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #F0F2F7;
+}
+
+.horas-side{
+    display: flex;
+    flex-direction: row;
+}
+
+.horas-left{
+    flex: 2;
+    margin: 1rem;
+}
+
+.horas-right{
+    flex: 1;
+    margin: 1rem;
+}
+
+.info-hours{
+    background-color: #252467;
+    padding: 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    border-radius: 20px;
+    text-align: left;
+}
+
+.info-hours h3{
+    color: #FFFFFF;
+    font-size: 32PX;
+}
+
+.circle-hours p{
+    flex-shrink: 0;
+}
+
+.count-hours{
+    margin-top: 2rem;
+    background-color: #FFFFFF;
+    padding: 1rem;
+    text-align: left;
+    border-radius: 20px;
+}
+
+.count-data p:first-of-type {
+    color: black;
+    font-size: 15px;
+    white-space: nowrap;    
+    flex: 0 0 160px; 
+    margin: 0;
+}
+
+.count-hours h2{
+    color: black;
+    font-weight: bold;
+}
+
+.count-data{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.2rem;
+    width: 100%;
+}
+
+.count-data .label {
+    color: black;
+    font-size: 15px;
+    white-space: nowrap;    
+    flex: 0 0 180px; 
+    text-align: left;
+}
+
+.count-data p{
+    color: black;
+    font-size: 15px;
+    white-space: nowrap;    
+    min-width: 60px;
+}
+
+.count-data p:last-child {
+    text-align: right;
+    flex-shrink: 0;
+    min-width: 40px;  
+    white-space: nowrap;
+            
+}
+
+.percentage-hours{
+    flex: 1;              
+    background-color: #BBBEC7;
+    border-radius: 5px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.line-percentage{
+    background-color: #6883BA;
+    width: 70%;             
+    height: 10px;
+    border-radius: 5px;
+}
+
+.count-data .hours-val {
+    color: black;
+    font-size: 15px;
+    flex: 0 0 50px; 
+    text-align: right;
+}
+
+.advance{
+    background-color: #FFFFFF;
+    padding: 1.6rem;
+    color: black;
+    border-radius: 20px;
+}
+
+.advance h1{
+    color: black;
+}
+
+.sessions-days{
+    margin-top: 2rem;
+}
+
+.hours-record{
+    display: flex;
+    flex-direction: column;
+    margin: 1rem;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    text-align: left;
+    padding: 1.5em;
+}
+
+.category-title{
+    color: black;
+    font-weight: bold;
+}
+
+.category-total{
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    gap: 2rem;
+    justify-content: space-between;
+}
+
+.category-total p{
+    color: black;
+}

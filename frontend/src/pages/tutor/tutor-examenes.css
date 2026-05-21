@@ -1,0 +1,498 @@
+.examenes {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #F0F2F7;
+}
+
+.line-exam {
+    background-color: #F0F2F7;
+    height: 3px;
+    width: 100%;
+    margin: 0;
+}
+
+.exams-content {
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Panel */
+.examenes-panel {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    color: black;
+    text-align: left;
+}
+
+.panel-right {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: #FFFFFF;
+}
+
+.panel-right h2 {
+    color: black;
+    margin-top: 0;
+}
+
+.exam-form {
+    margin-top: 1.5rem;
+}
+
+.exam-form p {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.space {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.left-space, .right-space {
+    flex: 1;
+}
+
+/* Estilos Unificados para Inputs y Selects */
+.exam-input, .question-input, .option-input {
+    width: 100%;
+    box-sizing: border-box;
+    color: black;
+    background-color: #FFFFFF;
+    border: 2px solid #BBBEC7; /* Comas removidas */
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.exam-input::placeholder, .question-input::placeholder, .option-input::placeholder {
+    color: #BBBEC7;
+}
+
+.exam-input:focus, .question-input:focus, .option-input:focus {
+    border-color: #6883BA;
+}
+
+.exam-questions {
+    margin-top: 2rem;
+}
+
+.questions-container {
+    background-color: #F0F2F7;
+    padding: 1.5rem;
+    border-radius: 20px;
+    color: #6883BA;
+}
+
+.questions-container > p {
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.options-general {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.option-circle { 
+    background-color: #FFFFFF;
+    height: 20px;
+    width: 20px;
+    border: 2px solid #BBBEC7; /* Comas removidas */
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.left-options, .right-options {
+    flex: 1;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    gap: 1rem;
+    margin-top: 2.5rem;
+}
+
+.button-add, .button-save {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.button-add {
+    background-color: #FFFFFF;
+    color: #6883BA;
+    border: 2px dashed #6883BA;
+    border-radius: 20px;
+    padding: 0.75rem 2rem;
+    width: 100%;
+}
+
+.button-add:hover {
+    background-color: #F0F2F7;
+}
+
+.button-save {
+    background-color: #6883BA;
+    border: none;
+    color: #FFFFFF;
+    border-radius: 20px;
+    padding: 0.75rem 2.5rem;
+    width: 100%;
+}
+
+.button-save:hover {
+    background-color: #4f6ea8;
+}
+
+.panel-left {
+    flex: 1.2;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: #F0F2F7;
+}
+
+.panel-left h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: black;
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+    text-align: left;
+}
+
+.exam-item {
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: left;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.exam-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.exam-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.exam-indicator {
+    width: 8px;
+    height: 50px;
+    background-color: #252467;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.exam-info {
+    flex: 1;
+}
+
+.exam-name {
+    font-weight: 600;
+    color: black;
+    margin: 0;
+}
+
+.exam-date {
+    color: #BBBEC7;
+    font-size: 13px;
+    margin: 0;
+    margin-top: 0.25rem;
+}
+
+.exam-class {
+    background-color: #6883BA80;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #6883BA;
+    font-weight: bold;
+}
+
+.exam-link {
+    color: #6883BA;
+    font-size: 13px;
+    text-align: right;
+    cursor: pointer;
+    margin: 0;
+    font-weight: bold;
+}
+
+.exam-link:hover {
+    text-decoration: underline;
+}
+
+/* Resultados */
+.examenes-resultados {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.results-right {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: #FFFFFF;
+    color: black;
+    text-align: left;
+}
+
+.results-right h2 {
+    color: black;
+    margin-bottom: 2rem;
+    margin-top: 0;
+}
+
+.feedback-input {
+    background-color: #FFFFFF;
+    border: 2px solid #BBBEC7;
+    border-radius: 20px;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    color: black;
+    height: 150px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+}
+
+.feedback-input:focus {
+    border-color: #6883BA;
+}
+
+.results-left {
+    flex: 2;
+    padding: 2rem;
+    overflow-y: auto;
+    background-color: #F0F2F7;
+    text-align: left;
+}
+
+.results-left h2 {
+    color: black;
+    margin-top: 0;
+}
+
+.general-info {
+    display: flex;
+    flex-direction: row;
+    background-color: #252467;
+    padding: 1.5rem 2rem;
+    color: #FFFFFF;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.circle-cal {
+    width: 90px;
+    height: 90px;
+    background-color: #252467;
+    border-radius: 50%;
+    border: 5px solid #93E490;
+    display: flex;              
+    align-items: center;       
+    justify-content: center;    
+    margin-left: auto;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.student-info, .cal-info {
+    flex: 1;
+}
+
+.student-info h3 {
+    margin: 0 0 0.5rem 0;
+}
+
+.student-info p {
+    margin: 0;
+    color: #BBBEC7;
+}
+
+.exam-information {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.answers {
+    color: black;
+    background-color: #FFFFFF;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.answers p:first-child {
+    color: #BBBEC7;
+    margin: 0;
+    font-size: 14px;
+}
+
+.answers p:last-child {
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0;
+}
+
+.exam-data {
+    margin-top: 2rem;
+    background-color: #FFFFFF;
+    padding: 1.5rem;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+}
+
+.number-question p {
+    color: #252467;
+    margin: 0;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.questions {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.question-detail {
+    color: black;
+    font-weight: 500;
+}
+
+.question-detail p {
+    margin-top: 0;
+}
+
+.options-general-results {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.answers-side {
+    display: flex;
+    flex-direction: column;
+    flex: 1;                   
+    gap: 1rem;
+}
+
+.answers-left, .answers-right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    color: black;
+    background-color: #F0F2F7;
+    padding: 0.75rem 1rem;
+    border-radius: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.answers-left p, .answers-right p {
+    margin: 0;
+}
+
+.correct {
+    background-color: #93E490 !important;
+    color: #252467 !important;
+    border-color: #252467 !important;
+    font-weight: bold;
+}
+
+.vista-centrada {
+    justify-content: center;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.w-100 {
+    width: 100%;
+    flex: none !important;
+    border-radius: 20px;
+    margin-top: 1rem;
+}
+
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.header-flex h2 {
+    margin-bottom: 0 !important;
+}
+
+.header-flex .button-save {
+    width: auto;
+    padding: 0.5rem 1.5rem;
+    margin: 0;
+}
+
+.button-delete {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background-color: transparent;
+    color: #ff4d4f;
+    border: 1px solid #ff4d4f;
+    border-radius: 10px;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.button-delete:hover {
+    background-color: #ff4d4f;
+    color: white;
+}

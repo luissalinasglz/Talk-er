@@ -1,0 +1,192 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #F2F0F7;
+  color: black;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  flex: 1;
+  background-color: #F2F0F7;
+}
+
+.left-rectangles {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 5;
+}
+
+.right-rectangles {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex: 3;
+}
+
+.rectangle {
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  padding: 1rem;
+  text-align: left;
+  box-shadow: 0 5px 22px rgba(237, 236, 236, 0.05);
+}
+
+.rectangle.grow {
+  flex: 1;
+  background-color: #252467;
+  color: #FFFFFF;
+}
+
+.acreditadas {
+  text-align: center;
+}
+
+.class-orden {
+  background-color: #6883BA;
+}
+
+.class-orden h3,
+.class-orden p {
+  color: #FFFFFF;
+}
+
+.class-orden .info .side p:first-child {
+  font-weight: bold;
+  font-size: 1.05rem;
+  color: #ffffff;
+}
+
+.class-orden .info .side .groups {
+  color: #afb9ba;
+  font-weight: lighter;
+  margin-top: 4px;
+}
+
+.content {
+  padding-top: 1rem;
+}
+
+.info,
+.lessons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.lessons {
+  padding-bottom: 1rem;
+}
+
+.side {
+  margin-left: 1rem;
+  font-weight: 600;
+}
+
+.circle {
+  background-color: #BBBEC7;
+  height: 20px;
+  width: 20px;
+  border: none;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.groups {
+  color: #BBBEC7;
+  font-size: 15px;
+}
+
+.line-separate {
+  background-color: #99AACC;
+  height: 2.5px;
+  width: 100%;
+  border: none;
+  margin: 15px 0;
+}
+
+.empty-message {
+  text-align: center;
+  color: gray;
+}
+
+.count {
+  font-weight: bold;
+  font-size: 30px;
+  padding-bottom: 1rem;
+}
+
+.content-bar {
+  background-color: #BBBEC7;
+  width: 100%;
+  height: 15px;
+  border-radius: 20px;
+}
+
+.percentage-bar {
+  background-color: #6883BA;
+  width: 50%;
+  height: 15px;
+  border-radius: 20px;
+}
+
+.percentage {
+  color: #BBBEC7;
+  font-weight: bold;
+  font-size: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.calendario {
+  width: 100%;
+  font-size: 0.75rem;
+  margin-top: 1rem;
+  border-collapse: collapse;
+}
+
+.calendario th {
+  padding: 10px;
+  font-size: 0.8rem;
+  color: #666;
+  text-transform: uppercase;
+  text-align: center;
+  border-bottom: 3px solid #F0F2FA;
+}
+
+.calendario td {
+  padding: 10px;
+  border: 1px solid #F0F2F7;
+  height: 60px;
+  vertical-align: middle;
+}
+
+.hora {
+  font-weight: bold;
+  color: #252467;
+  border: none !important;
+  width: 60px;
+}
+
+.evento {
+  background-color: #6883BA;
+  color: white;
+  border-radius: 12px;
+  padding: 8px;
+  font-size: 0.75rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(104, 131, 186, 0.3);
+}
+
+.evento p {
+  margin: 0;
+}

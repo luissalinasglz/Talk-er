@@ -1,0 +1,15 @@
+.student-layout {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  grid-template-rows: 80px 1fr;
+  grid-template-areas: "sidebar header" "sidebar main";
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.student-main {
+  grid-area: main;
+  overflow-y: auto;
+  background-color: #F2F0F7;
+}

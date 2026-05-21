@@ -1,0 +1,182 @@
+.dashboard-student{
+    display: flex;
+    flex-direction: row;
+}
+
+.student-left{
+    flex: 4;
+}
+
+.groups-rectangles{
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+    text-align: left;
+    gap: 1rem;
+}
+
+.groups-rectangles h2{
+    color: #000000;
+}
+
+.general-student-rectangles{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.group-rectangle{
+    background-color: #6883BA;
+    color: #FFFFFF;
+    padding: 1rem;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 250px;
+    width: 200px;
+}
+
+.next-sent{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin: 2rem;
+    gap: 1rem;
+}
+
+.next-sent h2{
+    color: #000000;
+    
+}
+
+.lessons-student{
+    background-color: #FFFFFF;
+    padding: 1rem;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.lessons-student h4{
+    color: #000000;
+}
+
+.circle-student-red{
+    width: 30px;
+    height: 30px;
+    background-color: #E05C5C;
+    border-radius: 50%;
+}
+
+.circle-student-orange{
+    width: 30px;
+    height: 30px;
+    background-color: #F0A500;
+    border-radius: 50%;
+}
+
+.student-right{
+    flex: 4;
+}
+
+.hour-student{
+     margin: 2rem;
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    text-align: left;
+    padding: 1rem;
+}
+
+.hour-student h2{
+    color: #000000;
+}
+
+.next-session-student{
+    margin: 2rem;
+    background-color: #252467;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 20px;
+}
+
+.next-session-details{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-white-student{
+    width: 50px;
+    height: 50px;
+}
+
+.session-join{
+    background-color: #6883BA;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 20px;
+}
+
+.schedule-grid {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+}
+
+.schedule-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    min-height: 48px;
+}
+
+.schedule-hour {
+    width: 45px;
+    font-size: 0.8rem;
+    color: #888888;
+    padding-top: 4px;
+    flex-shrink: 0;
+}
+
+.schedule-slot {
+    flex: 1;
+    border-top: 1px solid #EFEFEF;
+    min-height: 48px;
+    position: relative;
+}
+
+.schedule-event {
+    border-radius: 10px;
+    padding: 0.5rem 0.75rem;
+    color: #FFFFFF;
+    margin: 2px 0;
+}
+
+.event-english {
+    background-color: #6883BA;
+}
+
+.event-french {
+    background-color: #7a8fc4;
+}
+
+.event-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.event-time {
+    font-size: 0.75rem;
+    margin: 2px 0 0 0;
+    opacity: 0.85;
+}

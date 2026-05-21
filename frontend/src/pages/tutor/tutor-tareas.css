@@ -1,0 +1,335 @@
+.tareas {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #F0F2F7;
+}
+
+.homework-header {
+    background-color: #FFFFFF;
+    padding: 1rem 2rem;
+}
+
+.homework-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: black;
+    margin: 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #F0F2F7;
+}
+
+.line-homework {
+    width: 100%;
+    height: 3px;
+    background-color: #BBBEC7;
+}
+
+.homework-tabs {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    padding-top: 0.75rem;
+}
+
+.tab {
+    font-size: 14px;
+    color: #BBBEC7;
+    cursor: pointer;
+    padding-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.tab.active {
+    color: #6883BA;
+    border-bottom: 3px solid #6883BA;
+}
+
+.homework-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.homework-list h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: black;
+    text-align: left;
+}
+
+.homework-item {
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.homework-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.homework-indicator {
+    width: 8px;
+    height: 50px;
+    background-color: #252467;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.homework-info {
+    flex: 1;
+}
+
+.homework-name {
+    color: black;
+    font-weight: 600;
+    margin: 0;
+}
+
+.homework-date {
+    color: #BBBEC7;
+    font-size: 13px;
+    margin: 0;
+    margin-top: 0.25rem;
+}
+
+.homework-class {
+    background-color: #6883BA80;
+    padding: 0.75rem 3rem;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #6883BA;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+/* Tareas detalles */
+.homework-details {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    height: 100%;
+}
+
+.detail-left {
+    flex: 1;
+    padding: 2rem;
+    border-radius: 20px;
+    background-color: #252467;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-left h3 {
+    color: #FFFFFF;
+    margin-top: 0;
+}
+
+.detail-left p {
+    color: #E0E0E0;
+    line-height: 1.5;
+}
+
+.indications {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.indications-details {
+    padding-bottom: 1rem;
+}
+
+.file {
+    margin-top: auto;
+    background-color: #FFFFFF20;
+    border-radius: 10px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    color: #FFFFFF;
+}
+
+.save {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.button, .button-edite {
+    background-color: #6883BA;
+    color: #FFFFFF;
+    padding: 0.75rem 3rem;
+    border-radius: 30px;
+    cursor: pointer;
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover, .button-edite:hover {
+    background-color: #4f6ea8;
+}
+
+.detail-right {
+    flex: 1.25;
+    background-color: #FFFFFF;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    border-radius: 20px;
+}
+
+.detail-right h3 {
+    color: black;
+    font-weight: bold;
+    padding-bottom: 1rem;
+    margin-top: 0;
+}
+
+.student {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+}
+
+.student p {
+    color: black;
+    margin: 0;
+}
+
+.info-date {
+    color: #BBBEC7 !important;
+    font-size: 11px;
+    margin-top: 0.25rem !important;
+}
+
+.circle-student {
+    background-color: #252467;
+    height: 40px;
+    width: 40px;
+    border: none;
+    border-radius: 50%;
+}
+
+.file-info {
+    display: flex;
+    flex-direction: row;
+    background-color: #F0F2F7;
+    padding: 1rem 1.5rem;
+    align-items: center;
+    border-radius: 20px;
+    gap: 1rem;
+    margin-top: 2rem;
+    color: black;
+}
+
+.ver {
+    margin-left: auto;
+    font-weight: bold;
+    color: #6883BA;
+    cursor: pointer;
+}
+
+.calification {
+    display: flex;
+    flex-direction: row;
+    margin-top: 2rem;
+    align-items: center;
+}
+
+.homework-form {
+    color: black;
+    text-align: left;
+    width: 50%;
+    min-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.select-input {
+    background-color: #FFFFFF;
+    border: 2px solid #BBBEC7;
+    padding: 0.75rem 1rem;
+    border-radius: 20px;
+    color: black;
+    font-size: 15px;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.select-input::placeholder {
+    color: #BBBEC7;
+}
+
+.select-input:focus {
+    border-color: #6883BA;
+}
+
+select.select-input {
+    cursor: pointer;
+}
+
+.file-attach {
+    background-color: #FFFFFF;
+    border: 2px dashed #BBBEC7; 
+    padding: 1rem;
+    border-radius: 20px;
+    color: black;
+    font-size: 15px;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    cursor: pointer;
+}
+
+.file-attach p {
+    font-weight: normal !important;
+}
+
+.blue-document {
+    height: 27px;
+}
+
+.form-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+}
+
+.form-date, .form-hour {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.5rem;
+}
