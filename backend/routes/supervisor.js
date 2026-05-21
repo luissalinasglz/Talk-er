@@ -1,10 +1,13 @@
 import express from "express";
 import pool from "../db/db.js";
-import { Verify } from "../middleware/verify.js";
+import { Verify, VerifyRoleSupervisor } from "../middleware/verify.js";
 
 const router = express.Router();
 
-router.get("/tutors", Verify, async (req, res) => {
+router.use(Verify)
+router.use(VerifyRoleSupervisor)
+
+router.get("/tutors", async (req, res) => {
   try {
     const supervisorId = req.user.id;
 
@@ -43,7 +46,7 @@ router.get("/tutors", Verify, async (req, res) => {
   }
 });
 
-router.get("/tutor/:tutorId/sessions", Verify, async (req, res) => {
+router.get("/tutor/:tutorId/sessions", async (req, res) => {
   try {
     const { tutorId } = req.params;
 
@@ -79,7 +82,7 @@ router.get("/tutor/:tutorId/sessions", Verify, async (req, res) => {
   }
 });
 
-router.get("/bitacoras", Verify, async (req, res) => {
+router.get("/bitacoras", async (req, res) => {
   try {
     const supervisorId = req.user.id;
 
@@ -108,7 +111,7 @@ router.get("/bitacoras", Verify, async (req, res) => {
   }
 });
 
-router.post("/correcciones", Verify, async (req, res) => {
+router.post("/correcciones", async (req, res) => {
   try {
     const { validated, corrections, approved, session_id } = req.body;
 
