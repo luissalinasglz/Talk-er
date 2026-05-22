@@ -1,24 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./tutor-material.css";
+import imageCompression from "browser-image-compression";
 
 function Material() {
     const API_URL = import.meta.env.VITE_API_URL;
 
     const [materiales, setMateriales] = useState([]);
     const [alumnos, setAlumnos] = useState([]);
-    
+
     const [filtro, setFiltro] = useState("Todos");
     const [nuevoTitulo, setNuevoTitulo] = useState("");
     const [nuevoTipo, setNuevoTipo] = useState("PDF");
-    
+
     const [alumnosSeleccionados, setAlumnosSeleccionados] = useState([]);
-    
+
     const [nuevoEnlace, setNuevoEnlace] = useState("");
     const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
-    
+
     const [loading, setLoading] = useState(true);
     const [subiendo, setSubiendo] = useState(false);
     const [message, setMessage] = useState("");
+
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         Promise.all([fetchMateriales(), fetchAlumnos()]).finally(() => {
@@ -32,8 +35,13 @@ function Material() {
                 method: "GET",
                 credentials: "include",
             });
+
             const data = await res.json();
-            if (res.ok) setMateriales(data);
+
+            if (res.ok) {
+                setMateriales(data);
+            }
+
         } catch (error) {
             console.error("Error cargando materiales:", error);
         }
@@ -45,15 +53,23 @@ function Material() {
                 method: "GET",
                 credentials: "include",
             });
+
             const data = await res.json();
-            if (res.ok) setAlumnos(data);
+
+            if (res.ok) {
+                setAlumnos(data);
+            }
+
         } catch (error) {
             console.error("Error cargando alumnos:", error);
         }
     }
+
     const toggleAlumno = (id) => {
         setAlumnosSeleccionados((prev) =>
-            prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
+            prev.includes(id)
+                ? prev.filter((a) => a !== id)
+                : [...prev, id]
         );
     };
 
@@ -65,90 +81,236 @@ function Material() {
         }
     };
 
-   const materialesAgrupados = Object.values(
+    const materialesAgrupados = Object.values(
         materiales.reduce((acumulador, mat) => {
-            const llaveUnica = mat.type === "LINK" ? mat.external_url : mat.file_url;
+
+            const llaveUnica =
+                mat.type === "LINK"
+                    ? mat.external_url
+                    : mat.file_url;
+
             const clave = llaveUnica || mat.title;
 
             if (!acumulador[clave]) {
-                acumulador[clave] = { 
-                    ...mat, 
-                    lista_alumnos: [mat.nombre_alumno] 
+
+                acumulador[clave] = {
+                    ...mat,
+                    lista_alumnos: [mat.nombre_alumno]
                 };
+
             } else {
-                if (!acumulador[clave].lista_alumnos.includes(mat.nombre_alumno)) {
-                    acumulador[clave].lista_alumnos.push(mat.nombre_alumno);
+
+                if (
+                    !acumulador[clave]
+                        .lista_alumnos
+                        .includes(mat.nombre_alumno)
+                ) {
+                    acumulador[clave]
+                        .lista_alumnos
+                        .push(mat.nombre_alumno);
                 }
             }
-            
+
             return acumulador;
+
         }, {})
     );
 
     const materialesFiltrados = materialesAgrupados.filter((mat) =>
-        filtro === "Todos" ? true : mat.lista_alumnos.includes(filtro)
+        filtro === "Todos"
+            ? true
+            : mat.lista_alumnos.includes(filtro)
     );
 
     const columnaIzquierda = materialesFiltrados.filter((_, i) => i % 2 === 0);
+
     const columnaDerecha = materialesFiltrados.filter((_, i) => i % 2 !== 0);
 
-async function publicarMaterial() {
-        if (!nuevoTitulo.trim()) return setMessage("Ingresa un título.");
-        if (alumnosSeleccionados.length === 0) return setMessage("Selecciona al menos un alumno.");
-        if (nuevoTipo === "LINK" && !nuevoEnlace.trim()) return setMessage("Ingresa un enlace.");
-        if (nuevoTipo !== "LINK" && !archivoSeleccionado) return setMessage("Selecciona un archivo.");
+    async function publicarMaterial() {
+
+        if (!nuevoTitulo.trim()) {
+            return setMessage("Ingresa un título.");
+        }
+
+        if (alumnosSeleccionados.length === 0) {
+            return setMessage("Selecciona al menos un alumno.");
+        }
+
+        if (nuevoTipo === "LINK" && !nuevoEnlace.trim()) {
+            return setMessage("Ingresa un enlace.");
+        }
+
+        if (nuevoTipo !== "LINK" && !archivoSeleccionado) {
+            return setMessage("Selecciona un archivo.");
+        }
 
         try {
+
             setSubiendo(true);
-            
-            const formData = new FormData();
-            formData.append("title", nuevoTitulo);
-            
-            formData.append("student_tutor_ids", JSON.stringify(alumnosSeleccionados));
-            
-            formData.append("type", nuevoTipo);
-            
-            if (nuevoTipo === "LINK") {
-                formData.append("external_url", nuevoEnlace);
-            } else {
-                formData.append("file", archivoSeleccionado);
+            setMessage("");
+
+            let fileKey = null;
+
+            // =====================================================
+            // SUBIDA A CELLAR / S3
+            // =====================================================
+
+            if (nuevoTipo !== "LINK") {
+
+                let archivoFinal = archivoSeleccionado;
+
+                // =================================================
+                // COMPRESIÓN SOLO PARA IMÁGENES
+                // =================================================
+
+                if (archivoSeleccionado.type.startsWith("image/")) {
+
+                    archivoFinal = await imageCompression(
+                        archivoSeleccionado,
+                        {
+                            maxSizeMB: 1,
+                            maxWidthOrHeight: 1920,
+                            useWebWorker: true,
+                        }
+                    );
+                }
+
+                // =================================================
+                // SOLICITAR URL PREFIRMADA
+                // =================================================
+
+                const presignRes = await fetch(
+                    `${API_URL}/tutor/storage/presign`,
+                    {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            type: "material",
+                            filename: archivoFinal.name,
+                            contentType: archivoFinal.type,
+                        }),
+                    }
+                );
+
+                const presignData = await presignRes.json();
+
+                if (!presignRes.ok) {
+                    throw new Error(
+                        presignData.message ||
+                        "Error preparando archivo"
+                    );
+                }
+
+                // =================================================
+                // SUBIR DIRECTO A CELLAR
+                // =================================================
+
+                const uploadRes = await fetch(
+                    presignData.uploadUrl,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": archivoFinal.type,
+                        },
+                        body: archivoFinal,
+                    }
+                );
+
+                if (!uploadRes.ok) {
+                    throw new Error("Error subiendo archivo");
+                }
+
+                fileKey = presignData.fileKey;
             }
 
-            const res = await fetch(`${API_URL}/tutor/materials`, {
-                method: "POST",
-                credentials: "include",
-                body: formData,
-            });
+            // =====================================================
+            // GUARDAR EN BASE DE DATOS
+            // =====================================================
+
+            const res = await fetch(
+                `${API_URL}/tutor/materials`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        title: nuevoTitulo.trim(),
+                        student_tutor_ids: alumnosSeleccionados,
+                        type: nuevoTipo,
+                        file_url: fileKey,
+                        external_url:
+                            nuevoTipo === "LINK"
+                                ? nuevoEnlace.trim()
+                                : null,
+                    }),
+                }
+            );
 
             const data = await res.json();
 
-            if (res.ok) {
-                setMessage("Material publicado exitosamente para los alumnos seleccionados.");
-                setNuevoTitulo("");
-                setNuevoEnlace("");
-                setArchivoSeleccionado(null);
-                setNuevoTipo("PDF");
-                setAlumnosSeleccionados([]);
-                fetchMateriales();
-            } else {
-                setMessage(data.message || "Error al subir.");
+            if (!res.ok) {
+                throw new Error(
+                    data.message ||
+                    "Error publicando material"
+                );
             }
 
+            // =====================================================
+            // RESET
+            // =====================================================
+
+            setMessage("Material publicado exitosamente.");
+
+            setNuevoTitulo("");
+            setNuevoEnlace("");
+            setArchivoSeleccionado(null);
+            setNuevoTipo("PDF");
+            setAlumnosSeleccionados([]);
+
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
+
+            fetchMateriales();
+
         } catch (error) {
+
             console.error(error);
-            setMessage("Error subiendo material.");
+
+            setMessage(
+                error.message ||
+                "Error subiendo material."
+            );
+
         } finally {
+
             setSubiendo(false);
         }
     }
 
     function abrirMaterial(mat) {
-        const url = mat.type === "LINK" ? mat.external_url : `${API_URL}${mat.file_url}`;
+
+        const url =
+            mat.type === "LINK"
+                ? mat.external_url
+                : mat.signed_file_url;
+
+        if (!url) {
+            return setMessage("No se encontró el archivo.");
+        }
+
         window.open(url, "_blank");
     }
 
     const renderizarZonaCarga = () => {
+
         if (nuevoTipo === "LINK") {
+
             return (
                 <div className="exam-form group-spacing">
                     <input
@@ -164,35 +326,76 @@ async function publicarMaterial() {
 
         return (
             <label className="upload-zone">
-                <p className="upload-icon-text">Haz clic aquí para buscar en tu equipo</p>
-                <div className="upload-btn">Seleccionar Archivo</div>
+
+                <p className="upload-icon-text">
+                    Haz clic aquí para buscar en tu equipo
+                </p>
+
+                <div className="upload-btn">
+                    Seleccionar Archivo
+                </div>
+
                 <input
+                    ref={fileInputRef}
                     type="file"
+                    accept=".pdf,.doc,.docx,.ppt,.pptx,image/*,video/mp4"
                     className="hidden-file-input"
-                    onChange={(e) => setArchivoSeleccionado(e.target.files[0])}
+                    onChange={(e) => {
+
+                        const file = e.target.files[0];
+
+                        if (!file) return;
+
+                        setMessage("");
+
+                        if (file.size > 10 * 1024 * 1024) {
+
+                            setMessage(
+                                "El archivo supera 10MB."
+                            );
+
+                            return;
+                        }
+
+                        setArchivoSeleccionado(file);
+                    }}
                 />
+
                 {archivoSeleccionado && (
-                    <p className="file-name-preview">📎 {archivoSeleccionado.name}</p>
+                    <p className="file-name-preview">
+                        📎 {archivoSeleccionado.name}
+                    </p>
                 )}
             </label>
         );
     };
 
-    if (loading) return <p className="loading-text">Cargando materiales...</p>;
+    if (loading) {
+        return (
+            <p className="loading-text">
+                Cargando materiales...
+            </p>
+        );
+    }
 
     return (
         <div className="material">
+
             <div className="line-material"></div>
 
             <div className="material-content">
+
                 <div className="material-left">
+
                     <div className="type-material">
+
                         <div
                             className={`type-tab ${filtro === "Todos" ? "active" : ""}`}
                             onClick={() => setFiltro("Todos")}
                         >
                             <p>Todos</p>
                         </div>
+
                         {alumnos.map((alumno) => (
                             <div
                                 key={`tab-${alumno.id}`}
@@ -209,24 +412,40 @@ async function publicarMaterial() {
                     </div>
 
                     <div className="material-info">
+
                         <div className="material-side">
                             {columnaIzquierda.map((mat) => (
-                                <MaterialCard key={mat.id} mat={mat} onOpen={abrirMaterial} />
+                                <MaterialCard
+                                    key={mat.id}
+                                    mat={mat}
+                                    onOpen={abrirMaterial}
+                                />
                             ))}
                         </div>
+
                         <div className="material-side">
                             {columnaDerecha.map((mat) => (
-                                <MaterialCard key={mat.id} mat={mat} onOpen={abrirMaterial} />
+                                <MaterialCard
+                                    key={mat.id}
+                                    mat={mat}
+                                    onOpen={abrirMaterial}
+                                />
                             ))}
                         </div>
+
                     </div>
                 </div>
 
                 <div className="material-right">
+
                     <h2>Subir Nuevo Material</h2>
 
                     <div className="exam-form group-spacing">
-                        <p className="form-label">Título material</p>
+
+                        <p className="form-label">
+                            Título material
+                        </p>
+
                         <input
                             type="text"
                             className="input-field"
@@ -237,38 +456,68 @@ async function publicarMaterial() {
                     </div>
 
                     <div className="exam-form group-spacing">
-                        <p className="form-label">Asignar a:</p>
+
+                        <p className="form-label">
+                            Asignar a:
+                        </p>
+
                         {alumnos.length === 0 ? (
-                            <p className="input-field">No tienes alumnos asignados</p>
+
+                            <p className="input-field">
+                                No tienes alumnos asignados
+                            </p>
+
                         ) : (
+
                             <div className="alumnos-selection-box">
+
                                 <label className="checkbox-label">
+
                                     <input
                                         type="checkbox"
-                                        checked={alumnosSeleccionados.length === alumnos.length && alumnos.length > 0}
+                                        checked={
+                                            alumnosSeleccionados.length === alumnos.length &&
+                                            alumnos.length > 0
+                                        }
                                         onChange={toggleTodos}
                                     />
-                                    <strong>Seleccionar a todos</strong>
+
+                                    <strong>
+                                        Seleccionar a todos
+                                    </strong>
+
                                 </label>
-                                
+
                                 <div className="select-all-divider"></div>
 
                                 {alumnos.map((alumno) => (
-                                    <label key={`check-${alumno.id}`} className="checkbox-label">
+
+                                    <label
+                                        key={`check-${alumno.id}`}
+                                        className="checkbox-label"
+                                    >
+
                                         <input
                                             type="checkbox"
                                             checked={alumnosSeleccionados.includes(alumno.id)}
                                             onChange={() => toggleAlumno(alumno.id)}
                                         />
+
                                         {alumno.student_name}
+
                                     </label>
                                 ))}
+
                             </div>
                         )}
                     </div>
 
                     <div className="exam-form group-spacing">
-                        <p className="form-label">Tipo material</p>
+
+                        <p className="form-label">
+                            Tipo material
+                        </p>
+
                         <select
                             className="input-field"
                             value={nuevoTipo}
@@ -285,13 +534,28 @@ async function publicarMaterial() {
                     {renderizarZonaCarga()}
 
                     <div
-                        className={`material-save-btn ${subiendo || alumnos.length === 0 ? "disabled" : ""}`}
-                        onClick={alumnos.length > 0 && !subiendo ? publicarMaterial : undefined}
+                        className={`material-save-btn ${subiendo || alumnos.length === 0
+                                ? "disabled"
+                                : ""
+                            }`}
+                        onClick={
+                            alumnos.length > 0 && !subiendo
+                                ? publicarMaterial
+                                : undefined
+                        }
                     >
-                        <p>{subiendo ? "Publicando..." : "Publicar Material"}</p>
+                        <p>
+                            {subiendo
+                                ? "Publicando..."
+                                : "Publicar Material"}
+                        </p>
                     </div>
 
-                     {message && <p className="success-message">{message}</p>}
+                    {message && (
+                        <p className="success-message">
+                            {message}
+                        </p>
+                    )}
                 </div>
             </div>
         </div>
@@ -299,15 +563,25 @@ async function publicarMaterial() {
 }
 
 function MaterialCard({ mat, onOpen }) {
+
     const nombres = mat.lista_alumnos.join(", ");
 
     return (
         <div className="material-data">
+
             <h3>{mat.title}</h3>
-            <p>{mat.type} - {nombres}</p>
-            <div className="material-button" onClick={() => onOpen(mat)}>
+
+            <p>
+                {mat.type} - {nombres}
+            </p>
+
+            <div
+                className="material-button"
+                onClick={() => onOpen(mat)}
+            >
                 <p>Ver material</p>
             </div>
+
         </div>
     );
 }

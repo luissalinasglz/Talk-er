@@ -9,6 +9,8 @@ export default function Login() {
     const [isChecked, setIsChecked] = useState(false);
     const navigate = useNavigate();
 
+    const API_URL = import.meta.env.VITE_API_URL;
+
     const roleRoutes = {
         admin: "/admin",
         supervisor: "/supervisor",
@@ -21,7 +23,7 @@ export default function Login() {
         setMessage("");
 
         try {
-            const response = await fetch("http://localhost:3000/v1/auth/login", {
+            const response = await fetch(`${API_URL}/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -16,7 +16,6 @@ server.disable("x-powered-by");
 server.use(cookieParser());
 server.use(express.urlencoded({ extended: false }));
 server.use(express.json());
-server.use("/uploads", express.static("uploads"));
 
 async function connectWithRetry() {
     try {

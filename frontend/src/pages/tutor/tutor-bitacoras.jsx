@@ -23,6 +23,7 @@ function Bitacoras() {
     const [incidence, setIncidence] = useState(null);
     const [incidenceType, setIncidenceType] = useState("");
     const [incidenceDescription, setIncidenceDescription] = useState("");
+    const [evidenceType, setEvidenceType] = useState("");
 
     useEffect(() => { fetchSesiones(); }, []);
 
@@ -53,7 +54,16 @@ function Bitacoras() {
         setSesionActivaId(s.id);
         setMessage("");
         setEvidenceFile(null);
-        setEvidencePreview(s.evidence_url || "");
+        setEvidencePreview(s.signed_evidence_url || "");
+
+        // Deduce el tipo desde el fileKey guardado en BD
+        if (s.evidence_url) {
+            const ext = s.evidence_url.split(".").pop().toLowerCase();
+            setEvidenceType(ext === "pdf" ? "application/pdf" : "image");
+        } else {
+            setEvidenceType("");
+        }
+
         setTitle(s.title || "");
         setDescription(s.description || "");
         setPlanning(s.planning || "");
@@ -71,6 +81,7 @@ function Bitacoras() {
             return;
         }
         setEvidenceFile(file);
+        setEvidenceType(file.type);
         setEvidencePreview(file.type === "application/pdf" ? "" : URL.createObjectURL(file));
     };
 
@@ -86,33 +97,53 @@ function Bitacoras() {
         setMessage("");
 
         try {
-            let evidenceUrl = evidencePreview;
+            let evidenceUrl = datosSesion.evidence_url || "";
 
             if (evidenceFile) {
-                const formData = new FormData();
-                formData.append("evidence", evidenceFile);
-                formData.append("session_id", sesionActivaId);
-                const uploadRes = await fetch(`${API_URL}/tutor/bitacoras/upload`, {
+
+                // 1. Pedir presigned URL
+                const presignRes = await fetch(`${API_URL}/tutor/storage/presign`, {
                     method: "POST",
                     credentials: "include",
-                    body: formData,
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        type: "evidence",
+                        filename: evidenceFile.name,
+                        contentType: evidenceFile.type,
+                    }),
                 });
-                if (!uploadRes.ok) {
-                    setMessage("Error al subir el archivo de evidencia.");
-                    setIsSaving(false);
-                    return;
+
+                const presignData = await presignRes.json();
+
+                if (!presignRes.ok) {
+                    throw new Error(presignData.message || "Error preparando archivo");
                 }
-                evidenceUrl = (await uploadRes.json()).url;
+
+                // 2. Subir directo a Cellar
+                const uploadRes = await fetch(presignData.uploadUrl, {
+                    method: "PUT",
+                    headers: { "Content-Type": evidenceFile.type },
+                    body: evidenceFile,
+                });
+
+                if (!uploadRes.ok) {
+                    throw new Error("Error subiendo evidencia");
+                }
+
+                evidenceUrl = presignData.fileKey;
             }
 
+            // 3. Guardar en base de datos
             const res = await fetch(`${API_URL}/tutor/bitacoras`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
                 credentials: "include",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     sesion_id: sesionActivaId,
-                    title, description, planning,
-                    evidence_url: evidenceUrl || "",
+                    title,
+                    description,
+                    planning,
+                    evidence_url: evidenceUrl,
                     incidence,
                     incidence_type: incidence ? incidenceType : null,
                     incidence_description: incidence ? incidenceDescription : null,
@@ -120,15 +151,15 @@ function Bitacoras() {
             });
 
             const data = await res.json();
-            if (res.ok) {
-                setMessage("¡Bitácora enviada a revisión con éxito!");
-                await fetchSesiones();
-            } else {
-                setMessage(data.message || "Error al guardar la bitácora.");
-            }
+
+            if (!res.ok) throw new Error(data.message || "Error al guardar la bitácora.");
+
+            setMessage("¡Bitácora enviada a revisión con éxito!");
+            await fetchSesiones();
+
         } catch (error) {
             console.error("Error:", error);
-            setMessage("Error de conexión al guardar.");
+            setMessage(error.message || "Error de conexión al guardar.");
         } finally {
             setIsSaving(false);
         }
@@ -281,21 +312,23 @@ function Bitacoras() {
                                 {/* Archivo recién seleccionado */}
                                 {evidenceFile && (
                                     <div className="evidence-preview">
-                                        {evidenceFile.type === "application/pdf"
-                                            ? <div className="pdf-preview"><p>{evidenceFile.name}</p></div>
+                                        {evidenceType === "application/pdf"
+                                            ? <div className="pdf-preview"><p> {evidenceFile.name}</p></div>
                                             : <img src={evidencePreview} alt="Evidencia" className="evidence-media" />
                                         }
                                     </div>
                                 )}
 
-                                {/* Evidencia ya guardada (sin archivo nuevo seleccionado) */}
+                                {/* Evidencia ya guardada */}
                                 {!evidenceFile && evidencePreview && (
                                     <div className="evidence-preview">
-                                        {evidencePreview.toLowerCase().endsWith(".pdf")
+                                        {evidenceType === "application/pdf"
                                             ? <div className="pdf-preview">
-                                                <p>Evidencia en PDF</p>
-                                                <a href={evidencePreview} target="_blank" rel="noopener noreferrer">Ver archivo</a>
-                                              </div>
+                                                <p> Evidencia en PDF</p>
+                                                <a href={evidencePreview} target="_blank" rel="noopener noreferrer">
+                                                    Ver archivo
+                                                </a>
+                                            </div>
                                             : <img src={evidencePreview} alt="Evidencia guardada" className="evidence-media" />
                                         }
                                     </div>

@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `session_logs` (
 	`validated` boolean NOT NULL,
 	`corrections` varchar(300),
 	`approved` boolean NOT NULL,
-	'approved_by' int,
+	`approved_by` int,
 	PRIMARY KEY (`id`)
 );
 
