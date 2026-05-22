@@ -268,16 +268,37 @@ function Material() {
                 <input
                     ref={fileInputRef}
                     type="file"
-                    accept=".pdf,.doc,.docx,.ppt,.pptx,image/*"
+                    accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg"
                     className="hidden-file-input"
                     onChange={(e) => {
-                        const file = e.target.files[0];
+                        const file = e.target.files?.[0];
                         if (!file) return;
+
                         setMessage("");
+
+                        const allowedTypes = [
+                            "application/pdf",
+
+                            "application/msword",
+                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+
+                            "application/vnd.ms-powerpoint",
+                            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+
+                            "image/png",
+                            "image/jpeg",
+                        ];
+
+                        if (!allowedTypes.includes(file.type)) {
+                            setMessage("Tipo de archivo no permitido.");
+                            return;
+                        }
+
                         if (file.size > 5 * 1024 * 1024) {
                             setMessage("El archivo supera 5MB.");
                             return;
                         }
+
                         setArchivoSeleccionado(file);
                     }}
                 />
