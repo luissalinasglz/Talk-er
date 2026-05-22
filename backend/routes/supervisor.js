@@ -112,12 +112,13 @@ router.get("/bitacoras", async (req, res) => {
 });
 
 router.post("/correcciones", async (req, res) => {
+  const supervisorId = req.user.id;
   try {
-    const { validated, corrections, approved, session_id } = req.body;
+    const { validated, corrections, approved, session_id} = req.body;
 
     await pool.query(`
       UPDATE session_logs
-      SET validated = ?, corrections = ?, approved = ?
+      SET validated = ?, corrections = ?, approved = ?, approved_by = supervisorId
       WHERE session_id = ?
     `, [validated, corrections, approved, session_id]);
 
