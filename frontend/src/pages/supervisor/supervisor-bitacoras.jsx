@@ -203,9 +203,10 @@ function SupervisorBitacoras() {
                                 value={correcciones}
                                 onChange={(e) => setCorrecciones(e.target.value)}
                                 placeholder="Escribe aquí las observaciones para el tutor..."
+                                data-cy="supervisor-correction-input"
                             />
                             <div className="review-buttons">
-                                <div className="btn-correction" onClick={handleCorrection}>Enviar a Corrección</div>
+                                <div className="btn-correction" onClick={handleCorrection} data-cy="supervisor-correction-button">Enviar a Corrección</div>
                             </div>
                         </div>
                     </>

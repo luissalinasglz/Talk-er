@@ -118,9 +118,9 @@ router.post("/correcciones", async (req, res) => {
 
     await pool.query(`
       UPDATE session_logs
-      SET validated = ?, corrections = ?, approved = ?, approved_by = supervisorId
+      SET validated = ?, corrections = ?, approved = ?, approved_by = ?
       WHERE session_id = ?
-    `, [validated, corrections, approved, session_id]);
+    `, [validated, corrections, approved, supervisorId, session_id]);
 
     res.json({ message: "Bitácora guardada correctamente" });
   } catch (error) {
