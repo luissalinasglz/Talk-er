@@ -2,7 +2,7 @@ import express from "express";
 import pool from "../db/db.js";
 import { Verify, VerifyRoleTeacher } from "../middleware/verify.js";
 import  cellar  from "../middleware/cellar.js";
-import { PutObjectCommand, GetObjectCommand, } from "@aws-sdk/client-s3";
+import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 
@@ -616,6 +616,68 @@ router.post("/materials", async (req, res) => {
 
     res.status(500).json({
       message: "Error guardando material",
+    });
+  }
+});
+
+router.post("/deleteMaterial", async (req, res) => {
+  try {
+    const { file_url, type, student_tutor_ids } = req.body;
+
+    if (
+      !student_tutor_ids ||
+      !Array.isArray(student_tutor_ids) ||
+      student_tutor_ids.length === 0
+    ) {
+      return res.status(400).json({
+        message: "IDs de material requeridos",
+      });
+    }
+
+    // Verificar que todos los materiales pertenecen al tutor autenticado
+    const placeholders = student_tutor_ids.map(() => "?").join(",");
+
+    const [rows] = await pool.query(
+      `
+      SELECT m.id, m.file_url
+      FROM materials m
+      INNER JOIN student_tutor st ON st.id = m.student_tutor_id
+      WHERE m.id IN (${placeholders})
+        AND st.tutor = ?
+    `,
+      [...student_tutor_ids, req.user.id]
+    );
+
+    if (rows.length !== student_tutor_ids.length) {
+      return res.status(403).json({
+        message: "Acceso denegado",
+      });
+    }
+
+    // Eliminar filas de la DB
+    await pool.query(
+      `DELETE FROM materials WHERE id IN (${placeholders})`,
+      student_tutor_ids
+    );
+
+    // Eliminar archivo de Cellar solo si no es un LINK
+    if (type !== "LINK" && file_url) {
+      const command = new DeleteObjectCommand({
+        Bucket: process.env.CELLAR_ADDON_BUCKET,
+        Key: file_url,
+      });
+
+      await cellar.send(command);
+    }
+
+    res.json({
+      message: "Material eliminado correctamente",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error eliminando el material",
     });
   }
 });

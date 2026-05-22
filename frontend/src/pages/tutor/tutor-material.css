@@ -293,3 +293,22 @@
     opacity: 0.6;
     pointer-events: none;
 }
+
+.material-button--delete {
+    background-color: transparent;
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+}
+
+.material-button--delete p {
+    color: #e74c3c;
+}
+
+.material-button--delete:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.material-button--delete:hover p {
+    color: white;
+}
