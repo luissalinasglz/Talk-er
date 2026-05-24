@@ -64,7 +64,6 @@ function Ligas() {
 
   function loadSession(group) {
     setSelected(group);
-    setMessage("");
     setInputValue("");
     setPlatform("Zoom");
     setPassword("");
@@ -76,7 +75,6 @@ function Ligas() {
 
   function resetForm() {
     setSelected(null);
-    setMessage("");
     setInputValue("");
     setPlatform("Zoom");
     setPassword("");
@@ -116,18 +114,66 @@ function Ligas() {
 
   const generateFinalUrl = () => {
     const trimmed = inputValue.trim();
-    if (!trimmed) return "";
 
+    if (!trimmed) return null;
+
+    // URL
     if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
-      return trimmed;
+      try {
+        new URL(trimmed);
+        return trimmed;
+      } catch {
+        return null;
+      }
     }
 
-    const cleanId = trimmed.replace(/\s+/g, "");
-
     switch (platform) {
-      case "Zoom": return `https://zoom.us/j/${cleanId}`;
-      case "Meet": return `https://meet.google.com/${cleanId}`;
-      default: return trimmed;
+      case "Zoom": {
+        // Solo números (9-12 dígitos)
+        const cleanId = trimmed.replace(/\s+/g, "");
+
+        if (!/^\d{9,12}$/.test(cleanId)) {
+          return null;
+        }
+
+        return `https://zoom.us/j/${cleanId}`;
+      }
+
+      case "Meet": {
+        // abc-defg-hij
+        if (!/^[a-z]{3}-[a-z]{4}-[a-z]{3}$/i.test(trimmed)) {
+          return null;
+        }
+
+        return `https://meet.google.com/${trimmed}`;
+      }
+
+      case "Teams": {
+        // Teams usa URLs completas
+        try {
+          const url = new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`);
+
+          if (!url.hostname.includes("teams.microsoft.com")) {
+            return null;
+          }
+
+          return url.href;
+        } catch {
+          return null;
+        }
+      }
+
+      case "Otro": {
+        try {
+          const url = new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`);
+          return url.href;
+        } catch {
+          return null;
+        }
+      }
+
+      default:
+        return null;
     }
   };
 
@@ -143,6 +189,11 @@ function Ligas() {
     }
 
     const finalUrl = generateFinalUrl();
+
+    if (!finalUrl) {
+      setMessage("La liga o ID de reunión no es válido.");
+      return;
+    }
 
     try {
       const body = {
@@ -166,7 +217,6 @@ function Ligas() {
       if (res.ok) {
         setMessage(data.message || "Liga guardada con éxito");
         await fetchWeekGroups();
-        resetForm();
       } else {
         setMessage(data.message || "Error al guardar");
       }

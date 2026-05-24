@@ -153,12 +153,12 @@ function SupervisorBitacoras() {
                                             ) : (
                                                 <>
                                                     <div className="evidence-preview">
-                                                        {sel.evidence_url.toLowerCase().endsWith(".pdf")
-                                                            ? <iframe src={sel.evidence_url} title="PDF Evidence" className="pdf-frame" />
-                                                            : <img src={sel.evidence_url} alt="Evidencia" className="evidence-image" />
+                                                        {sel.signed_evidence_url.toLowerCase().endsWith(".pdf")
+                                                            ? <iframe src={sel.signed_evidence_url} title="PDF Evidence" className="pdf-frame" />
+                                                            : <img src={sel.signed_evidence_url} alt="Evidencia" className="evidence-image" />
                                                         }
                                                     </div>
-                                                    <a href={sel.evidence_url} target="_blank" rel="noopener noreferrer" className="open-evidence-link">
+                                                    <a href={sel.signed_evidence_url} target="_blank" rel="noopener noreferrer" className="open-evidence-link">
                                                         Abrir evidencia completa
                                                     </a>
                                                 </>

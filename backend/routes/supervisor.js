@@ -1,6 +1,9 @@
 import express from "express";
 import pool from "../db/db.js";
 import { Verify, VerifyRoleSupervisor } from "../middleware/verify.js";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import  cellar  from "../middleware/cellar.js";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const router = express.Router();
 
@@ -102,12 +105,34 @@ router.get("/bitacoras", async (req, res) => {
       WHERE rt.supervisor_id = ?
         AND sl.validated = TRUE
         AND sl.approved = FALSE
-      `, [supervisorId]);
+    `, [supervisorId]);
+
+    await Promise.all(
+      rows.map(async (row) => {
+        if (row.evidence_url) {
+          const command = new GetObjectCommand({
+            Bucket: process.env.CELLAR_ADDON_BUCKET,
+            Key: row.evidence_url,
+          });
+
+          row.signed_evidence_url = await getSignedUrl(
+            cellar,
+            command,
+            {
+              expiresIn: 300,
+            }
+          );
+        }
+      })
+    );
 
     res.json(rows);
   } catch (error) {
     console.error("Error en /bitacoras:", error);
-    res.status(500).json({ message: "Error obteniendo bitácoras pendientes" });
+
+    res.status(500).json({
+      message: "Error obteniendo bitácoras pendientes",
+    });
   }
 });
 
@@ -118,9 +143,9 @@ router.post("/correcciones", async (req, res) => {
 
     await pool.query(`
       UPDATE session_logs
-      SET validated = ?, corrections = ?, approved = ?, approved_by = supervisorId
+      SET validated = ?, corrections = ?, approved = ?, approved_by = ?
       WHERE session_id = ?
-    `, [validated, corrections, approved, session_id]);
+    `, [validated, corrections, approved, session_id, supervisorId]);
 
     res.json({ message: "Bitácora guardada correctamente" });
   } catch (error) {
