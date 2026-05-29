@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import SidebarTutor from "./tutor-sidebar";
 import Dashboard from "./tutor-dashboard";
 
@@ -30,6 +30,7 @@ function TutorContainer() {
           <Route path="anuncios" element={<Anuncios />} />
           <Route path="bitacora" element={<Bitacoras />} />
           <Route path="horas" element={<Horas />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </div>

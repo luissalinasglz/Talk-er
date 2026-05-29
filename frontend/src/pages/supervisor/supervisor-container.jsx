@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate} from "react-router-dom";
 import SidebarSupervisor from "./supervisor-sidebar";
 import Dashboard from "./supervisor-dashboard";
 
@@ -19,6 +19,7 @@ function SupervisorContainer() {
           <Route index element={<Dashboard />} />
           <Route path="sesiones" element={<Sesiones />} />
           <Route path="bitacora" element={<Bitacoras />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </div>
