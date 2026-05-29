@@ -1,37 +1,78 @@
+import React, { useEffect, useState } from "react";
 import "./student-sesiones.css";
 import video from "../../assets/video.png";
 import profileBlue from "../../assets/profile-blue.png";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+const parseDBDate = (dateString) => {
+    if (!dateString) return new Date();
+    const cleanString = dateString.endsWith('Z') ? dateString.slice(0, -1) : dateString;
+    return new Date(cleanString.replace(' ', 'T'));
+};
+
 function StudentSesiones() {
+    const [sesiones, setSesiones] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch(`${API_URL}/student/sesiones`, {
+            credentials: "include",
+        })
+            .then((res) => res.json())
+            .then((data) => setSesiones(Array.isArray(data) ? data : []))
+            .catch((err) => console.error("Error cargando sesiones:", err))
+            .finally(() => setLoading(false));
+    }, []);
+
+    const ahora = new Date();
+
     const getSunday = (date) => {
         const day = new Date(date);
-        const dayOf = day.getDay();
-        day.setDate(day.getDate()-dayOf);
+        day.setDate(day.getDate() - day.getDay());
+        day.setHours(0, 0, 0, 0);
         return day;
     };
 
-    const today = new Date();
-    const sunday = getSunday(today);
+    const sunday = getSunday(ahora);
+    const saturday = new Date(sunday);
+    saturday.setDate(sunday.getDate() + 6);
+    saturday.setHours(23, 59, 59, 999);
 
-    const weekDays = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+    const weekDays = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
     const calendarDays = weekDays.map((name, i) => {
         const day = new Date(sunday);
         day.setDate(sunday.getDate() + i);
-        return{
-        name,
-        number: day.getDate(),
-        month: day.toLocaleDateString('es-MX', {month: 'short'})
-        };
+        return { name, number: day.getDate(), dateObj: day };
     });
 
-    const firstDay = new Date(sunday);
-    const lastDay = new Date(sunday);
-    lastDay.setDate(sunday.getDate()+6);
-    const weekTitle = `Semana ${firstDay.getDate()} de ${firstDay.toLocaleString('es-MX', { month: 'long' })} al ${lastDay.getDate()} de ${lastDay.toLocaleString('es-MX', { month: 'long' })}`;
-    
-    return(
+    const weekTitle = `Semana ${sunday.getDate()} de ${sunday.toLocaleString('es-MX', { month: 'long' })} al ${saturday.getDate()} de ${saturday.toLocaleString('es-MX', { month: 'long' })}`;
+
+    const sesionesSemana = sesiones
+        .map((s) => ({ ...s, startObj: parseDBDate(s.start_time), endObj: parseDBDate(s.end_time) }))
+        .filter((s) => s.startObj >= sunday && s.startObj <= saturday)
+        .sort((a, b) => a.startObj - b.startObj);
+
+    const proximaSesion = sesionesSemana.filter((s) => s.endObj > ahora)[0] || null;
+
+    const tutoresUnicos = Array.from(
+        new Map(sesionesSemana.map((s) => [s.tutor_name, s.idioma])),
+        ([name, idioma]) => ({ name, idioma })
+    );
+
+    const horasCalendario = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+
+    const getSesionParaCelda = (diaIndice, hora) =>
+        sesionesSemana.find(
+            (s) => s.startObj.getDay() === diaIndice && s.startObj.getHours() === hora
+        );
+
+    if (loading) return <p>Cargando sesiones...</p>;
+
+    return (
         <div className="sesiones-student">
+
             <div className="session-student-general">
                 <div className="session-details">
                     <div className="image-video">
@@ -39,168 +80,109 @@ function StudentSesiones() {
                     </div>
                     <div className="session-details-student">
                         <p>Próxima sesión</p>
-                        <h2>Inglés</h2>
-                        <p>Hoy lunes de 3:10 p.m. - 4:50 p.m.</p>
+                        {proximaSesion ? (
+                            <>
+                                <h2>{proximaSesion.idioma}</h2>
+                                <p>
+                                    {proximaSesion.startObj.toLocaleDateString('es-MX', { weekday: 'long' })}{' '}
+                                    {proximaSesion.startObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} -{' '}
+                                    {proximaSesion.endObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <h2>Sin sesiones</h2>
+                                <p>No hay próximas sesiones programadas.</p>
+                            </>
+                        )}
                     </div>
                 </div>
-                <div className="link-join-student">
-                    <h3>Unirse a la reunión</h3>
-                </div>
+                {proximaSesion && (
+                    <a href={proximaSesion.session_url} target="_blank" rel="noreferrer" className="link-join-student" style={{ textDecoration: 'none' }}>
+                        <h3>Unirse a la reunión</h3>
+                    </a>
+                )}
             </div>
 
             <div className="student-side">
+
                 <div className="left-session-student">
                     <h3>{weekTitle}</h3>
                     <table className="calendario">
-                    <thead>
-                        <tr>
-                        <th></th>
-                        {calendarDays.map((day, i) => (
-                            <th key={i}>{day.name} {day.number}</th>
-                        ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <td className="hora">2:00</td>
-                        <td></td>
-                        <td rowspan={2}>
-                            <div className="evento">
-                            <p>Inglés</p> 
-                            <p>3:10 - 4:50</p>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td rowspan={2}>
-                            <div className="evento">
-                            <p>Inglés</p> 
-                            <p>3:10 - 4:50</p>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-                        <tr>
-                        <td className="hora">3:00</td>
-                        <td></td>
-        
-                        <td></td>
-                        <td></td>
-                        
-                        <td></td>
-                        <td></td>
-                        </tr>
-                        <tr>
-                        <td className="hora">4:00</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-                        <tr>
-                        <td className="hora">5:00</td>
-                        <td></td>
-                        <td rowspan={2}>
-                            <div className="evento">
-                            <p>Frances</p> 
-                            <p>5:10 - 6:50</p>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td rowspan={2}>
-                            <div className="evento">
-                            <p>Frances</p> 
-                            <p>5:10 - 6:50</p>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-                        <tr>
-                        <td className="hora">6:00</td>
-                        <td></td>
-                        
-                        <td></td>
-                        
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-                        <tr>
-                        <td className="hora">7:00</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-                    </tbody>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                {calendarDays.map((day, i) => (
+                                    <th key={i}>{day.name} {day.number}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {horasCalendario.map((hora) => (
+                                <tr key={hora}>
+                                    <td className="hora">{hora > 12 ? hora - 12 : hora}:00 {hora >= 12 ? 'pm' : 'am'}</td>
+                                    {calendarDays.map((_, diaIndice) => {
+                                        const sesion = getSesionParaCelda(diaIndice, hora);
+                                        return (
+                                            <td key={diaIndice}>
+                                                {sesion && (
+                                                    <div className="evento">
+                                                        <p>{sesion.idioma}</p>
+                                                        <p>
+                                                            {sesion.startObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} -{' '}
+                                                            {sesion.endObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            ))}
+                        </tbody>
                     </table>
                 </div>
 
                 <div className="right-session-student">
+
                     <div className="student-tutors">
                         <h2>Mis tutores</h2>
-                        <div className="tutor-student">
-                            <img className="profileblue" src={profileBlue} alt="profileblue" />
-                            <div className="tutor-detail-student">
-                                <h3>Tutor Harry Potter</h3>
-                                <p>Inglés</p>
+                        {tutoresUnicos.length > 0 ? tutoresUnicos.map((tutor, i) => (
+                            <div className="tutor-student" key={i}>
+                                <img className="profileblue" src={profileBlue} alt="profileblue" />
+                                <div className="tutor-detail-student">
+                                    <h3>Tutor {tutor.name}</h3>
+                                    <p>{tutor.idioma}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="tutor-student">
-                            <img className="profileblue" src={profileBlue} alt="profileblue" />
-                            <div className="tutor-detail-student">
-                                <h3>Tutor Hermione Granger</h3>
-                                <p>Frances</p>
-                            </div>
-                        </div>
+                        )) : (
+                            <p style={{ marginTop: '10px', color: '#666' }}>No hay tutores esta semana.</p>
+                        )}
                     </div>
 
                     <div className="student-class-week">
                         <h2>Sesiones de esta semana</h2>
-                        <div className="week-student">
-                            <div className="circle-student-class"></div>
-                            <div className="student-week-detail">
-                                <h3>Inglés - Lun 17 de Mayo</h3>
-                                <p>3:10 p.m. - 4:50 p.m.</p>
+                        {sesionesSemana.length > 0 ? sesionesSemana.map((s, i) => (
+                            <div className="week-student" key={i}>
+                                <div className="circle-student-class"></div>
+                                <div className="student-week-detail">
+                                    <h3>
+                                        {s.idioma} - {s.startObj.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'long' })}
+                                    </h3>
+                                    <p>
+                                        {s.startObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} -{' '}
+                                        {s.endObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="week-student">
-                            <div className="circle-student-class"></div>
-                            <div className="student-week-detail">
-                                <h3>Frances - Lun 17 de Mayo</h3>
-                                <p>5:10 p.m. - 6:50 p.m.</p>
-                            </div>
-                        </div>
-                        <div className="week-student">
-                            <div className="circle-student-class"></div>
-                            <div className="student-week-detail">
-                                <h3>Frances - Mié 19 de Mayo</h3>
-                                <p>5:10 p.m. - 6:50 p.m.</p>
-                            </div>
-                        </div>
-                        <div className="week-student">
-                            <div className="circle-student-class"></div>
-                            <div className="student-week-detail">
-                                <h3>Inglés - Jue 20 de Mayo</h3>
-                                <p>3:10 p.m. - 4:50 p.m.</p>
-                            </div>
-                        </div>
+                        )) : (
+                            <p style={{ marginTop: '10px', color: '#666' }}>No hay clases agendadas esta semana.</p>
+                        )}
                     </div>
                 </div>
             </div>
-
         </div>
     );
-
 }
 
-export default StudentSesiones
+export default StudentSesiones;
