@@ -1,7 +1,7 @@
 import express from "express";
 import pool from "../db/db.js";
 import { Verify, VerifyRoleTeacher } from "../middleware/verify.js";
-import  cellar  from "../middleware/cellar.js";
+import cellar from "../middleware/cellar.js";
 import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
@@ -171,6 +171,8 @@ router.get("/my-groups/week", async (req, res) => {
           SELECT 1
           FROM sessions s
           WHERE s.student_tutor = st.id
+            AND DAYOFWEEK(s.start_time) - 1 = h.dia_semana
+            AND TIME(s.start_time) = h.hora_inicio
             AND YEARWEEK(s.start_time, 0) =
                 YEARWEEK(CURDATE(), 0)
         )
@@ -716,6 +718,32 @@ router.put("/tareas/:id", async (req, res) => {
     res.status(500).json({
       message: "Error actualizando tarea",
     });
+  }
+});
+
+router.post("/horarios",  async (req, res) => {
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    const { group_id, horarios } = req.body;
+
+    await connection.query("DELETE FROM horarios WHERE student_tutor_id = ?", [group_id]);
+
+    for (const h of horarios) {
+      await connection.query(
+        "INSERT INTO horarios (student_tutor_id, dia_semana, hora_inicio, hora_fin) VALUES (?, ?, ?, ?)",
+        [group_id, h.dia, h.hora_inicio, h.hora_fin]
+      );
+    }
+
+    await connection.commit();
+    res.json({ message: "Horario guardado con éxito" });
+  } catch (error) {
+    await connection.rollback();
+    console.error("Error al guardar horario:", error);
+    res.status(500).json({ message: "Error al guardar el horario" });
+  } finally {
+    connection.release();
   }
 });
 
