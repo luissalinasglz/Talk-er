@@ -2,26 +2,29 @@ import { useState } from "react";
 import "../tutor-tareas.css";
 import documentoazul from "../../../assets/documento_tarea.png";
 
-function TareasCrear({ onCrear }) {
+function TareasCrear({ grupos = [], onCrear }) {
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [beneficiario, setBeneficiario] = useState("");
+  const [groupId, setGroupId] = useState("");
   const [fechaEntrega, setFechaEntrega] = useState("");
   const [horaLimite, setHoraLimite] = useState("");
 
   const handleSubmit = () => {
-    if (!titulo || !beneficiario) {
-      alert("Por favor, ingresa al menos un título y un beneficiario.");
+    if (!titulo.trim()) {
+      alert("Por favor, ingresa un título.");
+      return;
+    }
+    if (!groupId) {
+      alert("Por favor, selecciona un beneficiario.");
       return;
     }
 
     const nuevaTarea = {
-      titulo,
-      descripcion,
-      beneficiario,
+      group: parseInt(groupId),
+      titulo: titulo.trim(),
+      descripcion: descripcion.trim(),
       fechaEntrega,
       horaLimite,
-      archivo: "Sin archivo",
     };
 
     onCrear(nuevaTarea);
@@ -35,12 +38,15 @@ function TareasCrear({ onCrear }) {
         <p>Beneficiario (Grupo/Alumno)</p>
         <select
           className="select-input"
-          value={beneficiario}
-          onChange={(e) => setBeneficiario(e.target.value)}
+          value={groupId}
+          onChange={(e) => setGroupId(e.target.value)}
         >
           <option value="">Seleccionar beneficiario</option>
-          <option value="Inglés A">Inglés A</option>
-          <option value="Inglés B">Inglés B</option>
+          {grupos.map((g) => (
+            <option key={g.id} value={g.id}>
+              {g.student_name} — {g.idioma === "english" ? "Inglés" : "Francés"}
+            </option>
+          ))}
         </select>
       </div>
 
