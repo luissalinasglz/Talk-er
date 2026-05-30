@@ -4,7 +4,8 @@ import { Verify, VerifyRoleTeacher } from "../middleware/verify.js";
 import cellar from "../middleware/cellar.js";
 import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import crypto from "crypto";
+import { randomBytes } from "crypto";
+import Examen from "../models/Examen.js"
 
 const router = express.Router();
 
@@ -69,7 +70,7 @@ router.post("/storage/presign", async (req, res) => {
 
     const ext = filename.split(".").pop()?.toLowerCase();
 
-    const fileId = crypto.randomBytes(16).toString("hex");
+    const fileId = randomBytes(16).toString("hex");
 
     const fileKey = `${STORAGE_FOLDERS[type]}/${fileId}.${ext}`;
 
@@ -278,29 +279,6 @@ router.get("/clases", async (req, res) => {
   }
 });
 
-router.get("/examenes", async (req, res) => {
-  try {
-    const [rows] = await pool.query(
-      `
-      SELECT id,
-        nombre,
-        clase,
-        duracion,
-        DATE_FORMAT(fecha_limite, '%Y-%m-%d %H:%i') AS vence
-      FROM examenes
-      WHERE tutor_id = ?
-    `,
-      [req.user.id]
-    );
-
-    res.json(rows);
-  } catch {
-    res.status(500).json({
-      message: "Error obteniendo exámenes",
-    });
-  }
-});
-
 router.get("/tareas", async (req, res) => {
   try {
     const [rows] = await pool.query(
@@ -379,6 +357,35 @@ router.get("/materials", async (req, res) => {
       message: "Error obteniendo materiales",
     });
   }
+});
+
+router.get("/examenes", async (req, res) => {
+    try {
+        const examenes = await Examen.find({ tutor_id: req.user.id })
+            .select("-preguntas")   // la lista no necesita las preguntas
+            .sort({ fecha_limite: 1 })
+            .lean();
+
+        res.json(examenes);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error obteniendo exámenes" });
+    }
+});
+
+router.get("/examenes/:id", async (req, res) => {
+    try {
+        const examen = await Examen.findOne({
+            _id: req.params.id,
+            tutor_id: req.user.id,
+        }).lean();
+
+        if (!examen) return res.status(404).json({ message: "No encontrado" });
+        res.json(examen);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error obteniendo examen" });
+    }
 });
 
 // ==========================================
@@ -745,6 +752,81 @@ router.post("/horarios",  async (req, res) => {
   } finally {
     connection.release();
   }
+});
+
+router.post("/tareas", async (req, res) => {
+  try {
+    const { group, titulo, descripcion, fechaEntrega, horaLimite } = req.body;
+ 
+    if (!group || !titulo?.trim()) {
+      return res.status(400).json({ message: "Grupo y título son requeridos" });
+    }
+ 
+    const [grupos] = await pool.query(
+      `SELECT id FROM student_tutor WHERE id = ? AND tutor = ?`,
+      [group, req.user.id]
+    );
+ 
+    if (grupos.length === 0) {
+      return res.status(403).json({ message: "Acceso denegado al grupo" });
+    }
+ 
+    const dueDate =
+      fechaEntrega && horaLimite
+        ? `${fechaEntrega} ${horaLimite}:00`
+        : null;
+ 
+    await pool.query(
+      `INSERT INTO assignments (\`group\`, title, description, due_date)
+       VALUES (?, ?, ?, ?)`,
+      [group, titulo.trim(), descripcion?.trim() || "", dueDate]
+    );
+ 
+    res.status(201).json({ message: "Tarea creada correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error creando tarea" });
+  }
+});
+
+router.post("/examenes", async (req, res) => {
+    try {
+        const { nombre, clase, duracion, fecha_limite, preguntas } = req.body;
+
+        if (!nombre || !clase || !duracion || !fecha_limite) {
+            return res.status(400).json({ message: "Faltan campos requeridos" });
+        }
+
+        const examen = await Examen.create({
+            tutor_id: req.user.id,
+            nombre,
+            clase,
+            duracion,
+            fecha_limite: new Date(fecha_limite),
+            preguntas: preguntas || [],
+        });
+
+        res.status(201).json(examen);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error creando examen" });
+    }
+});
+
+router.put("/examenes/:id", async (req, res) => {
+    try {
+        const examen = await Examen.findOneAndUpdate(
+            { _id: req.params.id, tutor_id: req.user.id },
+            { $set: req.body },
+            { new: true, runValidators: true }
+        );
+
+        if (!examen) return res.status(404).json({ message: "No encontrado" });
+        res.json(examen);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error actualizando examen" });
+    }
 });
 
 router.get("/hola", async (req, res) => {

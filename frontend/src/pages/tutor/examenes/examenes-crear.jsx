@@ -1,54 +1,148 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../tutor-examenes.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+const LETRAS = ["A", "B", "C", "D"];
+
+function nuevaPregunta() {
+    return { id: Date.now(), enunciado: "", opciones: ["", "", "", ""], correcta: null };
+}
+
 function ExamenesCrear({ onVolver }) {
-    const [listaPreguntas, setListaPreguntas] = useState([{ id: Date.now(), correcta: null }]);
+    const [nombre, setNombre] = useState("");
+    const [clase, setClase] = useState("");
+    const [duracion, setDuracion] = useState("");
+    const [fechaLimite, setFechaLimite] = useState("");
+    const [horaLimite, setHoraLimite] = useState("");
+    const [listaPreguntas, setListaPreguntas] = useState([nuevaPregunta()]);
+    const [guardando, setGuardando] = useState(false);
+    const [error, setError] = useState("");
+    const [grupos, setGrupos] = useState([]);
 
-    const agregarNuevaPregunta = () => {
-        setListaPreguntas([...listaPreguntas, { id: Date.now(), correcta: null }]);
-    };
+    useEffect(() => {
+        fetch(`${API_URL}/tutor/my-groups`, { credentials: "include" })
+            .then(r => r.json())
+            .then(data => {
+                if (Array.isArray(data)) setGrupos(data);
+            })
+            .catch(console.error);
+    }, []);
 
-    const eliminarPregunta = (idParaEliminar) => {
-        setListaPreguntas(listaPreguntas.filter((pregunta) => pregunta.id !== idParaEliminar));
-    };
+    const agregarNuevaPregunta = () =>
+        setListaPreguntas(prev => [...prev, nuevaPregunta()]);
 
-    const marcarCorrecta = (idPregunta, opcion) => {
-        setListaPreguntas(listaPreguntas.map(p => 
-            p.id === idPregunta ? { ...p, correcta: opcion } : p
-        ));
-    };
+    const eliminarPregunta = (id) =>
+        setListaPreguntas(prev => prev.filter(p => p.id !== id));
 
-    const guardarExamen = () => {
-        alert("¡Examen guardado y publicado correctamente!");
-        onVolver();
+    const actualizarEnunciado = (id, valor) =>
+        setListaPreguntas(prev =>
+            prev.map(p => p.id === id ? { ...p, enunciado: valor } : p)
+        );
+
+    const actualizarOpcion = (id, indice, valor) =>
+        setListaPreguntas(prev =>
+            prev.map(p => {
+                if (p.id !== id) return p;
+                const opciones = [...p.opciones];
+                opciones[indice] = valor;
+                return { ...p, opciones };
+            })
+        );
+
+    const marcarCorrecta = (id, letra) =>
+        setListaPreguntas(prev =>
+            prev.map(p => p.id === id ? { ...p, correcta: letra } : p)
+        );
+
+    const guardarExamen = async () => {
+        setError("");
+
+        if (!nombre.trim() || !clase || !duracion || !fechaLimite || !horaLimite) {
+            setError("Completa todos los campos del encabezado.");
+            return;
+        }
+
+        const incompleta = listaPreguntas.some(
+            p => !p.enunciado.trim() ||
+                 p.opciones.some(o => !o.trim()) ||
+                 p.correcta === null
+        );
+        if (incompleta) {
+            setError("Completa todas las preguntas, sus opciones y marca la respuesta correcta.");
+            return;
+        }
+
+        const payload = {
+            nombre: nombre.trim(),
+            clase,
+            duracion: parseInt(duracion),
+            fecha_limite: `${fechaLimite}T${horaLimite}:00`,
+            preguntas: listaPreguntas.map(p => ({
+                enunciado: p.enunciado.trim(),
+                opciones: p.opciones.map(texto => ({ texto: texto.trim() })),
+                correcta: LETRAS.indexOf(p.correcta),
+            })),
+        };
+
+        try {
+            setGuardando(true);
+            const res = await fetch(`${API_URL}/tutor/examenes`, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || "Error al guardar");
+
+            onVolver();
+        } catch (err) {
+            console.error(err);
+            setError(err.message || "Error de conexión al guardar el examen.");
+        } finally {
+            setGuardando(false);
+        }
     };
 
     return (
         <div className="examenes-panel vista-centrada">
             <div className="panel-right w-100">
-                <button className="button-add" onClick={onVolver} style={{ width: 'auto', marginBottom: '1rem' }}>
+                <button className="button-add" onClick={onVolver}
+                    style={{ width: "auto", marginBottom: "1rem" }}>
                     ← Volver
                 </button>
                 <h2>Crear Examen</h2>
 
                 <div className="exam-form">
-                    <p>Título examen</p>
-                    <input type="text" className="exam-input" placeholder="Ej: Examen unidad 3" />
+                    <p>Título del examen</p>
+                    <input
+                        type="text"
+                        className="exam-input"
+                        placeholder="Ej: Examen unidad 3"
+                        value={nombre}
+                        onChange={e => setNombre(e.target.value)}
+                    />
                 </div>
 
                 <div className="exam-form">
                     <div className="space">
                         <div className="left-space">
                             <p>Clase</p>
-                            <select className="exam-input">
-                                <option value="">Inglés (Nivel)</option>
-                                <option value="A">Inglés A</option>
-                                <option value="B">Inglés B</option>
+                            <select className="exam-input" value={clase}
+                                onChange={e => setClase(e.target.value)}>
+                                <option value="">Seleccionar grupo...</option>
+                                {grupos.map(g => (
+                                    <option key={g.id} value={`${g.idioma} — ${g.student_name}`}>
+                                        {g.idioma} — {g.student_name}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                         <div className="right-space">
                             <p>Duración (min)</p>
-                            <input type="number" className="exam-input" placeholder="45" />
+                            <input type="number" className="exam-input" placeholder="45"
+                                value={duracion} onChange={e => setDuracion(e.target.value)} />
                         </div>
                     </div>
                 </div>
@@ -57,67 +151,100 @@ function ExamenesCrear({ onVolver }) {
                     <div className="space">
                         <div className="left-space">
                             <p>Fecha límite</p>
-                            <input type="date" className="exam-input" />
+                            <input type="date" className="exam-input"
+                                value={fechaLimite} onChange={e => setFechaLimite(e.target.value)} />
                         </div>
                         <div className="right-space">
                             <p>Hora límite</p>
-                            <input type="time" className="exam-input" />
+                            <input type="time" className="exam-input"
+                                value={horaLimite} onChange={e => setHoraLimite(e.target.value)} />
                         </div>
                     </div>
                 </div>
 
                 <div className="exam-questions">
                     <h3>Preguntas</h3>
-                    <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
-                        * Haz clic en el círculo de la opción que sea la respuesta correcta.
+                    <p style={{ fontSize: "0.8rem", color: "#666", marginBottom: "1rem" }}>
+                        * Haz clic en el círculo de la opción correcta.
                     </p>
 
                     {listaPreguntas.map((pregunta, index) => (
-                        <div key={pregunta.id} className="questions-container" style={{ marginBottom: '1.5rem', position: 'relative' }}>
+                        <div key={pregunta.id} className="questions-container"
+                            style={{ marginBottom: "1.5rem", position: "relative" }}>
+
                             {listaPreguntas.length > 1 && (
-                                <button
-                                    className="button-delete"
-                                    onClick={() => eliminarPregunta(pregunta.id)}
-                                >
+                                <button className="button-delete"
+                                    onClick={() => eliminarPregunta(pregunta.id)}>
                                     ✕ Eliminar
                                 </button>
                             )}
 
-                            <p>Pregunta {index + 1} - Opción Múltiple</p>
-                            <input type="text" className="question-input" placeholder="Escribe una pregunta" />
+                            <p>Pregunta {index + 1} — Opción Múltiple</p>
+
+                            <input
+                                type="text"
+                                className="question-input"
+                                placeholder="Escribe la pregunta"
+                                value={pregunta.enunciado}
+                                onChange={e => actualizarEnunciado(pregunta.id, e.target.value)}
+                            />
 
                             <div className="options-general">
                                 <div className="left-options">
-                                    <div className="options" onClick={() => marcarCorrecta(pregunta.id, 'A')} style={{ cursor: 'pointer' }}>
-                                        <div className="option-circle" style={{ backgroundColor: pregunta.correcta === 'A' ? '#4CAF50' : '' }}></div>
-                                        <input type="text" className="option-input" placeholder="Opción A" onClick={e => e.stopPropagation()} />
-                                    </div>
-                                    <div className="options" onClick={() => marcarCorrecta(pregunta.id, 'B')} style={{ cursor: 'pointer' }}>
-                                        <div className="option-circle" style={{ backgroundColor: pregunta.correcta === 'B' ? '#4CAF50' : '' }}></div>
-                                        <input type="text" className="option-input" placeholder="Opción B" onClick={e => e.stopPropagation()} />
-                                    </div>
+                                    {[0, 1].map(i => (
+                                        <div key={i} className="options"
+                                            onClick={() => marcarCorrecta(pregunta.id, LETRAS[i])}
+                                            style={{ cursor: "pointer" }}>
+                                            <div className="option-circle" style={{
+                                                backgroundColor: pregunta.correcta === LETRAS[i] ? "#4CAF50" : ""
+                                            }} />
+                                            <input
+                                                type="text"
+                                                className="option-input"
+                                                placeholder={`Opción ${LETRAS[i]}`}
+                                                value={pregunta.opciones[i]}
+                                                onChange={e => actualizarOpcion(pregunta.id, i, e.target.value)}
+                                                onClick={e => e.stopPropagation()}
+                                            />
+                                        </div>
+                                    ))}
                                 </div>
                                 <div className="right-options">
-                                    <div className="options" onClick={() => marcarCorrecta(pregunta.id, 'C')} style={{ cursor: 'pointer' }}>
-                                        <div className="option-circle" style={{ backgroundColor: pregunta.correcta === 'C' ? '#4CAF50' : '' }}></div>
-                                        <input type="text" className="option-input" placeholder="Opción C" onClick={e => e.stopPropagation()} />
-                                    </div>
-                                    <div className="options" onClick={() => marcarCorrecta(pregunta.id, 'D')} style={{ cursor: 'pointer' }}>
-                                        <div className="option-circle" style={{ backgroundColor: pregunta.correcta === 'D' ? '#4CAF50' : '' }}></div>
-                                        <input type="text" className="option-input" placeholder="Opción D" onClick={e => e.stopPropagation()} />
-                                    </div>
+                                    {[2, 3].map(i => (
+                                        <div key={i} className="options"
+                                            onClick={() => marcarCorrecta(pregunta.id, LETRAS[i])}
+                                            style={{ cursor: "pointer" }}>
+                                            <div className="option-circle" style={{
+                                                backgroundColor: pregunta.correcta === LETRAS[i] ? "#4CAF50" : ""
+                                            }} />
+                                            <input
+                                                type="text"
+                                                className="option-input"
+                                                placeholder={`Opción ${LETRAS[i]}`}
+                                                value={pregunta.opciones[i]}
+                                                onChange={e => actualizarOpcion(pregunta.id, i, e.target.value)}
+                                                onClick={e => e.stopPropagation()}
+                                            />
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
+                {error && (
+                    <p style={{ color: "#E74C3C", textAlign: "center", marginTop: "1rem" }}>
+                        {error}
+                    </p>
+                )}
+
                 <div className="buttons-container">
                     <button className="button-add" onClick={agregarNuevaPregunta}>
                         + Agregar Pregunta
                     </button>
-                    <button className="button-save" onClick={guardarExamen}>
-                        Publicar examen
+                    <button className="button-save" onClick={guardarExamen} disabled={guardando}>
+                        {guardando ? "Guardando..." : "Publicar examen"}
                     </button>
                 </div>
             </div>

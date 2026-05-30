@@ -13,21 +13,23 @@ function Tareas() {
   const [tareaActiva, setTareaActiva] = useState(null);
 
   const [tareas, setTareas] = useState([]);
+  const [grupos, setGrupos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchTareas();
+    fetchGrupos();
   }, []);
 
   async function fetchTareas() {
     try {
       setLoading(true);
+      setError(null);
 
       const res = await fetch(`${API_URL}/tutor/tareas`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
 
@@ -36,12 +38,33 @@ function Tareas() {
       if (res.ok) {
         setTareas(data);
       } else {
-        console.error(data.message);
+        setError(data.message || "Error obteniendo tareas");
       }
-    } catch (error) {
-      console.error("Error obteniendo tareas", error);
+    } catch (err) {
+      setError("Error de conexión al cargar tareas");
+      console.error("Error obteniendo tareas", err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchGrupos() {
+    try {
+      const res = await fetch(`${API_URL}/tutor/my-groups`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setGrupos(data);
+      } else {
+        console.error("Error obteniendo grupos:", data.message);
+      }
+    } catch (err) {
+      console.error("Error obteniendo grupos", err);
     }
   }
 
@@ -49,9 +72,7 @@ function Tareas() {
     try {
       const res = await fetch(`${API_URL}/tutor/tareas`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(nuevaTarea),
       });
@@ -64,48 +85,45 @@ function Tareas() {
         setVista("lista");
       } else {
         console.error(data.message);
+        alert(data.message || "Error al crear la tarea");
       }
-    } catch (error) {
-      console.error("Error creando tarea", error);
+    } catch (err) {
+      console.error("Error creando tarea", err);
+      alert("Error de conexión al crear la tarea");
     }
   }
 
   async function handleEditarTarea(tareaEditada) {
     try {
-      const res = await fetch(
-        `${API_URL}/tutor/tareas/${tareaEditada.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(tareaEditada),
-        }
-      );
+      const res = await fetch(`${API_URL}/tutor/tareas/${tareaEditada.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(tareaEditada),
+      });
 
       const data = await res.json();
 
       if (res.ok) {
         await fetchTareas();
-
         setTareaActiva(tareaEditada);
         setVista("detalle");
       } else {
         console.error(data.message);
+        alert(data.message || "Error al editar la tarea");
       }
-    } catch (error) {
-      console.error("Error editando tarea", error);
+    } catch (err) {
+      console.error("Error editando tarea", err);
+      alert("Error de conexión al editar la tarea");
     }
   }
 
   const renderContenido = () => {
-    if (loading) {
-      return <p>Cargando tareas...</p>;
-    }
+    if (loading) return <p style={{ color: "black", padding: "2rem" }}>Cargando tareas...</p>;
+    if (error) return <p style={{ color: "red", padding: "2rem" }}>{error}</p>;
 
     if (tab === "crear") {
-      return <TareasCrear onCrear={handleCrearTarea} />;
+      return <TareasCrear grupos={grupos} onCrear={handleCrearTarea} />;
     }
 
     if (vista === "lista") {
@@ -145,18 +163,13 @@ function Tareas() {
     <div className="tareas">
       <div className="homework-header">
         <div className="line-homework"></div>
-
         <div className="homework-tabs">
           <div
             className={`tab ${tab === "gestionar" ? "active" : ""}`}
-            onClick={() => {
-              setTab("gestionar");
-              setVista("lista");
-            }}
+            onClick={() => { setTab("gestionar"); setVista("lista"); }}
           >
             Gestionar Tareas
           </div>
-
           <div
             className={`tab ${tab === "crear" ? "active" : ""}`}
             onClick={() => setTab("crear")}
@@ -165,7 +178,6 @@ function Tareas() {
           </div>
         </div>
       </div>
-
       <div className="homework-content">
         {renderContenido()}
       </div>
