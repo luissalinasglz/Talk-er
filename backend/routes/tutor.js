@@ -388,6 +388,31 @@ router.get("/examenes/:id", async (req, res) => {
     }
 });
 
+router.get("/alumno/:claseId", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `
+      SELECT st.student,
+        CONCAT(u.name, ' ', u.last_name) AS nombre_alumno
+      FROM student_tutor st 
+      INNER JOIN users u
+        ON u.id = st.student
+      WHERE st.id = ?
+    `,
+      [req.params.claseId]
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error obteniendo alumno",
+    });
+  }
+});
+
+
 // ==========================================
 // POST ENDPOINTS
 // ==========================================

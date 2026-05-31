@@ -133,8 +133,8 @@ function ExamenesCrear({ onVolver }) {
                                 onChange={e => setClase(e.target.value)}>
                                 <option value="">Seleccionar grupo...</option>
                                 {grupos.map(g => (
-                                    <option key={g.id} value={`${g.idioma} — ${g.student_name}`}>
-                                        {g.idioma} — {g.student_name}
+                                    <option key={g.id} value={`${g.id}`}>
+                                        {g.student_name}
                                     </option>
                                 ))}
                             </select>
