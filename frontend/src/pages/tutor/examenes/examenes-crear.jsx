@@ -9,22 +9,20 @@ function nuevaPregunta() {
 }
 
 function ExamenesCrear({ onVolver }) {
-    const [nombre, setNombre] = useState("");
-    const [clase, setClase] = useState("");
-    const [duracion, setDuracion] = useState("");
+    const [nombre, setNombre]           = useState("");
+    const [clase, setClase]             = useState("");
+    const [duracion, setDuracion]       = useState("");
     const [fechaLimite, setFechaLimite] = useState("");
-    const [horaLimite, setHoraLimite] = useState("");
+    const [horaLimite, setHoraLimite]   = useState("");
     const [listaPreguntas, setListaPreguntas] = useState([nuevaPregunta()]);
-    const [guardando, setGuardando] = useState(false);
-    const [error, setError] = useState("");
-    const [grupos, setGrupos] = useState([]);
+    const [guardando, setGuardando]     = useState(false);
+    const [error, setError]             = useState("");
+    const [grupos, setGrupos]           = useState([]);
 
     useEffect(() => {
         fetch(`${API_URL}/tutor/my-groups`, { credentials: "include" })
             .then(r => r.json())
-            .then(data => {
-                if (Array.isArray(data)) setGrupos(data);
-            })
+            .then(data => { if (Array.isArray(data)) setGrupos(data); })
             .catch(console.error);
     }, []);
 
@@ -108,8 +106,7 @@ function ExamenesCrear({ onVolver }) {
     return (
         <div className="examenes-panel vista-centrada">
             <div className="panel-right w-100">
-                <button className="button-add" onClick={onVolver}
-                    style={{ width: "auto", marginBottom: "1rem" }}>
+                <button className="button-add volver" onClick={onVolver}>
                     ← Volver
                 </button>
                 <h2>Crear Examen</h2>
@@ -164,14 +161,12 @@ function ExamenesCrear({ onVolver }) {
 
                 <div className="exam-questions">
                     <h3>Preguntas</h3>
-                    <p style={{ fontSize: "0.8rem", color: "#666", marginBottom: "1rem" }}>
+                    <p className="exam-questions-hint">
                         * Haz clic en el círculo de la opción correcta.
                     </p>
 
                     {listaPreguntas.map((pregunta, index) => (
-                        <div key={pregunta.id} className="questions-container"
-                            style={{ marginBottom: "1.5rem", position: "relative" }}>
-
+                        <div key={pregunta.id} className="questions-container">
                             {listaPreguntas.length > 1 && (
                                 <button className="button-delete"
                                     onClick={() => eliminarPregunta(pregunta.id)}>
@@ -193,11 +188,8 @@ function ExamenesCrear({ onVolver }) {
                                 <div className="left-options">
                                     {[0, 1].map(i => (
                                         <div key={i} className="options"
-                                            onClick={() => marcarCorrecta(pregunta.id, LETRAS[i])}
-                                            style={{ cursor: "pointer" }}>
-                                            <div className="option-circle" style={{
-                                                backgroundColor: pregunta.correcta === LETRAS[i] ? "#4CAF50" : ""
-                                            }} />
+                                            onClick={() => marcarCorrecta(pregunta.id, LETRAS[i])}>
+                                            <div className={`option-circle${pregunta.correcta === LETRAS[i] ? " selected" : ""}`} />
                                             <input
                                                 type="text"
                                                 className="option-input"
@@ -212,11 +204,8 @@ function ExamenesCrear({ onVolver }) {
                                 <div className="right-options">
                                     {[2, 3].map(i => (
                                         <div key={i} className="options"
-                                            onClick={() => marcarCorrecta(pregunta.id, LETRAS[i])}
-                                            style={{ cursor: "pointer" }}>
-                                            <div className="option-circle" style={{
-                                                backgroundColor: pregunta.correcta === LETRAS[i] ? "#4CAF50" : ""
-                                            }} />
+                                            onClick={() => marcarCorrecta(pregunta.id, LETRAS[i])}>
+                                            <div className={`option-circle${pregunta.correcta === LETRAS[i] ? " selected" : ""}`} />
                                             <input
                                                 type="text"
                                                 className="option-input"
@@ -233,11 +222,7 @@ function ExamenesCrear({ onVolver }) {
                     ))}
                 </div>
 
-                {error && (
-                    <p style={{ color: "#E74C3C", textAlign: "center", marginTop: "1rem" }}>
-                        {error}
-                    </p>
-                )}
+                {error && <p className="form-error">{error}</p>}
 
                 <div className="buttons-container">
                     <button className="button-add" onClick={agregarNuevaPregunta}>

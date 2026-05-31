@@ -18,8 +18,6 @@ const examenSchema = new mongoose.Schema({
     fecha_limite:  { type: Date,   required: true },
     preguntas:     { type: [preguntaSchema], default: [] },
     creado_en:     { type: Date, default: Date.now },
-    calificacion:  { type: Number },
-    retro:         { type: String },
 });
 
 export default mongoose.model("Examen", examenSchema);
