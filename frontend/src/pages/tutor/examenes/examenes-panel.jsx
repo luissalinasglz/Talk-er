@@ -5,7 +5,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 function ExamenesPanel({ onSeleccionar, onCrearNuevo }) {
     const [examenes, setExamenes] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [alumnos, setAlumnos]   = useState({});
+    const [loading, setLoading]   = useState(true);
 
     useEffect(() => {
         fetch(`${API_URL}/tutor/examenes`, { credentials: "include" })
@@ -15,7 +16,20 @@ function ExamenesPanel({ onSeleccionar, onCrearNuevo }) {
             .finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <p style={{ padding: "2rem" }}>Cargando exámenes...</p>;
+    useEffect(() => {
+        if (examenes.length === 0) return;
+
+        examenes.forEach((examen) => {
+            fetch(`${API_URL}/tutor/alumno/${examen.clase}`, { credentials: "include" })
+                .then(r => r.json())
+                .then(data => {
+                    setAlumnos(prev => ({ ...prev, [examen._id]: data }));
+                })
+                .catch(console.error);
+        });
+    }, [examenes]);
+
+    if (loading) return <p className="estado-cargando">Cargando exámenes...</p>;
 
     return (
         <div className="examenes-panel vista-centrada">
@@ -26,28 +40,33 @@ function ExamenesPanel({ onSeleccionar, onCrearNuevo }) {
                 </div>
 
                 {examenes.length === 0 && (
-                    <p style={{ color: "#999", textAlign: "center", marginTop: "2rem" }}>
-                        No hay exámenes creados aún.
-                    </p>
+                    <p className="estado-vacio">No hay exámenes creados aún.</p>
                 )}
 
-                {examenes.map((examen) => (
-                    <div key={examen._id} className="exam-item">
-                        <div className="exam-header">
-                            <div className="exam-indicator"></div>
-                            <div className="exam-info">
-                                <p className="exam-name">{examen.nombre}</p>
-                                <p className="exam-date">
-                                    Vence {new Date(examen.fecha_limite).toLocaleString("es-MX")} · {examen.duracion}min
-                                </p>
+                {examenes.map((examen) => {
+                    const estudiantesDelExamen = alumnos[examen._id] || [];
+                    return (
+                        <div key={examen._id} className="exam-item">
+                            <div className="exam-header">
+                                <div className="exam-indicator" />
+                                <div className="exam-info">
+                                    <p className="exam-name">{examen.nombre}</p>
+                                    <p className="exam-date">
+                                        Vence {new Date(examen.fecha_limite).toLocaleString("es-MX")} · {examen.duracion}min
+                                    </p>
+                                </div>
+                                <div className="exam-alumnos">
+                                    {estudiantesDelExamen.map((alumno, i) => (
+                                        <p key={i} className="exam-class">{alumno.nombre_alumno}</p>
+                                    ))}
+                                </div>
                             </div>
-                            <p className="exam-class">{examen.clase}</p>
+                            <p className="exam-link" onClick={() => onSeleccionar(examen)}>
+                                Ver resultados →
+                            </p>
                         </div>
-                        <p className="exam-link" onClick={() => onSeleccionar(examen)}>
-                            Ver resultados →
-                        </p>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

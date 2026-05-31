@@ -63,7 +63,7 @@
     box-sizing: border-box;
     color: black;
     background-color: #FFFFFF;
-    border: 2px solid #BBBEC7; /* Comas removidas */
+    border: 2px solid #BBBEC7;
     border-radius: 20px;
     padding: 0.75rem 1rem;
     font-family: inherit;
@@ -84,11 +84,23 @@
     margin-top: 2rem;
 }
 
+.exam-questions h3 {
+    margin-bottom: 0.25rem;
+}
+
+.exam-questions-hint {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
 .questions-container {
     background-color: #F0F2F7;
     padding: 1.5rem;
     border-radius: 20px;
     color: #6883BA;
+    margin-bottom: 1.5rem;
+    position: relative;
 }
 
 .questions-container > p {
@@ -104,13 +116,18 @@
     gap: 2rem;
 }
 
-.option-circle { 
+.option-circle {
     background-color: #FFFFFF;
     height: 20px;
     width: 20px;
-    border: 2px solid #BBBEC7; /* Comas removidas */
+    border: 2px solid #BBBEC7;
     border-radius: 50%;
     flex-shrink: 0;
+}
+
+.option-circle.selected {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
 }
 
 .options {
@@ -119,6 +136,7 @@
     align-items: center;
     gap: 1rem;
     margin-top: 1rem;
+    cursor: pointer;
 }
 
 .left-options, .right-options {
@@ -128,7 +146,7 @@
 .buttons-container {
     display: flex;
     flex-direction: column;
-    align-items: center;    
+    align-items: center;
     gap: 1rem;
     margin-top: 2.5rem;
 }
@@ -154,6 +172,11 @@
     background-color: #F0F2F7;
 }
 
+.button-add.volver {
+    width: auto;
+    margin-bottom: 1rem;
+}
+
 .button-save {
     background-color: #6883BA;
     border: none;
@@ -167,6 +190,7 @@
     background-color: #4f6ea8;
 }
 
+/* Panel izquierdo (lista de exámenes) */
 .panel-left {
     flex: 1.2;
     padding: 2rem;
@@ -254,7 +278,30 @@
     text-decoration: underline;
 }
 
-/* Resultados */
+/* Estado vacío y carga */
+.estado-vacio {
+    color: #999;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.estado-cargando {
+    padding: 2rem;
+}
+
+.estado-error {
+    padding: 2rem;
+    color: #E74C3C;
+}
+
+/* Error de formulario */
+.form-error {
+    color: #E74C3C;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* ── Resultados ── */
 .examenes-resultados {
     display: flex;
     flex-direction: row;
@@ -308,6 +355,7 @@
     margin-top: 0;
 }
 
+/* Tarjeta resumen del examen */
 .general-info {
     display: flex;
     flex-direction: row;
@@ -325,9 +373,9 @@
     background-color: #252467;
     border-radius: 50%;
     border: 5px solid #93E490;
-    display: flex;              
-    align-items: center;       
-    justify-content: center;    
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-left: auto;
     font-weight: bold;
     font-size: 1.2rem;
@@ -346,39 +394,45 @@
     color: #BBBEC7;
 }
 
-.exam-information {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
+.student-info-fecha {
+    margin-top: 0.5rem !important;
+    font-size: 0.85rem !important;
 }
 
-.answers {
-    color: black;
-    background-color: #FFFFFF;
-    padding: 1rem;
-    text-align: center;
+/* Tabs de alumnos */
+.alumnos-tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.alumno-tab {
+    padding: 0.4rem 1rem;
     border-radius: 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.answers p:first-child {
-    color: #BBBEC7;
-    margin: 0;
-    font-size: 14px;
-}
-
-.answers p:last-child {
+    border: 2px solid #6883BA;
     font-weight: bold;
-    font-size: 18px;
-    margin: 0;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    background-color: #FFFFFF;
+    color: #6883BA;
 }
 
+.alumno-tab.activo {
+    background-color: #6883BA;
+    color: #FFFFFF;
+}
+
+.alumno-tab-score {
+    margin-left: 0.4rem;
+    opacity: 0.8;
+}
+
+/* Detalle de pregunta en resultados */
 .exam-data {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     background-color: #FFFFFF;
     padding: 1.5rem;
     border-radius: 20px;
@@ -419,7 +473,7 @@
 .answers-side {
     display: flex;
     flex-direction: column;
-    flex: 1;                   
+    flex: 1;
     gap: 1rem;
 }
 
@@ -440,6 +494,14 @@
     margin: 0;
 }
 
+.answer-icon {
+    margin-left: 0.5rem;
+}
+
+.answer-icon.faded {
+    opacity: 0.7;
+}
+
 .correct {
     background-color: #93E490 !important;
     color: #252467 !important;
@@ -447,6 +509,64 @@
     font-weight: bold;
 }
 
+.incorrect {
+    background-color: #FFD0D0 !important;
+    color: #c0392b !important;
+    font-weight: bold;
+}
+
+/* Badge de estado por pregunta */
+.question-status {
+    margin-top: 0.5rem;
+    font-size: 12px;
+}
+
+.question-status.sin-respuesta {
+    color: #999;
+}
+
+.question-status.correcta {
+    color: #27ae60;
+}
+
+.question-status.incorrecta {
+    color: #c0392b;
+}
+
+/* Panel de retroalimentación */
+.retro-nombre {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.retro-meta {
+    color: #999;
+    font-size: 13px;
+    margin-bottom: 1rem;
+}
+
+.retro-label {
+    margin-bottom: 0.5rem;
+}
+
+.button-save.retro-btn {
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.retro-ok {
+    color: #27ae60;
+    text-align: center;
+    margin-top: 0.75rem;
+    font-size: 14px;
+}
+
+.retro-vacia {
+    color: #999;
+    font-size: 14px;
+}
+
+/* Centrado y anchura */
 .vista-centrada {
     justify-content: center;
     max-width: 900px;
@@ -495,4 +615,36 @@
 .button-delete:hover {
     background-color: #ff4d4f;
     color: white;
+}
+
+/* Exams-information (estadísticas) */
+.exam-information {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.answers {
+    color: black;
+    background-color: #FFFFFF;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.answers p:first-child {
+    color: #BBBEC7;
+    margin: 0;
+    font-size: 14px;
+}
+
+.answers p:last-child {
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0;
 }

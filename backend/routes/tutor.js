@@ -6,6 +6,7 @@ import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sd
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomBytes } from "crypto";
 import Examen from "../models/Examen.js"
+import Submission from "../models/Submission.js";
 
 const router = express.Router();
 
@@ -386,6 +387,54 @@ router.get("/examenes/:id", async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Error obteniendo examen" });
     }
+});
+
+router.get("/alumno/:claseId", async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      `
+      SELECT st.student,
+        CONCAT(u.name, ' ', u.last_name) AS nombre_alumno
+      FROM student_tutor st 
+      INNER JOIN users u
+        ON u.id = st.student
+      WHERE st.id = ?
+    `,
+      [req.params.claseId]
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error obteniendo alumno",
+    });
+  }
+});
+
+router.get("/examenes/:id/submissions", async (req, res) => {
+  try {
+    const examen = await Examen.findOne({ _id: req.params.id, tutor_id: req.user.id }).lean();
+    if (!examen) return res.status(404).json({ message: "No encontrado" });
+
+    const submissions = await Submission.find({ examen_id: req.params.id }).lean();
+
+    const enriched = await Promise.all(
+      submissions.map(async (sub) => {
+        const [rows] = await pool.query(
+          `SELECT CONCAT(name, ' ', last_name) AS nombre_alumno FROM users WHERE id = ?`,
+          [sub.student_id]
+        );
+        return { ...sub, nombre_alumno: rows[0]?.nombre_alumno ?? `Alumno ${sub.student_id}` };
+      })
+    );
+
+    res.json({ examen, submissions: enriched });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error obteniendo resultados" });
+  }
 });
 
 // ==========================================
@@ -827,6 +876,25 @@ router.put("/examenes/:id", async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Error actualizando examen" });
     }
+});
+
+router.put("/examenes/:id/submissions/:sid/retro", async (req, res) => {
+  try {
+    const examen = await Examen.findOne({ _id: req.params.id, tutor_id: req.user.id });
+    if (!examen) return res.status(404).json({ message: "No encontrado" });
+
+    const sub = await Submission.findByIdAndUpdate(
+      req.params.sid,
+      { retro: req.body.retro ?? "" },
+      { new: true }
+    );
+    if (!sub) return res.status(404).json({ message: "Submission no encontrada" });
+
+    res.json(sub);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error guardando retroalimentación" });
+  }
 });
 
 router.get("/hola", async (req, res) => {
