@@ -46,6 +46,10 @@
     margin-top: 2rem;
 }
 
+.exam-results h2{
+    color: black;
+}
+
 .exam-calification-student{
     margin-top: 2rem;
     display: flex;
@@ -99,3 +103,213 @@
     background-color: #F3E690;
 }
 
+
+/* ── HEADER EXAMEN ── */
+.exam-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background-color: #252467;
+    color: #fff;
+    border-radius: 16px;
+    margin: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.exam-header-info h2 { margin: 0; font-size: 1.1rem; }
+.exam-header-info p  { margin: 0; font-size: 0.85rem; opacity: 0.8; }
+
+.exam-timer {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 0.4rem 1rem;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.15);
+}
+
+.exam-timer.urgente {
+    background-color: #E05C5C;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.6; }
+}
+
+.exam-submit-btn {
+    background-color: #6883BA;
+    color: #fff;
+    padding: 0.6rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.exam-submit-btn:hover { background-color: #526a9e; }
+
+/* ── PREGUNTAS ── */
+.exam-questions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1rem 1.5rem;
+    overflow-y: auto;
+}
+
+.exam-question {
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    border: 2px solid #E0E4EF;
+    transition: border-color 0.2s;
+}
+
+.exam-question.respondida { border-color: #6883BA; }
+
+.question-number {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6883BA;
+    text-transform: uppercase;
+    margin: 0 0 0.4rem;
+}
+
+.question-text {
+    font-size: 0.95rem;
+    color: #252467;
+    font-weight: 600;
+    margin: 0 0 1rem;
+}
+
+.question-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.question-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 2px solid #E0E4EF;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #444;
+    transition: all 0.15s;
+}
+
+.question-option:hover { border-color: #6883BA; background-color: #F0F2F7; }
+
+.question-option.selected {
+    border-color: #252467;
+    background-color: #252467;
+    color: #fff;
+}
+
+.option-letter {
+    font-weight: 700;
+    font-size: 0.8rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ── RESULTADO ── */
+.exam-resultado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.exam-resultado h2{
+    color:#000000;
+}
+
+.resultado-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resultado-circle h2 { font-size: 2.5rem; color: #fff; margin: 0; }
+
+.resultado-pass { color: #2e7d32; font-weight: 600; }
+.resultado-fail { color: #E05C5C; font-weight: 600; }
+
+/* ── COLORES CALIFICACIÓN ── */
+.excelente  { background-color: #252467; }
+.bien       { background-color: #6883BA; }
+.suficiente { background-color: #f0a500; }
+.reprobado  { background-color: #E05C5C; }
+
+.circle-calification-student {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.circle-calification-student h3 { color: #fff; font-size: 1rem; margin: 0; }
+
+/* ── RETROALIMENTACIÓN ── */
+.exam-retro {
+    margin-top: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: #F0F2F7;
+    border-left: 4px solid #6883BA;
+    border-radius: 0 10px 10px 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* ── MISC ── */
+.exam-empty  { color: #BBBEC7; margin-top: 0.5rem; font-size: 0.9rem; }
+.exam-vence  { font-size: 0.8rem; color: #E05C5C; margin: 0; }
+.exam-message { margin: 0.5rem 1.5rem; }
+
+.exam-detail {
+    cursor: default;
+}
+
+.exam-button {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.exam-button:hover {
+    background-color: #1a1a5c;
+}
+
+.exam-cal-button {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.exam-cal-button:hover {
+    background-color: #526a9e;
+}
+
+.exam-calification {
+    min-height: 90px; /* evita que la card cambie de tamaño al alternar */
+}

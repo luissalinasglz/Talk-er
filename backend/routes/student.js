@@ -1,5 +1,7 @@
 import express from "express";
 import pool from "../db/db.js";
+import Examen from "../models/Examen.js";
+import Submission from "../models/Submission.js";
 import { Verify } from "../middleware/verify.js";
 import cellar from "../middleware/cellar.js";
 import { PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
@@ -210,6 +212,173 @@ router.get("/materials", Verify, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error obteniendo materiales" });
+    }
+});
+
+// GET lista de exámenes
+router.get("/examenes", Verify, async (req, res) => {
+    try {
+        const [stRows] = await pool.query(
+            `SELECT id FROM student_tutor WHERE student = ?`,
+            [req.user.id]
+        );
+
+        if (stRows.length === 0) {
+            return res.json({ disponibles: [], calificados: [] });
+        }
+
+        const studentTutorIds = stRows.map((r) => r.id);
+
+        const examenes = await Examen.find({ clase: { $in: studentTutorIds } })
+            .select("-preguntas")
+            .sort({ fecha_limite: 1 })
+            .lean();
+
+        const examenIds = examenes.map((e) => e._id);
+        const submissions = await Submission.find({
+            examen_id: { $in: examenIds },
+            student_id: req.user.id,
+        }).lean();
+
+        const subMap = {};
+        submissions.forEach((s) => {
+            subMap[s.examen_id.toString()] = s;
+        });
+
+        const ahora = new Date();
+        const disponibles = [];
+        const calificados = [];
+
+        examenes.forEach((e) => {
+            const sub = subMap[e._id.toString()];
+            if (sub) {
+                calificados.push({ ...e, submission: sub });
+            } else if (new Date(e.fecha_limite) > ahora) {
+                disponibles.push(e);
+            }
+        });
+
+        res.json({ disponibles, calificados });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error obteniendo exámenes" });
+    }
+});
+
+// GET examen completo con preguntas
+router.get("/examenes/:id", Verify, async (req, res) => {
+    try {
+        const [stRows] = await pool.query(
+            `SELECT id FROM student_tutor WHERE student = ?`,
+            [req.user.id]
+        );
+
+        if (stRows.length === 0) {
+            return res.status(403).json({ message: "Acceso denegado" });
+        }
+
+        const studentTutorIds = stRows.map((r) => r.id);
+
+        const examen = await Examen.findOne({
+            _id: req.params.id,
+            clase: { $in: studentTutorIds },
+        }).lean();
+
+        if (!examen) return res.status(404).json({ message: "No encontrado" });
+
+        const existing = await Submission.findOne({
+            examen_id: req.params.id,
+            student_id: req.user.id,
+        });
+
+        if (existing) {
+            return res.status(403).json({ message: "Ya presentaste este examen" });
+        }
+
+        // Enviar preguntas sin la respuesta correcta
+        const examenSinRespuestas = {
+            ...examen,
+            preguntas: examen.preguntas.map(({ enunciado, opciones }) => ({
+                enunciado,
+                opciones,
+            })),
+        };
+
+        res.json(examenSinRespuestas);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error obteniendo examen" });
+    }
+});
+
+// POST enviar respuestas
+router.post("/examenes/:id/submit", Verify, async (req, res) => {
+    try {
+        const { respuestas } = req.body;
+
+        if (!Array.isArray(respuestas)) {
+            return res.status(400).json({ message: "Respuestas inválidas" });
+        }
+
+        const [stRows] = await pool.query(
+            `SELECT id FROM student_tutor WHERE student = ?`,
+            [req.user.id]
+        );
+
+        if (stRows.length === 0) {
+            return res.status(403).json({ message: "Acceso denegado" });
+        }
+
+        const studentTutorIds = stRows.map((r) => r.id);
+
+        const examen = await Examen.findOne({
+            _id: req.params.id,
+            clase: { $in: studentTutorIds },
+        }).lean();
+
+        if (!examen) return res.status(404).json({ message: "No encontrado" });
+
+        if (new Date(examen.fecha_limite) < new Date()) {
+            return res.status(403).json({ message: "El examen ya venció" });
+        }
+
+        const existing = await Submission.findOne({
+            examen_id: req.params.id,
+            student_id: req.user.id,
+        });
+        if (existing) {
+            return res.status(403).json({ message: "Ya presentaste este examen" });
+        }
+
+        // Evaluar
+        const total = examen.preguntas.length;
+        let correctas = 0;
+        examen.preguntas.forEach((pregunta, i) => {
+            if (respuestas[i] === pregunta.correcta) correctas++;
+        });
+
+        const calificacion = total > 0
+            ? Math.round((correctas / total) * 10 * 10) / 10
+            : 0;
+
+        const submission = await Submission.create({
+            examen_id: examen._id,
+            student_id: req.user.id,
+            respuestas,
+            calificacion,
+            retro: "",
+        });
+
+        res.status(201).json({
+            message: "Examen enviado",
+            calificacion,
+            correctas,
+            total,
+            submission_id: submission._id,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error enviando examen" });
     }
 });
 
