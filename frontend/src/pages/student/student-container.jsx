@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate} from "react-router-dom";
 import SidebarStudent from "./student-sidebar";
 import Dashboard from "./student-dashboard";
 
@@ -23,6 +23,7 @@ function StudentContainer() {
           <Route path="tareas" element={<StudentTareas />} />
           <Route path="examenes" element={<StudentExamenes />} />
           <Route path="material" element={<StudentMaterial />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </div>

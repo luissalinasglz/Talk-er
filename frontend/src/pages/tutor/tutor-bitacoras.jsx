@@ -27,6 +27,8 @@ function Bitacoras() {
 
     useEffect(() => { fetchSesiones(); }, []);
 
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));   
+
     async function fetchSesiones() {
         try {
             const res = await fetch(`${API_URL}/tutor/clases`, {
@@ -155,6 +157,7 @@ function Bitacoras() {
             if (!res.ok) throw new Error(data.message || "Error al guardar la bitácora.");
 
             setMessage("¡Bitácora enviada a revisión con éxito!");
+            await sleep(1000);
             await fetchSesiones();
 
         } catch (error) {

@@ -84,6 +84,9 @@ function Sesiones() {
     async function guardarHorario() {
         if (!selectedGroup) return setMessage("Selecciona un alumno.");
         if (selectedDays.length === 0) return setMessage("Selecciona al menos un día.");
+        if(startTime === "") return setMessage("Ingresa hora de inicio y fin");
+        if (startTime >= endTime) return setMessage("La hora de fin debe ser posterior a la hora de inicio.");
+        
 
         let horariosPayload = [];
 

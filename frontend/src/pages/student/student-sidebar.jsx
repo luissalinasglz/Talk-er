@@ -7,6 +7,7 @@ import sesionesIcon from "../../assets/calendario.png";
 import materialIcon from "../../assets/material.png";
 import tareasIcon from "../../assets/tarea.png";
 import examenIcon from "../../assets/examenes.png";
+import Logout from "../../LogoutButton";
 
 function SidebarStudent() {
   const base = "/student";
@@ -42,6 +43,8 @@ function SidebarStudent() {
             <img className="icon" src={materialIcon} alt="" />
             <p>Material</p>
         </NavLink>
+
+        <Logout/>
       </nav>
     </aside>
   );

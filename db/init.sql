@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
 	`assignment` int NOT NULL,
 	`file` varchar(100) NOT NULL,
 	`grade` int,
-	`feedback` varchar(100) NOT NULL,
+	`feedback` varchar(100),
 	`submitted_at` timestamp NOT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -173,7 +173,7 @@ VALUES (1, 'Lección del verbo to be', 'Completa los ejercicios de la página 24
        (1, 'Lección pasado simple', 'Escribe un ensayo corto de 300 palabras.', '2026-04-30 18:00:00');
 
 INSERT INTO submissions (assignment, file, grade, feedback, submitted_at)
-VALUES (1, 'Verbo_to_be-Wicho.pdf', NULL, '', '2026-04-27 10:15:00');
+VALUES (1, 'Verbo_to_be-Wicho.pdf', NULL, NULL, '2026-04-27 10:15:00');
 
 INSERT INTO sessions (student_tutor, session_url, platform, password, start_time, end_time)
 VALUES 
