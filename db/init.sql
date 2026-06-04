@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `assignments` (
 	`title` varchar(100) NOT NULL,
 	`description` varchar(300) NOT NULL,
 	`due_date` timestamp NOT NULL,
+    `file_url` varchar(255) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -48,7 +49,10 @@ CREATE TABLE IF NOT EXISTS `submissions` (
 	`grade` int,
 	`feedback` varchar(100),
 	`submitted_at` timestamp NOT NULL,
-	PRIMARY KEY (`id`)
+	`student` INT DEFAULT NULL,
+	PRIMARY KEY (`id`),
+    FOREIGN KEY (`student`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
 );
 
 CREATE TABLE IF NOT EXISTS `materials` (
