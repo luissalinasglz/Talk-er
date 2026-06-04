@@ -34,6 +34,7 @@ const ALLOWED_MIME_TYPES = [
 const STORAGE_FOLDERS = {
   material: "materials",
   evidence: "bitacoras",
+  assignment: "assignments",   // ← NEW: attachment files on tasks
 };
 
 // ==========================================
@@ -287,6 +288,7 @@ router.get("/tareas", async (req, res) => {
       SELECT a.id,
         a.title AS titulo,
         a.description AS descripcion,
+        a.file_url,
         st.idioma AS beneficiario,
         DATE_FORMAT(a.due_date, '%Y-%m-%d') AS fechaEntrega,
         DATE_FORMAT(a.due_date, '%H:%i') AS horaLimite
@@ -298,6 +300,19 @@ router.get("/tareas", async (req, res) => {
       [req.user.id]
     );
 
+    // Generate signed URLs for any assignment attachments
+    await Promise.all(
+      rows.map(async (row) => {
+        if (row.file_url) {
+          const command = new GetObjectCommand({
+            Bucket: process.env.CELLAR_ADDON_BUCKET,
+            Key: row.file_url,
+          });
+          row.signed_file_url = await getSignedUrl(cellar, command, { expiresIn: 300 });
+        }
+      })
+    );
+
     res.json(rows);
   } catch (error) {
     console.error(error);
@@ -307,6 +322,68 @@ router.get("/tareas", async (req, res) => {
     });
   }
 });
+
+// GET all submissions for a given assignment (with signed file URLs)
+router.get("/tareas/:id/submissions", async (req, res) => {
+  try {
+    const [assignmentRows] = await pool.query(
+      `SELECT a.id
+       FROM assignments a
+       JOIN student_tutor st ON a.\`group\` = st.id
+       WHERE a.id = ? AND st.tutor = ?`,
+      [req.params.id, req.user.id]
+    );
+
+    if (assignmentRows.length === 0) {
+      return res.status(403).json({ message: "Acceso denegado" });
+    }
+
+    console.log("Fetching submissions for assignment id:", req.params.id);
+
+    // Debug: check raw submissions first
+    const [rawSubs] = await pool.query(
+      `SELECT * FROM submissions WHERE assignment = ?`,
+      [req.params.id]
+    );
+    console.log("Raw submissions:", rawSubs);
+
+    const [rows] = await pool.query(
+      `SELECT sub.id,
+              sub.file,
+              sub.grade,
+              sub.feedback,
+              sub.submitted_at,
+              st.student AS student_id,
+              CONCAT(u.name, ' ', u.last_name) AS nombre_alumno
+       FROM submissions sub
+       JOIN assignments a ON a.id = sub.assignment
+       JOIN student_tutor st ON st.id = a.\`group\`
+       JOIN users u ON u.id = st.student
+       WHERE sub.assignment = ?
+       ORDER BY sub.submitted_at DESC`,
+      [req.params.id]
+    );
+    console.log("Joined rows:", rows);
+
+    await Promise.all(
+      rows.map(async (row) => {
+        if (row.file) {
+          const command = new GetObjectCommand({
+            Bucket: process.env.CELLAR_ADDON_BUCKET,
+            Key: row.file,
+          });
+          row.signed_file_url = await getSignedUrl(cellar, command, { expiresIn: 1800 });
+        }
+      })
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error obteniendo entregas" });
+  }
+});
+
 
 router.get("/materials", async (req, res) => {
   try {
@@ -740,43 +817,6 @@ router.post("/deleteMaterial", async (req, res) => {
   }
 });
 
-router.put("/tareas/:id", async (req, res) => {
-  try {
-    const {
-      titulo,
-      descripcion,
-      fechaEntrega,
-      horaLimite,
-    } = req.body;
-
-    await pool.query(
-      `
-      UPDATE assignments
-      SET title = ?,
-        description = ?,
-        due_date = ?
-      WHERE id = ?
-    `,
-      [
-        titulo,
-        descripcion,
-        `${fechaEntrega} ${horaLimite}:00`,
-        req.params.id,
-      ]
-    );
-
-    res.json({
-      message: "Tarea actualizada",
-    });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      message: "Error actualizando tarea",
-    });
-  }
-});
-
 router.post("/horarios",  async (req, res) => {
   const connection = await pool.getConnection();
   try {
@@ -805,7 +845,7 @@ router.post("/horarios",  async (req, res) => {
 
 router.post("/tareas", async (req, res) => {
   try {
-    const { group, titulo, descripcion, fechaEntrega, horaLimite } = req.body;
+    const { group, titulo, descripcion, fechaEntrega, horaLimite, file_url } = req.body;
  
     if (!group || !titulo?.trim()) {
       return res.status(400).json({ message: "Grupo y título son requeridos" });
@@ -826,9 +866,9 @@ router.post("/tareas", async (req, res) => {
         : null;
  
     await pool.query(
-      `INSERT INTO assignments (\`group\`, title, description, due_date)
-       VALUES (?, ?, ?, ?)`,
-      [group, titulo.trim(), descripcion?.trim() || "", dueDate]
+      `INSERT INTO assignments (\`group\`, title, description, due_date, file_url)
+       VALUES (?, ?, ?, ?, ?)`,
+      [group, titulo.trim(), descripcion?.trim() || "", dueDate, file_url || null]
     );
  
     res.status(201).json({ message: "Tarea creada correctamente" });
@@ -860,6 +900,111 @@ router.post("/examenes", async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Error creando examen" });
     }
+});
+
+// ==========================================
+// PUT ENDPOINTS
+// ==========================================
+
+router.put("/tareas/:id", async (req, res) => {
+  try {
+    const {
+      titulo,
+      descripcion,
+      fechaEntrega,
+      horaLimite,
+      file_url,         
+      remove_file,      
+    } = req.body;
+
+    const [[current]] = await pool.query(
+      `SELECT a.file_url
+       FROM assignments a
+       JOIN student_tutor st ON a.\`group\` = st.id
+       WHERE a.id = ? AND st.tutor = ?`,
+      [req.params.id, req.user.id]
+    );
+
+    if (!current) {
+      return res.status(403).json({ message: "Acceso denegado" });
+    }
+
+    const oldKey = current.file_url;
+    let newKey = oldKey; 
+
+    if (remove_file) {
+      newKey = null;
+    } else if (file_url !== undefined) {
+      newKey = file_url || null;
+    }
+
+    if (oldKey && oldKey !== newKey) {
+      try {
+        await cellar.send(new DeleteObjectCommand({
+          Bucket: process.env.CELLAR_ADDON_BUCKET,
+          Key: oldKey,
+        }));
+      } catch (deleteErr) {
+        console.warn("No se pudo borrar archivo viejo de tarea:", deleteErr.message);
+      }
+    }
+
+    await pool.query(
+      `
+      UPDATE assignments
+      SET title = ?,
+        description = ?,
+        due_date = ?,
+        file_url = ?
+      WHERE id = ?
+    `,
+      [
+        titulo,
+        descripcion,
+        `${fechaEntrega} ${horaLimite}:00`,
+        newKey,
+        req.params.id,
+      ]
+    );
+
+    res.json({
+      message: "Tarea actualizada",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Error actualizando tarea",
+    });
+  }
+});
+
+router.put("/tareas/:id/submissions/:subId/grade", async (req, res) => {
+  try {
+    const { grade, feedback } = req.body;
+
+    const [assignmentRows] = await pool.query(
+      `SELECT a.id
+       FROM assignments a
+       JOIN student_tutor st ON a.\`group\` = st.id
+       WHERE a.id = ? AND st.tutor = ?`,
+      [req.params.id, req.user.id]
+    );
+
+    if (assignmentRows.length === 0) {
+      return res.status(403).json({ message: "Acceso denegado" });
+    }
+
+    await pool.query(
+      `UPDATE submissions SET grade = ?, feedback = ? WHERE id = ? AND assignment = ?`,
+      [grade ?? null, feedback ?? null, req.params.subId, req.params.id]
+    );
+
+    res.json({ message: "Calificación guardada" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error guardando calificación" });
+  }
 });
 
 router.put("/examenes/:id", async (req, res) => {
