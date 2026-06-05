@@ -2,8 +2,26 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import "./tutor-dashboard.css";
 
+const META_HORAS = 180;
+
+function calcularHoras(clases) {
+  let aprobadas = 0;
+
+  clases.forEach((clase) => {
+    const dur = clase.duracion || 0;
+    const horas = dur / 60;
+    if (clase.log_id && clase.approved) {
+      aprobadas += horas;
+    }
+  });
+
+  return Math.round(aprobadas * 10) / 10;
+}
+
 function Dashboard() {
   const [horarios, setHorarios] = useState([]);
+  const [horasAprobadas, setHorasAprobadas] = useState(0);
+  const [loadingHoras, setLoadingHoras] = useState(true);
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -23,8 +41,31 @@ function Dashboard() {
         console.error("Error al cargar horarios", error);
       }
     };
+
+    const fetchHoras = async () => {
+      try {
+        const res = await fetch(`${API_URL}/tutor/clases`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setHorasAprobadas(calcularHoras(data));
+        }
+      } catch (error) {
+        console.error("Error al cargar horas", error);
+      } finally {
+        setLoadingHoras(false);
+      }
+    };
+
     fetchHorarios();
+    fetchHoras();
   }, []);
+
+  const porcentaje = Math.min((horasAprobadas / META_HORAS) * 100, 100);
+  const horasRestantes = Math.max(META_HORAS - horasAprobadas, 0);
 
   const getSunday = (date) => {
     const day = new Date(date);
@@ -93,8 +134,8 @@ function Dashboard() {
   };
 
   const moveToLink = () => {
-    navigate(`/tutor/ligas`)
-  }
+    navigate(`/tutor/ligas`);
+  };
 
   const renderCalendarBody = () => {
     const celdasSaltadas = {};
@@ -191,14 +232,25 @@ function Dashboard() {
           <div className="rectangle acreditadas">
             <h5>Horas acreditadas</h5>
             <div className="content">
-              <p className="count">90/180 hrs</p>
-              <div className="content-bar">
-                <div className="percentage-bar"></div>
-              </div>
-              <div className="percentage">
-                <p>50% Completado</p>
-                <p>Faltan 90hrs</p>
-              </div>
+              {loadingHoras ? (
+                <p className="count" style={{ fontSize: "1rem", color: "#BBBEC7" }}>Cargando...</p>
+              ) : (
+                <>
+                  <p className="count">
+                    {horasAprobadas}/{META_HORAS} hrs
+                  </p>
+                  <div className="content-bar">
+                    <div
+                      className="percentage-bar"
+                      style={{ width: `${porcentaje}%` }}
+                    />
+                  </div>
+                  <div className="percentage">
+                    <p>{porcentaje.toFixed(0)}% Completado</p>
+                    <p>Faltan {horasRestantes}hrs</p>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
