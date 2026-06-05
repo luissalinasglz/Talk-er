@@ -153,12 +153,12 @@ function SupervisorBitacoras() {
                                             ) : (
                                                 <>
                                                     <div className="evidence-preview">
-                                                        {sel.evidence_url.toLowerCase().endsWith(".pdf")
-                                                            ? <iframe src={sel.evidence_url} title="PDF Evidence" className="pdf-frame" />
-                                                            : <img src={sel.evidence_url} alt="Evidencia" className="evidence-image" />
+                                                        {sel.signed_evidence_url.toLowerCase().endsWith(".pdf")
+                                                            ? <iframe src={sel.signed_evidence_url} title="PDF Evidence" className="pdf-frame" />
+                                                            : <img src={sel.signed_evidence_url} alt="Evidencia" className="evidence-image" />
                                                         }
                                                     </div>
-                                                    <a href={sel.evidence_url} target="_blank" rel="noopener noreferrer" className="open-evidence-link">
+                                                    <a href={sel.signed_evidence_url} target="_blank" rel="noopener noreferrer" className="open-evidence-link">
                                                         Abrir evidencia completa
                                                     </a>
                                                 </>
@@ -203,9 +203,10 @@ function SupervisorBitacoras() {
                                 value={correcciones}
                                 onChange={(e) => setCorrecciones(e.target.value)}
                                 placeholder="Escribe aquí las observaciones para el tutor..."
+                                data-cy="supervisor-correction-input"
                             />
                             <div className="review-buttons">
-                                <div className="btn-correction" onClick={handleCorrection}>Enviar a Corrección</div>
+                                <div className="btn-correction" onClick={handleCorrection} data-cy="supervisor-correction-button">Enviar a Corrección</div>
                             </div>
                         </div>
                     </>

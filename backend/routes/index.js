@@ -3,12 +3,14 @@ import Auth from './auth.js';
 import Tutor from './tutor.js';
 import Student from './student.js';
 import Supervisor from './supervisor.js';
+import Admin from './admin.js'
 
 const Router = (server) => {
     server.use('/v1/auth', Auth);
     server.use('/v1/tutor', Tutor);
     server.use('/v1/student', Student);
     server.use('/v1/supervisor', Supervisor);
+    server.use('/v1/admin', Admin);
 
     server.get('/v1/user', Verify, (req, res) => {
         res.status(200).json({

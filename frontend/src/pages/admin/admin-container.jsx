@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate} from "react-router-dom";
 import SidebarAdmin from "./admin-sidebar";
 import Dashboard from "./admin-dashboard";
 
@@ -23,6 +23,7 @@ function AdminContainer() {
           <Route path="usuarios" element={<AdminUsuarios />} />
           <Route path="horas" element={<AdminHoras />} />
           <Route path="material" element={<AdminMaterial />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </div>

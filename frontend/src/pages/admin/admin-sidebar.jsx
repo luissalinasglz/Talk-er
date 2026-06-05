@@ -7,6 +7,7 @@ import estadisticasIcon from "../../assets/estadistica.png";
 import usuariosIcon from "../../assets/usuarios.png";
 import horasIcon from "../../assets/horas.png"
 import materialIcon from "../../assets/material.png"
+import Logout from "../../LogoutButton";
 
 function SidebarAdmin() {
   const base = "/admin";
@@ -42,6 +43,8 @@ function SidebarAdmin() {
           <img className="icon" src={materialIcon} alt="" />
           <p>Material</p>
         </NavLink>
+        
+        <Logout/>
       </nav>
     </aside>
   );

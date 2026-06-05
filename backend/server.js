@@ -5,6 +5,9 @@ import { PORT } from "./config/index.js";
 import Router from "./routes/index.js";
 import pool from "./db/db.js"
 import { purgeExpiredTokens } from "./models/Blacklist.js";
+import { connectMongo } from "./db/mongo.js"
+import { webcrypto } from "crypto";
+globalThis.crypto = webcrypto;
 
 const server = express();
 
@@ -16,7 +19,6 @@ server.disable("x-powered-by");
 server.use(cookieParser());
 server.use(express.urlencoded({ extended: false }));
 server.use(express.json());
-server.use("/uploads", express.static("uploads"));
 
 async function connectWithRetry() {
     try {
@@ -30,6 +32,7 @@ async function connectWithRetry() {
 }
 
 connectWithRetry();
+await connectMongo();
 Router(server);
 
 server.listen(PORT, () =>

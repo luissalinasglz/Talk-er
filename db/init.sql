@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `assignments` (
 	`title` varchar(100) NOT NULL,
 	`description` varchar(300) NOT NULL,
 	`due_date` timestamp NOT NULL,
+    `file_url` varchar(255) DEFAULT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -46,9 +47,12 @@ CREATE TABLE IF NOT EXISTS `submissions` (
 	`assignment` int NOT NULL,
 	`file` varchar(100) NOT NULL,
 	`grade` int,
-	`feedback` varchar(100) NOT NULL,
+	`feedback` varchar(100),
 	`submitted_at` timestamp NOT NULL,
-	PRIMARY KEY (`id`)
+	`student` INT DEFAULT NULL,
+	PRIMARY KEY (`id`),
+    FOREIGN KEY (`student`) REFERENCES `users`(`id`) ON DELETE CASCADE
+
 );
 
 CREATE TABLE IF NOT EXISTS `materials` (
@@ -74,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `session_logs` (
 	`validated` boolean NOT NULL,
 	`corrections` varchar(300),
 	`approved` boolean NOT NULL,
+	`approved_by` int,
 	PRIMARY KEY (`id`)
 );
 
@@ -143,7 +148,9 @@ ALTER TABLE `student_tutor` ADD CONSTRAINT `student_tutor_fk2` FOREIGN KEY (`stu
 ALTER TABLE `assignments` ADD CONSTRAINT `assignments_fk1` FOREIGN KEY (`group`) REFERENCES `student_tutor`(`id`);
 ALTER TABLE `submissions` ADD CONSTRAINT `submissions_fk1` FOREIGN KEY (`assignment`) REFERENCES `assignments`(`id`);
 ALTER TABLE `materials` ADD CONSTRAINT `materials_fk1` FOREIGN KEY (`student_tutor_id`) REFERENCES `student_tutor`(`id`);
+
 ALTER TABLE `session_logs` ADD CONSTRAINT `session_logs_fk1` FOREIGN KEY (`session_id`) REFERENCES `sessions`(`id`);
+ALTER TABLE `session_logs`ADD CONSTRAINT `session_logs_fk2` FOREIGN KEY (`approved_by`) REFERENCES `users`( `id`);
 
 ALTER TABLE `reviewer_tutor` ADD CONSTRAINT `reviewer_tutor_fk1` FOREIGN KEY (`tutor_id`) REFERENCES `users`(`id`);
 ALTER TABLE `reviewer_tutor` ADD CONSTRAINT `reviewer_tutor_fk2` FOREIGN KEY (`supervisor_id`) REFERENCES `users`(`id`);
@@ -170,7 +177,7 @@ VALUES (1, 'Lección del verbo to be', 'Completa los ejercicios de la página 24
        (1, 'Lección pasado simple', 'Escribe un ensayo corto de 300 palabras.', '2026-04-30 18:00:00');
 
 INSERT INTO submissions (assignment, file, grade, feedback, submitted_at)
-VALUES (1, 'Verbo_to_be-Wicho.pdf', NULL, '', '2026-04-27 10:15:00');
+VALUES (1, 'Verbo_to_be-Wicho.pdf', NULL, NULL, '2026-04-27 10:15:00');
 
 INSERT INTO sessions (student_tutor, session_url, platform, password, start_time, end_time)
 VALUES 
