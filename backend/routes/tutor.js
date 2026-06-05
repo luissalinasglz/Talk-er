@@ -323,7 +323,6 @@ router.get("/tareas", async (req, res) => {
   }
 });
 
-// GET all submissions for a given assignment (with signed file URLs)
 router.get("/tareas/:id/submissions", async (req, res) => {
   try {
     const [assignmentRows] = await pool.query(
@@ -340,7 +339,6 @@ router.get("/tareas/:id/submissions", async (req, res) => {
 
     console.log("Fetching submissions for assignment id:", req.params.id);
 
-    // Debug: check raw submissions first
     const [rawSubs] = await pool.query(
       `SELECT * FROM submissions WHERE assignment = ?`,
       [req.params.id]
@@ -440,7 +438,7 @@ router.get("/materials", async (req, res) => {
 router.get("/examenes", async (req, res) => {
     try {
         const examenes = await Examen.find({ tutor_id: req.user.id })
-            .select("-preguntas")   // la lista no necesita las preguntas
+            .select("-preguntas")   
             .sort({ fecha_limite: 1 })
             .lean();
 
