@@ -348,7 +348,7 @@ function Bitacoras() {
                                     <div
                                         className={`incidencia-btn ${hasIncidence ? "active" : ""} ${isReadOnly ? "readonly" : ""}`}
                                         onClick={() => !isReadOnly && setIncidence(true)}
-                                    >Sí</div>
+                                    >Sí </div>
                                     <div
                                         className={`incidencia-btn ${!hasIncidence && incidence !== null ? "active-no" : ""} ${isReadOnly ? "readonly" : ""}`}
                                         onClick={() => { if (!isReadOnly) { setIncidence(false); setIncidenceType(""); setIncidenceDescription(""); } }}

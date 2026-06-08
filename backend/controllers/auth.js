@@ -7,29 +7,29 @@ export async function Login(req, res) {
     const { username } = req.body;
     try {
         const user = await findUserByUsername(username);
-        if(!user)
+        if (!user)
             return res.status(401).json({
                 status: "failed",
                 data: [],
                 message: "Nombre de usuario invalido"
             });
 
-        const isPasswordValid = req.body.password == user.password_hash;
-        
+        const isPasswordValid = await bcrypt.compare(req.body.password, user.password_hash);
+
         if (!isPasswordValid)
             return res.status(401).json({
                 status: "failed",
                 data: [],
                 message: "Contraseña incorrecta"
             });
-        
+
         let options = {
             maxAge: 20 * 60 * 1000,
             httpOnly: true,
             secure: true,
             sameSite: "None",
         };
-        
+
         const token = generateAccessJWT(user);
         const { password_hash, ...user_data } = user;
 

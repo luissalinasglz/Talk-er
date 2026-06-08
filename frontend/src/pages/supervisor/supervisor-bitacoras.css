@@ -116,8 +116,8 @@
     transition: 0.3s;
 }
 
-.incidencia-btn.active { background-color: #E49090; color: white; border-color: #E49090; }
-.incidencia-btn.active-no { background-color: #93E490; color: white; border-color: #93E490; }
+.incidencia-btn.active { background-color: #252467; color: white; border-color: #252467; }
+.incidencia-btn.active-no { background-color: #252467; color: white; border-color: #252467; }
 
 .incidencia-extra {
     display: flex;

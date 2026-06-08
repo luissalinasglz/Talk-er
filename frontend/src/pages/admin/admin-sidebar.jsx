@@ -5,8 +5,9 @@ import profileWhite from "../../assets/profile-white.png";
 import dashboardIcon from "../../assets/dashboard.png";
 import estadisticasIcon from "../../assets/estadistica.png";
 import usuariosIcon from "../../assets/usuarios.png";
-import horasIcon from "../../assets/horas.png"
-import materialIcon from "../../assets/material.png"
+import horasIcon from "../../assets/horas.png";
+import materialIcon from "../../assets/material.png";
+import bitacoraIcon from "../../assets/bitacora.png";
 import Logout from "../../LogoutButton";
 
 function SidebarAdmin() {
@@ -19,14 +20,14 @@ function SidebarAdmin() {
       </div>
 
       <nav>
-        <NavLink to={base} className="option">
+        <NavLink to={base} end className="option">
           <img className="icon" src={dashboardIcon} alt="" />
           <p>Dashboard</p>
         </NavLink>
 
         <NavLink to={`${base}/estadisticas`} className="option">
           <img className="icon" src={estadisticasIcon} alt="" />
-          <p>Estadistica</p>
+          <p>Estadística</p>
         </NavLink>
 
         <NavLink to={`${base}/usuarios`} className="option">
@@ -34,17 +35,22 @@ function SidebarAdmin() {
           <p>Usuarios</p>
         </NavLink>
 
-         <NavLink to={`${base}/horas`} className="option">
+        <NavLink to={`${base}/horas`} className="option">
           <img className="icon" src={horasIcon} alt="" />
           <p>Horas</p>
         </NavLink>
 
-         <NavLink to={`${base}/material`} className="option">
+        <NavLink to={`${base}/material`} className="option">
           <img className="icon" src={materialIcon} alt="" />
           <p>Material</p>
         </NavLink>
-        
-        <Logout/>
+
+        <NavLink to={`${base}/supervisor`} className="option">
+          <img className="icon" src={bitacoraIcon} alt="" />
+          <p>Supervisor</p>
+        </NavLink>
+
+        <Logout />
       </nav>
     </aside>
   );

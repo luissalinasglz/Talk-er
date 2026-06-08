@@ -19,6 +19,104 @@ const ALLOWED_MIME_TYPES_SUBMISSIONS = [
 
 const router = express.Router();
 
+// ─── DASHBOARD ───────────────────────────────────────────────────────────────
+router.get("/dashboard", Verify, async (req, res) => {
+    try {
+        // 1. Clases (grupos activos del estudiante)
+        const [clases] = await pool.query(`
+            SELECT
+                st.id,
+                CASE st.idioma
+                    WHEN 'english' THEN 'Inglés'
+                    WHEN 'french' THEN 'Francés'
+                    ELSE st.idioma
+                END AS idioma,
+                u.name AS tutor_name
+            FROM student_tutor st
+            JOIN users u ON u.id = st.tutor
+            WHERE st.student = ?
+        `, [req.user.id]);
+
+        // 2. Tareas próximas (sin entrega aún, ordenadas por due_date ASC)
+        const [tareas] = await pool.query(`
+            SELECT
+                a.id,
+                a.title,
+                a.due_date,
+                CASE st.idioma
+                    WHEN 'english' THEN 'Inglés'
+                    WHEN 'french' THEN 'Francés'
+                    ELSE st.idioma
+                END AS idioma
+            FROM assignments a
+            JOIN student_tutor st ON a.\`group\` = st.id
+            LEFT JOIN submissions sub ON sub.assignment = a.id
+            WHERE st.student = ?
+              AND sub.id IS NULL
+              AND a.due_date >= NOW()
+            ORDER BY a.due_date ASC
+            LIMIT 5
+        `, [req.user.id]);
+
+        // 3. Sesiones — se trae desde hace 1 día para cubrir diferencias de
+        //    zona horaria entre el servidor (UTC) y el cliente (UTC-6).
+        //    El frontend filtra con hora local del navegador.
+        const [sesiones] = await pool.query(`
+            SELECT
+                s.id,
+                s.start_time,
+                s.end_time,
+                s.session_url,
+                u.name AS tutor_name,
+                CASE st.idioma
+                    WHEN 'english' THEN 'Inglés'
+                    WHEN 'french' THEN 'Francés'
+                    ELSE st.idioma
+                END AS idioma
+            FROM sessions s
+            JOIN student_tutor st ON s.student_tutor = st.id
+            JOIN users u ON u.id = st.tutor
+            WHERE st.student = ?
+              AND s.start_time >= NOW() - INTERVAL 1 DAY
+            ORDER BY s.start_time ASC
+        `, [req.user.id]);
+
+        res.json({ clases, tareas, sesiones });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error cargando dashboard" });
+    }
+});
+
+// ─── SESIONES ─────────────────────────────────────────────────────────────────
+router.get("/sesiones", Verify, async (req, res) => {
+    try {
+        const [sesiones] = await pool.query(`
+            SELECT
+                s.id,
+                s.start_time,
+                s.end_time,
+                s.session_url,
+                u.name AS tutor_name,
+                CASE st.idioma
+                    WHEN 'english' THEN 'Inglés'
+                    WHEN 'french' THEN 'Francés'
+                    ELSE st.idioma
+                END AS idioma
+            FROM sessions s
+            JOIN student_tutor st ON s.student_tutor = st.id
+            JOIN users u ON u.id = st.tutor
+            WHERE st.student = ?
+            ORDER BY s.start_time ASC
+        `, [req.user.id]);
+
+        res.json(sesiones);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error cargando sesiones" });
+    }
+});
+
 router.get("/tareas", Verify, async (req, res) => {
     try {
         const [tareas] = await pool.query(`

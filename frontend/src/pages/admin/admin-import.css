@@ -1,0 +1,97 @@
+/* Import panel */
+.import-btn-trigger {
+  padding: 1rem;
+  color: #fff;
+  background-color: #6883BA;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.import-panel {
+  background: #fff;
+  border-radius: 20px;
+  padding: 1.25rem 1.5rem;
+  margin: 0 2rem 1rem;
+  text-align: left;
+  border: 2px solid #6883BA30;
+}
+
+.import-panel h4 {
+  color: #252467;
+  margin-bottom: 1rem;
+}
+
+.import-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.import-row label {
+  min-width: 60px;
+  color: #555;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.import-select {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  border: 2px solid #BBBEC7;
+  outline: none;
+  background: #fff;
+  color: #000;
+  font-size: 13px;
+}
+
+.import-file {
+  flex: 1;
+  border: 2px solid #BBBEC7 !important;
+  border-radius: 12px !important;
+  padding: 0.4rem !important;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.import-status { color: #6883BA; font-size: 13px; margin-top: 0.5rem; }
+.import-error { color: #E05C5C; font-size: 13px; margin-top: 0.5rem; font-weight: 600; }
+.import-success { background: #D4EDDA; border-radius: 10px; padding: 0.75rem; margin-top: 0.5rem; }
+.import-success p { color: #155724; margin: 0 0 4px; font-size: 13px; }
+.import-download-note { color: #1a6b2e; font-weight: 600 !important; }
+.import-errors-list { color: #721c24; font-size: 12px; margin: 0.25rem 0; padding-left: 1.25rem; }
+
+/* Assignment modals */
+.assign-modal {
+  background: #fff;
+  border: 2px solid #6883BA;
+  border-radius: 16px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.assign-modal h4 { color: #252467; margin-bottom: 0.75rem; }
+
+.assign-select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  border: 2px solid #BBBEC7;
+  margin-bottom: 0.5rem;
+  color: #000;
+  background: #fff;
+  outline: none;
+  font-size: 13px;
+}
+
+.cancel-btn {
+  flex: 1;
+  background: #eee;
+  border-radius: 20px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  color: #666;
+}

@@ -14,9 +14,10 @@ const ALLOWED_TYPES = [
 
 const MAX_SIZE = 5 * 1024 * 1024;
 
-function getUrgencia(due_date) {
+function getUrgencia(tarea) {
+    if (tarea.submission_id) return "entregada";
     const ahora = new Date();
-    const vence = new Date(due_date);
+    const vence = new Date(tarea.due_date);
     const diffDias = (vence - ahora) / (1000 * 60 * 60 * 24);
     if (diffDias < 0) return "vencida";
     if (diffDias < 1) return "urgente";
@@ -24,9 +25,10 @@ function getUrgencia(due_date) {
     return "proxima";
 }
 
-function formatVencimiento(due_date) {
+function formatVencimiento(tarea) {
+    if (tarea.submission_id) return "Entregada";
     const ahora = new Date();
-    const vence = new Date(due_date);
+    const vence = new Date(tarea.due_date);
     const diffDias = Math.ceil((vence - ahora) / (1000 * 60 * 60 * 24));
     if (diffDias < 0) return "Vencida";
     if (diffDias === 0) return "Vence hoy";
@@ -152,10 +154,11 @@ function StudentTareas() {
         }
     }
 
-    const urgentes = tareas.filter((t) => getUrgencia(t.due_date) === "urgente");
-    const semana = tareas.filter((t) => getUrgencia(t.due_date) === "semana");
-    const proximas = tareas.filter((t) => getUrgencia(t.due_date) === "proxima");
-    const vencidas = tareas.filter((t) => getUrgencia(t.due_date) === "vencida");
+    const urgentes    = tareas.filter((t) => getUrgencia(t) === "urgente");
+    const semana      = tareas.filter((t) => getUrgencia(t) === "semana");
+    const proximas    = tareas.filter((t) => getUrgencia(t) === "proxima");
+    const vencidas    = tareas.filter((t) => getUrgencia(t) === "vencida");
+    const entregadas  = tareas.filter((t) => getUrgencia(t) === "entregada");
 
     const yaEntrego = !!tareaActiva?.submission_id;
     const mostrarFormEntrega = !yaEntrego || reemplazando;
@@ -171,7 +174,7 @@ function StudentTareas() {
             <div className={circulo}></div>
             <div className="homework-student-detail">
                 <p>{t.title}</p>
-                <h5>{t.idioma} — {formatVencimiento(t.due_date)}</h5>
+                <h5>{t.idioma} — {formatVencimiento(t)}</h5>
             </div>
         </div>
     ));
@@ -208,6 +211,12 @@ function StudentTareas() {
                             {renderLista(vencidas, "circle-student-red")}
                         </div>
                     )}
+                    {entregadas.length > 0 && (
+                        <div className="homework-next">
+                            <h4>Entregadas</h4>
+                            {renderLista(entregadas, "circle-student-green")}
+                        </div>
+                    )}
                     {tareas.length === 0 && <p>No tienes tareas pendientes.</p>}
                 </div>
 
@@ -215,15 +224,14 @@ function StudentTareas() {
                     <div className="homework-right">
                         <div className="homework-details-student">
                             <h2>{tareaActiva.title}</h2>
-                            <p className={`due-date ${getUrgencia(tareaActiva.due_date) === "vencida" ? "overdue" : ""}`}>
-                                {tareaActiva.idioma} — {formatVencimiento(tareaActiva.due_date)}
+                            <p className={`due-date ${getUrgencia(tareaActiva) === "vencida" ? "overdue" : ""}`}>
+                                {tareaActiva.idioma} — {formatVencimiento(tareaActiva)}
                             </p>
                             <div className="homework-indications">
                                 <h3>Indicaciones</h3>
                                 <p>{tareaActiva.description}</p>
                             </div>
 
-                            {/* Info de entrega existente */}
                             {yaEntrego && (
                                 <div className="homework-submitted">
                                     <p className="submitted-date">
@@ -245,7 +253,6 @@ function StudentTareas() {
                             )}
                         </div>
 
-                        {/* Preview de entrega existente */}
                         {yaEntrego && submissionUrl && !reemplazando && (
                             <div className="homework-preview">
                                 <h3>Tu entrega</h3>
@@ -272,7 +279,6 @@ function StudentTareas() {
                             </div>
                         )}
 
-                        {/* Formulario de entrega */}
                         {mostrarFormEntrega && (
                             <>
                                 <div className="homework-sent">
