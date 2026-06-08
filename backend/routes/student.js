@@ -58,7 +58,9 @@ router.get("/dashboard", Verify, async (req, res) => {
             LIMIT 5
         `, [req.user.id]);
 
-        // 3. Sesiones (hoy y futuras, para próxima sesión y horario de hoy)
+        // 3. Sesiones — se trae desde hace 1 día para cubrir diferencias de
+        //    zona horaria entre el servidor (UTC) y el cliente (UTC-6).
+        //    El frontend filtra con hora local del navegador.
         const [sesiones] = await pool.query(`
             SELECT
                 s.id,
@@ -75,7 +77,7 @@ router.get("/dashboard", Verify, async (req, res) => {
             JOIN student_tutor st ON s.student_tutor = st.id
             JOIN users u ON u.id = st.tutor
             WHERE st.student = ?
-              AND s.end_time >= CURDATE()
+              AND s.start_time >= NOW() - INTERVAL 1 DAY
             ORDER BY s.start_time ASC
         `, [req.user.id]);
 

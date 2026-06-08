@@ -36,13 +36,10 @@ function Dashboard() {
 
     // --- Helpers de Formato y Fechas ---
     const parseDBDate = (dateString) => {
-        if (!dateString) return new Date();
-
-        const cleanString = dateString.endsWith('Z') ? dateString.slice(0, -1) : dateString;
-
-        const safeString = cleanString.replace(' ', 'T');
-        return new Date(safeString);
-    };
+    if (!dateString) return new Date();
+    // No quitar la Z — dejar que el navegador convierta UTC a hora local
+    return new Date(dateString.replace(' ', 'T'));
+};
 
     const formatearFecha = (fechaObj) => {
         const opciones = { weekday: 'long', hour: 'numeric', minute: 'numeric', hour12: true };
@@ -74,6 +71,27 @@ function Dashboard() {
     });
 
     const proximaSesion = sesionesParseadas.find(s => s.finObj > ahora);
+        console.log("=== DEBUG DASHBOARD ===");
+console.log("ahora:", ahora.toString());
+sesionesParseadas.forEach(s => {
+    console.log(`Sesión ${s.id}:`, {
+        start_raw: s.start_time,
+        inicioObj: s.inicioObj.toString(),
+        finObj: s.finObj.toString(),
+        inicioDate: s.inicioObj.getDate(),
+        ahoraDate: ahora.getDate(),
+        inicioMonth: s.inicioObj.getMonth(),
+        ahoraMonth: ahora.getMonth(),
+        inicioYear: s.inicioObj.getFullYear(),
+        ahoraYear: ahora.getFullYear(),
+        esHoy: s.inicioObj.getDate() === ahora.getDate() &&
+               s.inicioObj.getMonth() === ahora.getMonth() &&
+               s.inicioObj.getFullYear() === ahora.getFullYear(),
+        finMayorAhora: s.finObj > ahora,
+    });
+});
+console.log("horarioHoy:", horarioHoy);
+console.log("proximaSesion:", proximaSesion);
 
     const obtenerRangoHoras = () => {
         if (!horarioHoy || horarioHoy.length === 0) return [8, 9, 10, 11, 12];
