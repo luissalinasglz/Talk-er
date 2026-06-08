@@ -338,7 +338,7 @@ function AdminUsuarios() {
             </div>
             <div style={{ display: "flex", gap: "0.75rem" }}>
               <div className="import-btn-trigger" onClick={() => setShowImport(!showImport)} style={{ cursor: "pointer" }}>
-                <p>📥 Importar XLSX</p>
+                <p>Importar XLSX</p>
               </div>
               <div className="add-user" onClick={startNew} style={{ cursor: "pointer" }}>
                 <p>+ Nuevo usuario</p>
