@@ -62,7 +62,7 @@ export async function VerifyRoleSupervisor(req, res, next) {
         const user = req.user;
         const { role } = user;
         
-        if (role !== "supervisor" || role !== "admin") {
+        if (role !== "supervisor" && role !== "admin") {
             return res.status(401).json({
                 status: "failed",
                 message: "You are not authorized to view this page.",
