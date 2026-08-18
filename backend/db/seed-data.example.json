@@ -1,0 +1,98 @@
+
+{
+    "periods": [
+        {
+            "name": "Febrero Junio 2026",
+            "session_log_percentage": 80,
+            "letter_percentage": 10,
+            "video_percentage": 10,
+            "start_date": "2026-02-10 00:00:01",
+            "end_date": "2026-06-25 23:59:59"
+        }
+    ],
+
+    "users": [
+        { 
+            "name": "Admin",
+            "last_name": "Admin",
+            "username": "Admin",
+            "password": "Admin",
+            "role": "admin",
+            "period": 1 
+        }
+    ],
+
+    "student_tutor": [
+        { "tutor": 3, "student": 4, "idioma": "english", "start_date": "2026-02-10", "end_date": "2026-06-25" },
+        { "tutor": 3, "student": 5, "idioma": "french",  "start_date": "2026-02-10", "end_date": "2026-06-25" }
+    ],
+
+    "reviewer_tutor": [
+        { "tutor_id": 3, "supervisor_id": 2 }
+    ],
+
+    "assignments": [
+        {
+            "group": 1,
+            "title": "Lección del verbo to be",
+            "description": "Completa los ejercicios de la pagina 24 de tu libro de trabajo.",
+            "due_date": "2026-04-28 23:59:59"
+        },
+        {
+            "group": 1,
+            "title": "Leccion pasado simple",
+            "description": "Escribe un ensayo corto de 300 palabras.",
+            "due_date": "2026-04-30 18:00:00"
+        }
+    ],
+
+    "submissions": [
+        {
+            "assignment": 1,
+            "file": "Verbo_to_be.pdf",
+            "grade": null,
+            "feedback": null,
+            "submitted_at": "2026-04-27 10:15:00"
+        }
+    ],
+
+    "sessions": [
+        {
+            "student_tutor": 1,
+            "session_url": "https://zoom.us/j/1112223333",
+            "platform": "Zoom",
+            "password": "12345",
+            "start_time": "2026-04-20 16:00:00",
+            "end_time": "2026-04-20 17:00:00"
+        },
+        {
+            "student_tutor": 1,
+            "session_url": "https://zoom.us/j/4445556666",
+            "platform": "Zoom",
+            "password": "54321",
+            "start_time": "2026-04-22 16:00:00",
+            "end_time": "2026-04-22 17:00:00"
+        }
+    ],
+
+    "session_logs": [
+        {
+            "session_id": 1,
+            "title": "verbo to be",
+            "description": "El alumno repaso el verbo to be de forma excelente. Mostro buena actitud y participamos en un juego de roles.",
+            "evidence_url": "http://localhost:3000/v1/uploads/bitacoras/evidencia-demo-1.png",
+            "planning": "Se planeo repasar la unidad 1 del libro.",
+            "incidence": false,
+            "incidence_type": null,
+            "incidence_description": null,
+            "validated": true,
+            "corrections": "",
+            "approved": false
+        }
+    ],
+
+    "horarios": [
+        { "student_tutor_id": 1, "dia_semana": 4, "hora_inicio": "15:00:00", "hora_fin": "16:00:00" },
+        { "student_tutor_id": 1, "dia_semana": 0, "hora_inicio": "20:15:00", "hora_fin": "21:15:00" }
+    ]
+}

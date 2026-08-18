@@ -2,7 +2,7 @@ import express from "express";
 import pool from "../db/db.js";
 import Examen from "../models/Examen.js";
 import Submission from "../models/Submission.js";
-import { Verify } from "../middleware/verify.js";
+import { Verify, VerifyRoleStudent } from "../middleware/verify.js";
 import cellar from "../middleware/cellar.js";
 import { PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -19,8 +19,11 @@ const ALLOWED_MIME_TYPES_SUBMISSIONS = [
 
 const router = express.Router();
 
+router.use(Verify)
+router.use(VerifyRoleStudent)
+
 // ─── DASHBOARD ───────────────────────────────────────────────────────────────
-router.get("/dashboard", Verify, async (req, res) => {
+router.get("/dashboard", async (req, res) => {
     try {
         // 1. Clases (grupos activos del estudiante)
         const [clases] = await pool.query(`
@@ -89,7 +92,7 @@ router.get("/dashboard", Verify, async (req, res) => {
 });
 
 // ─── SESIONES ─────────────────────────────────────────────────────────────────
-router.get("/sesiones", Verify, async (req, res) => {
+router.get("/sesiones", async (req, res) => {
     try {
         const [sesiones] = await pool.query(`
             SELECT
@@ -117,7 +120,7 @@ router.get("/sesiones", Verify, async (req, res) => {
     }
 });
 
-router.get("/tareas", Verify, async (req, res) => {
+router.get("/tareas", async (req, res) => {
     try {
         const [tareas] = await pool.query(`
             SELECT
@@ -149,7 +152,7 @@ router.get("/tareas", Verify, async (req, res) => {
     }
 });
 
-router.post("/tareas/presign", Verify, async (req, res) => {
+router.post("/tareas/presign", async (req, res) => {
     try {
         const { filename, contentType, assignmentId } = req.body;
 
@@ -192,7 +195,7 @@ router.post("/tareas/presign", Verify, async (req, res) => {
     }
 });
 
-router.post("/tareas/:id/submit", Verify, async (req, res) => {
+router.post("/tareas/:id/submit", async (req, res) => {
     try {
         const { fileKey } = req.body;
         const assignmentId = req.params.id;
@@ -247,7 +250,7 @@ router.post("/tareas/:id/submit", Verify, async (req, res) => {
     }
 });
 
-router.get("/tareas/:id/submission-url", Verify, async (req, res) => {
+router.get("/tareas/:id/submission-url", async (req, res) => {
     try {
         const [rows] = await pool.query(`
             SELECT sub.file
@@ -275,7 +278,7 @@ router.get("/tareas/:id/submission-url", Verify, async (req, res) => {
     }
 });
 
-router.get("/materials", Verify, async (req, res) => {
+router.get("/materials", async (req, res) => {
     try {
         const [rows] = await pool.query(`
             SELECT
@@ -314,7 +317,7 @@ router.get("/materials", Verify, async (req, res) => {
 });
 
 // GET lista de exámenes
-router.get("/examenes", Verify, async (req, res) => {
+router.get("/examenes", async (req, res) => {
     try {
         const [stRows] = await pool.query(
             `SELECT id FROM student_tutor WHERE student = ?`,
@@ -364,7 +367,7 @@ router.get("/examenes", Verify, async (req, res) => {
 });
 
 // GET examen completo con preguntas
-router.get("/examenes/:id", Verify, async (req, res) => {
+router.get("/examenes/:id", async (req, res) => {
     try {
         const [stRows] = await pool.query(
             `SELECT id FROM student_tutor WHERE student = ?`,
@@ -410,7 +413,7 @@ router.get("/examenes/:id", Verify, async (req, res) => {
 });
 
 // POST enviar respuestas
-router.post("/examenes/:id/submit", Verify, async (req, res) => {
+router.post("/examenes/:id/submit", async (req, res) => {
     try {
         const { respuestas } = req.body;
 
