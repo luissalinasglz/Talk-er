@@ -151,3 +151,4 @@ vite.config.ts.timestamp-*
 *.njsproj
 *.sln
 *.sw?
+backend/db/seed-data.json

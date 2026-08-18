@@ -1,7 +1,18 @@
+import { readFile } from "fs/promises";
+import { fileURLToPath } from "url";
+import path from "path";
 import pool from "./db.js";
 import bcrypt from "bcrypt";
 
 const SALT_ROUNDS = 10;
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_PATH = path.join(__dirname, "seed-data.json");
+
+async function loadSeedData() {
+  const raw = await readFile(DATA_PATH, "utf-8");
+  return JSON.parse(raw);
+}
 
 export async function seed() {
 
@@ -13,20 +24,17 @@ export async function seed() {
 
   console.log("Seeding initial data");
 
-  await pool.query(`
-    INSERT INTO periods (name, session_log_percentage, letter_percentage, video_percentage, start_date, end_date)
-    VALUES ('Febrero Junio 2026', 80, 10, 10, '2026-02-10 00:00:01', '2026-06-25 23:59:59')
-  `);
+  const data = await loadSeedData();
 
-  const users = [
-    { name: "Admin",     last_name: "Apellido",  username: "A01752364",          password: "Admin134679$",   role: "admin",      period: 1 },
-    { name: "Beto",      last_name: "Castro",    username: "A01425602",          password: "Beto258369$",    role: "supervisor", period: 1 },
-    { name: "Dari",      last_name: "Gonzales",  username: "A01425755",          password: "DArI1607#$",     role: "teacher",    period: 1 },
-    { name: "Wicho",     last_name: "Ponce",     username: "TwinchoSalinasFJ26", password: "TwinchoPro123$", role: "student",    period: 1 },
-    { name: "Sebastian", last_name: "Rodriguez", username: "SebastianPonceFJ26", password: "SebasPro123",    role: "student",    period: 1 },
-  ];
+  for (const p of data.periods) {
+    await pool.query(
+      `INSERT INTO periods (name, session_log_percentage, letter_percentage, video_percentage, start_date, end_date)
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      [p.name, p.session_log_percentage, p.letter_percentage, p.video_percentage, p.start_date, p.end_date]
+    );
+  }
 
-  for (const u of users) {
+  for (const u of data.users) {
     const hash = await bcrypt.hash(u.password, SALT_ROUNDS);
     await pool.query(
       `INSERT INTO users (name, last_name, username, password_hash, role, period) VALUES (?, ?, ?, ?, ?, ?)`,
@@ -34,43 +42,59 @@ export async function seed() {
     );
   }
 
-  await pool.query(`
-    INSERT INTO student_tutor (tutor, student, idioma, start_date, end_date)
-    VALUES (3, 4, 'english', '2026-02-10', '2026-06-25'), (3, 5, 'french', '2026-02-10', '2026-06-25')
-  `);
+  for (const st of data.student_tutor) {
+    await pool.query(
+      `INSERT INTO student_tutor (tutor, student, idioma, start_date, end_date) VALUES (?, ?, ?, ?, ?)`,
+      [st.tutor, st.student, st.idioma, st.start_date, st.end_date]
+    );
+  }
 
-  await pool.query(`INSERT INTO reviewer_tutor (tutor_id, supervisor_id) VALUES (3, 2)`);
+  for (const rt of data.reviewer_tutor) {
+    await pool.query(
+      `INSERT INTO reviewer_tutor (tutor_id, supervisor_id) VALUES (?, ?)`,
+      [rt.tutor_id, rt.supervisor_id]
+    );
+  }
 
-  await pool.query(`
-    INSERT INTO assignments (\`group\`, title, description, due_date)
-    VALUES
-      (1, 'Lección del verbo to be', 'Completa los ejercicios de la pagina 24 de tu libro de trabajo.', '2026-04-28 23:59:59'),
-      (1, 'Leccion pasado simple', 'Escribe un ensayo corto de 300 palabras.', '2026-04-30 18:00:00')
-  `);
+  for (const a of data.assignments) {
+    await pool.query(
+      `INSERT INTO assignments (\`group\`, title, description, due_date) VALUES (?, ?, ?, ?)`,
+      [a.group, a.title, a.description, a.due_date]
+    );
+  }
 
-  await pool.query(`
-    INSERT INTO submissions (assignment, file, grade, feedback, submitted_at)
-    VALUES (1, 'Verbo_to_be-Wicho.pdf', NULL, NULL, '2026-04-27 10:15:00')
-  `);
+  for (const s of data.submissions) {
+    await pool.query(
+      `INSERT INTO submissions (assignment, file, grade, feedback, submitted_at) VALUES (?, ?, ?, ?, ?)`,
+      [s.assignment, s.file, s.grade, s.feedback, s.submitted_at]
+    );
+  }
 
-  await pool.query(`
-    INSERT INTO sessions (student_tutor, session_url, platform, password, start_time, end_time)
-    VALUES
-      (1, 'https://zoom.us/j/1112223333', 'Zoom', '12345', '2026-04-20 16:00:00', '2026-04-20 17:00:00'),
-      (1, 'https://zoom.us/j/4445556666', 'Zoom', '54321', '2026-04-22 16:00:00', '2026-04-22 17:00:00')
-  `);
+  for (const s of data.sessions) {
+    await pool.query(
+      `INSERT INTO sessions (student_tutor, session_url, platform, password, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)`,
+      [s.student_tutor, s.session_url, s.platform, s.password, s.start_time, s.end_time]
+    );
+  }
 
-  await pool.query(`
-    INSERT INTO session_logs (session_id, title, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
-    VALUES (1, 'verbo to be', 'El alumno repaso el verbo to be de forma excelente. Mostro buena actitud y participamos en un juego de roles.',
-      'http://localhost:3000/v1/uploads/bitacoras/evidencia-demo-1.png',
-      'Se planeo repasar la unidad 1 del libro.', FALSE, NULL, NULL, TRUE, '', FALSE)
-  `);
+  for (const sl of data.session_logs) {
+    await pool.query(
+      `INSERT INTO session_logs (session_id, title, description, evidence_url, planning, incidence, incidence_type, incidence_description, validated, corrections, approved)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        sl.session_id, sl.title, sl.description, sl.evidence_url, sl.planning,
+        sl.incidence, sl.incidence_type, sl.incidence_description, sl.validated,
+        sl.corrections, sl.approved
+      ]
+    );
+  }
 
-  await pool.query(`
-    INSERT INTO horarios (student_tutor_id, dia_semana, hora_inicio, hora_fin)
-    VALUES (1, 4, '15:00:00', '16:00:00'), (1, 0, '20:15:00', '21:15:00')
-  `);
+  for (const h of data.horarios) {
+    await pool.query(
+      `INSERT INTO horarios (student_tutor_id, dia_semana, hora_inicio, hora_fin) VALUES (?, ?, ?, ?)`,
+      [h.student_tutor_id, h.dia_semana, h.hora_inicio, h.hora_fin]
+    );
+  }
 
   console.log("Seed complete");
 }
