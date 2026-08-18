@@ -19,8 +19,7 @@
             "password": "Admin",
             "role": "admin",
             "period": 1 
-        },
-        {}
+        }
     ],
 
     "student_tutor": [
